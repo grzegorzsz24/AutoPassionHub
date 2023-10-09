@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd">
+    <changeSet id="0001-1" author="Grzegorz">
+        <createTable tableName="users">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="first_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nickname" type="VARCHAR(50)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(100)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_of_birth" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="roles">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(50)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="user_role">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"
+                             foreignKeyName="fk_user_role_user_id"
+                             referencedTableName="users"
+                             referencedColumnNames="id"
+                             primaryKey="true"
+                             primaryKeyName="pk_user_role"/>
+            </column>
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false"
+                             foreignKeyName="fk_user_role_role_id"
+                             referencedTableName="roles"
+                             referencedColumnNames="id"
+                             primaryKey="true"
+                             primaryKeyName="pk_user_role"
+                />
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:test
+  liquibase:
+    contexts: dev
+    change-log: classpath:db/changelog/master.xml
+  web:
+    resources:
+      static-locations: classpath:/static/,file:./uploads/
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+app:
+  storage:
+    location: ./uploads/
