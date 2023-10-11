@@ -7,6 +7,9 @@ export default {
       screens: {
         "3xl": "1800px",
       },
+      colors: {
+        primaryDark: "#0F172A",
+      },
     },
   },
   plugins: [],
