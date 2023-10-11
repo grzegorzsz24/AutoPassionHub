@@ -1,11 +1,13 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
+import LoadingReducer from "./features/LoadingSlice";
 import { configureStore } from "@reduxjs/toolkit";
 import themeReducer from "./features/themeSlice";
 
 const store = configureStore({
   reducer: {
     theme: themeReducer,
+    loading: LoadingReducer,
   },
 });
 
