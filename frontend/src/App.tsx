@@ -3,7 +3,7 @@ import "./App.css";
 function App() {
   return (
     <div>
-      <h1>Auto Motive Hub</h1>
+      <h1>MotoSplot</h1>
     </div>
   );
 }
