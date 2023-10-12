@@ -1,9 +1,17 @@
+import {
+  NotificationStatus,
+  addNotification,
+} from "../store/features/notificationSlice";
+
 import FormInput from "../ui/FormInput";
 import PrimaryButton from "../ui/PrimaryButton";
 import Validator from "../utils/Validator";
+import { useAppDispatch } from "../store/store";
 import useInput from "../hooks/useInput";
 
 const LoginForm = () => {
+  const dispatch = useAppDispatch();
+
   const {
     value: email,
     isValid: isEmailValid,
@@ -31,6 +39,12 @@ const LoginForm = () => {
 
   const submitFormHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    dispatch(
+      addNotification({
+        message: "Wpisz poprawne dane",
+        type: NotificationStatus.SUCCESS,
+      })
+    );
 
     if (!formIsValid) {
       setInputsAsTouched();
