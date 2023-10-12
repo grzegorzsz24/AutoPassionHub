@@ -8,7 +8,7 @@ const initialState: LoadingState = {
   loading: false,
 };
 
-const ThemeSlice = createSlice({
+const LoadingSlice = createSlice({
   name: "loading",
   initialState,
   reducers: {
@@ -21,5 +21,5 @@ const ThemeSlice = createSlice({
   },
 });
 
-export const { startLoading, stopLoading } = ThemeSlice.actions;
-export default ThemeSlice.reducer;
+export const { startLoading, stopLoading } = LoadingSlice.actions;
+export default LoadingSlice.reducer;

@@ -5,7 +5,6 @@ import { setTheme } from "../store/features/themeSlice";
 
 const SwitchThemeButton = () => {
   const theme = useAppSelector((state) => state.theme.theme);
-  console.log(theme);
 
   const dispatch = useAppDispatch();
 
