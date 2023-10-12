@@ -1,26 +1,65 @@
 import FormInput from "../ui/FormInput";
 import PrimaryButton from "../ui/PrimaryButton";
+import Validator from "../utils/Validator";
+import useInput from "../hooks/useInput";
 
 const LoginForm = () => {
+  const {
+    value: email,
+    isValid: isEmailValid,
+    hasError: emailHasError,
+    valueChangeHandler: emailChangeHandler,
+    inputBlurHandler: emailBlurHandler,
+    setIsTouched: setEmailIsTouched,
+  } = useInput(Validator.isEmail);
+
+  const {
+    value: password,
+    isValid: isPasswordValid,
+    hasError: passwordHasError,
+    valueChangeHandler: passwordChangeHandler,
+    inputBlurHandler: passwordBlurHandler,
+    setIsTouched: setPasswordIsTouched,
+  } = useInput(Validator.isPassword);
+
+  const formIsValid = isEmailValid && isPasswordValid;
+
+  const setInputsAsTouched = () => {
+    setEmailIsTouched(true);
+    setPasswordIsTouched(true);
+  };
+
+  const submitFormHandler = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!formIsValid) {
+      setInputsAsTouched();
+      return;
+    }
+  };
+
   return (
-    <form className="flex flex-col gap-6 max-w-[35rem] w-full ">
+    <form
+      className="flex flex-col gap-6 max-w-[25rem] w-full"
+      onSubmit={submitFormHandler}
+    >
       <FormInput
         type="email"
         placeholder="Adres E-mail"
-        value="Kacper"
+        value={email}
         errorMessage="Adres E-mail jest niepoprawny"
-        hasError={false}
-        onChange={() => {}}
-        onBlur={() => {}}
+        hasError={emailHasError}
+        onChange={emailChangeHandler}
+        onBlur={emailBlurHandler}
       />
       <FormInput
         type="password"
         placeholder="Hasło"
-        value=""
+        value={password}
         errorMessage="Hasło jest niepoprawne"
-        hasError={false}
-        onChange={() => {}}
-        onBlur={() => {}}
+        hasError={passwordHasError}
+        onChange={passwordChangeHandler}
+        onBlur={passwordBlurHandler}
       />
       <div>
         <PrimaryButton onClick={() => {}} size="lg" fullWidth>
