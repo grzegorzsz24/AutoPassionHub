@@ -4,22 +4,25 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Setter
+@Table(name = "article")
 @Getter
-@Table(name = "forum")
-public class Forum {
+@Setter
+public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private String title;
+    private String content;
+    private LocalDateTime publishedAt;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "forum")
-    private Set<Post> posts = new HashSet<>();
+    @OneToMany(mappedBy = "article")
+    private Set<Like> likes = new HashSet<>();
 }
