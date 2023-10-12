@@ -1,6 +1,9 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import AppLayout from "./pages/AppLayout";
+import LoginPage from "./pages/LoginPage";
+import Notification from "./ui/Notification";
+import RegisterPage from "./pages/RegisterPage";
 
 const router = createBrowserRouter([
   {
@@ -13,18 +16,23 @@ const router = createBrowserRouter([
       },
       {
         path: "/login",
-        element: <div>login</div>,
+        element: <LoginPage />,
       },
       {
         path: "/register",
-        element: <div>register</div>,
+        element: <RegisterPage />,
       },
     ],
   },
 ]);
 
 function App() {
-  return <RouterProvider router={router}></RouterProvider>;
+  return (
+    <>
+      <RouterProvider router={router}></RouterProvider>
+      <Notification />
+    </>
+  );
 }
 
 export default App;
