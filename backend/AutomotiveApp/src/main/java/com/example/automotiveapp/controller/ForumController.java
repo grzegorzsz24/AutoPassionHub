@@ -15,7 +15,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/forums")
+@RequestMapping("/user/forums")
 @RequiredArgsConstructor
 public class ForumController {
     private final ForumService forumService;

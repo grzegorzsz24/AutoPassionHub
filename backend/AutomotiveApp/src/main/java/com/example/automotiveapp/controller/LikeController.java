@@ -16,7 +16,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/likes")
+@RequestMapping("/user/likes")
 @RequiredArgsConstructor
 public class LikeController {
     private final LikeService likeService;

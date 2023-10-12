@@ -13,7 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/articles")
+@RequestMapping("/user/articles")
 @RequiredArgsConstructor
 public class ArticleController {
     private final ArticleService articleService;

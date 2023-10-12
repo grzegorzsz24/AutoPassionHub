@@ -11,11 +11,13 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
@@ -27,14 +29,30 @@ public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
 
+    private static final String[] AUTH_WHITELIST = {
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/v3/api-docs.yaml",
+            "/v3/api-docs/**",
+            "/api/v1/auth/**"
+    };
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.ignoringRequestMatchers(toH2Console()).disable())
-                .authorizeHttpRequests(auth -> auth.requestMatchers(toH2Console(), antMatcher("/api/auth/**"))
-                        .permitAll()
-                        .anyRequest()
-                        .authenticated())
+                .authorizeHttpRequests(requests -> {
+                    requests
+                        .requestMatchers(toH2Console(), antMatcher("/auth/**"),
+                                antMatcher("/swagger-ui/**"),
+                                antMatcher("/swagger-ui.html"),
+                                antMatcher("/v3/**"),
+                                antMatcher("/api/v1/auth/**"))
+                        .permitAll();
+                    requests.requestMatchers(new AntPathRequestMatcher("/user/**"))
+                            .hasAuthority("USER")
+                            .anyRequest()
+                            .authenticated();})
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
@@ -43,13 +61,14 @@ public class SecurityConfiguration {
         return http.build();
     }
 
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Access-Control-Allow-Headers","Access-Control-Allow-Origin",
+        configuration.setAllowedHeaders(Arrays.asList("Access-Control-Allow-Headers", "Access-Control-Allow-Origin",
                 "Access-Control-Request-Method",
                 "Access-Control-Request-Headers",
                 "Origin",

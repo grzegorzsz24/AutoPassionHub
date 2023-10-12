@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/posts")
+@RequestMapping("/user/posts")
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
