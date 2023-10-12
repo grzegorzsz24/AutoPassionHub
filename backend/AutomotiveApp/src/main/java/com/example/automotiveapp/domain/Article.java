@@ -23,6 +23,6 @@ public class Article {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "article")
-    private Set<Like> likes = new HashSet<>();
+//    @OneToMany(mappedBy = "article")
+//    private Set<Like> likes = new HashSet<>();
 }

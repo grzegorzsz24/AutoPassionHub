@@ -10,11 +10,11 @@ import java.util.List;
 
 @Getter
 @Setter
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PostDto {
     private Long id;
     private String content;
     private LocalDateTime postedAt;
+    private boolean isLiked;
     private List<MultipartFile> file;
     private String user;
     private String forum;

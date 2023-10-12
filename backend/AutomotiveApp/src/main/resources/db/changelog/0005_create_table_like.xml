@@ -21,12 +21,12 @@
                                  referencedTableName="post"
                                  referencedColumnNames="id"/>
                 </column>
-                <column name="article_id" type="BIGINT">
-                    <constraints nullable="false"
-                                 foreignKeyName="fk_like_article"
-                                 referencedTableName="article"
-                                 referencedColumnNames="id"/>
-                </column>
+<!--                <column name="article_id" type="BIGINT">-->
+<!--                    <constraints nullable="false"-->
+<!--                                 foreignKeyName="fk_like_article"-->
+<!--                                 referencedTableName="article"-->
+<!--                                 referencedColumnNames="id"/>-->
+<!--                </column>-->
             </createTable>
         </changeSet>
 </databaseChangeLog>

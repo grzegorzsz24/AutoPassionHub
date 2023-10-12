@@ -18,6 +18,7 @@ public class Post {
     private Long id;
     private String content;
     private LocalDateTime postedAt;
+    private boolean isLiked;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
