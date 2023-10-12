@@ -51,7 +51,7 @@ public class FileStorageService {
         List<Path> filepaths = createFilePath(files, storageLocation);
         List<String> paths = new ArrayList<>();
         int index = 0;
-        for (MultipartFile file: files) {
+        for (MultipartFile file : files) {
             try {
                 Files.copy(file.getInputStream(), filepaths.get(index), StandardCopyOption.REPLACE_EXISTING);
                 paths.add(filepaths.get(index).getFileName().toString());

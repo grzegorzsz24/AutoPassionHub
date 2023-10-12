@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ForumDtoMapper {
     private final UserRepository userRepository;
+
     public static ForumDto map(Forum forum) {
         ForumDto forumDto = new ForumDto();
         BeanUtils.copyProperties(forum, forumDto);

@@ -1,7 +1,5 @@
 package com.example.automotiveapp.controller;
 
-import com.example.automotiveapp.domain.Forum;
-import com.example.automotiveapp.domain.User;
 import com.example.automotiveapp.dto.ForumDto;
 import com.example.automotiveapp.dto.UserDto;
 import com.example.automotiveapp.service.ForumService;
@@ -15,7 +13,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/forums")

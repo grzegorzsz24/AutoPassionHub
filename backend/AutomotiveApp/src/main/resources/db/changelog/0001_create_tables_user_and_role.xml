@@ -21,10 +21,10 @@
             <column name="email" type="VARCHAR(100)">
                 <constraints unique="true" nullable="false"/>
             </column>
-            <column name="password" type="VARCHAR(50)">
+            <column name="password" type="VARCHAR(100)">
                 <constraints nullable="false"/>
             </column>
-            <column name="date_of_birth" type="DATETIME">
+            <column name="date_of_birth" type="DATE">
                 <constraints nullable="false"/>
             </column>
         </createTable>

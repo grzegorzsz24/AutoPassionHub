@@ -2,7 +2,6 @@ package com.example.automotiveapp.controller;
 
 import com.example.automotiveapp.dto.ForumDto;
 import com.example.automotiveapp.dto.PostDto;
-import com.example.automotiveapp.dto.UserDto;
 import com.example.automotiveapp.service.ForumService;
 import com.example.automotiveapp.service.PostService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -14,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 

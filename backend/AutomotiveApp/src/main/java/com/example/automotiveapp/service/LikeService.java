@@ -1,9 +1,7 @@
 package com.example.automotiveapp.service;
 
-import com.example.automotiveapp.domain.Forum;
 import com.example.automotiveapp.domain.Like;
 import com.example.automotiveapp.dto.LikeDto;
-import com.example.automotiveapp.mapper.ForumDtoMapper;
 import com.example.automotiveapp.mapper.LikeDtoMapper;
 import com.example.automotiveapp.repository.LikeRepository;
 import lombok.RequiredArgsConstructor;

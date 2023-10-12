@@ -1,18 +1,16 @@
 package com.example.automotiveapp.mapper;
 
-import com.example.automotiveapp.domain.*;
+import com.example.automotiveapp.domain.Like;
+import com.example.automotiveapp.domain.Post;
+import com.example.automotiveapp.domain.User;
 import com.example.automotiveapp.dto.LikeDto;
-import com.example.automotiveapp.dto.PostDto;
 import com.example.automotiveapp.repository.ArticleRepository;
-import com.example.automotiveapp.repository.ForumRepository;
 import com.example.automotiveapp.repository.PostRepository;
 import com.example.automotiveapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service

@@ -1,10 +1,7 @@
 package com.example.automotiveapp.controller;
 
-import com.example.automotiveapp.domain.Like;
-import com.example.automotiveapp.dto.ForumDto;
 import com.example.automotiveapp.dto.LikeDto;
 import com.example.automotiveapp.dto.PostDto;
-import com.example.automotiveapp.repository.LikeRepository;
 import com.example.automotiveapp.service.LikeService;
 import com.example.automotiveapp.service.PostService;
 import lombok.RequiredArgsConstructor;

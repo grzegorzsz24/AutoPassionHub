@@ -1,11 +1,11 @@
 package com.example.automotiveapp.dto;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 public class UserDto {
     private String firstName;
     private String lastName;
     private String nickname;
     private String email;
-    private LocalDateTime dateOfBirth;
+    private Date dateOfBirth;
 }

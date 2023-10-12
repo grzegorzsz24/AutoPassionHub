@@ -1,16 +1,26 @@
 package com.example.automotiveapp.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDateTime;
-import java.util.HashSet;
+import java.util.Collection;
+import java.util.Date;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
 @Getter
-public class User {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,25 +29,57 @@ public class User {
     private String nickname;
     private String email;
     private String password;
-    private LocalDateTime dateOfBirth;
+    @Column(name = "date_of_birth", columnDefinition = "DATE")
+    private Date dateOfBirth;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
     )
-    private Set<Role> roles = new HashSet<>();
+    private Set<Role> roles;
 
     @OneToMany(mappedBy = "user")
-    private Set<Forum> forums = new HashSet<>();
+    private Set<Forum> forums;
 
     @OneToMany(mappedBy = "user")
-    private Set<Post> posts = new HashSet<>();
+    private Set<Post> posts;
 
     @OneToMany(mappedBy = "user")
-    private Set<Like> likes = new HashSet<>();
+    private Set<Like> likes;
 
     @OneToMany(mappedBy = "user")
-    private Set<Article> articles = new HashSet<>();
+    private Set<Article> articles;
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName()))
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

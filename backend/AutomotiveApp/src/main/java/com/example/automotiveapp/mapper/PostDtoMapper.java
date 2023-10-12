@@ -4,7 +4,6 @@ import com.example.automotiveapp.domain.File;
 import com.example.automotiveapp.domain.Forum;
 import com.example.automotiveapp.domain.Post;
 import com.example.automotiveapp.domain.User;
-import com.example.automotiveapp.dto.ForumDto;
 import com.example.automotiveapp.dto.PostDto;
 import com.example.automotiveapp.repository.ForumRepository;
 import com.example.automotiveapp.repository.UserRepository;
@@ -13,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +21,7 @@ import java.util.List;
 public class PostDtoMapper {
     private final UserRepository userRepository;
     private final ForumRepository forumRepository;
+
     public static PostDto map(Post post) {
         PostDto postDto = new PostDto();
         BeanUtils.copyProperties(post, postDto);

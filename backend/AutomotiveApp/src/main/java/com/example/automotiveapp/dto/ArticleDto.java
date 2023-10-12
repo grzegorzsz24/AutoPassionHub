@@ -1,8 +1,5 @@
 package com.example.automotiveapp.dto;
 
-import com.example.automotiveapp.domain.User;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 

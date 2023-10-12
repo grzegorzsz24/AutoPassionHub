@@ -1,6 +1,5 @@
 package com.example.automotiveapp.repository;
 
-import com.example.automotiveapp.domain.Forum;
 import com.example.automotiveapp.domain.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

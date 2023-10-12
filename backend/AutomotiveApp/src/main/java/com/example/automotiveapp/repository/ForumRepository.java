@@ -8,6 +8,8 @@ import java.util.Optional;
 
 public interface ForumRepository extends JpaRepository<Forum, Long> {
     List<Forum> findAllByUser_NicknameIgnoreCase(String nickname);
+
     List<Forum> findAllByNameContains(String name);
+
     Optional<Forum> findByNameIgnoreCase(String name);
 }

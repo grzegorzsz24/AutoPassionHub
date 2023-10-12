@@ -1,7 +1,6 @@
 package com.example.automotiveapp.controller;
 
 import com.example.automotiveapp.dto.ArticleDto;
-import com.example.automotiveapp.dto.ForumDto;
 import com.example.automotiveapp.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

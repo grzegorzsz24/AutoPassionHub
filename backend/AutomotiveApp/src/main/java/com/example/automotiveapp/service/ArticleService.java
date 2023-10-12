@@ -1,11 +1,8 @@
 package com.example.automotiveapp.service;
 
 import com.example.automotiveapp.domain.Article;
-import com.example.automotiveapp.domain.Forum;
 import com.example.automotiveapp.dto.ArticleDto;
-import com.example.automotiveapp.dto.ForumDto;
 import com.example.automotiveapp.mapper.ArticleDtoMapper;
-import com.example.automotiveapp.mapper.ForumDtoMapper;
 import com.example.automotiveapp.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

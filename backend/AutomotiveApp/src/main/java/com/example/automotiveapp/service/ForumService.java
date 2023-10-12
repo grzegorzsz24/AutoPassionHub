@@ -1,7 +1,6 @@
 package com.example.automotiveapp.service;
 
 import com.example.automotiveapp.domain.Forum;
-import com.example.automotiveapp.domain.User;
 import com.example.automotiveapp.dto.ForumDto;
 import com.example.automotiveapp.mapper.ForumDtoMapper;
 import com.example.automotiveapp.repository.ForumRepository;

@@ -1,7 +1,7 @@
 insert into
     users (first_name, last_name, nickname, email, password, date_of_birth)
 values
-    ('Grzegorz', 'Szymanek', 'grzesio123','admin@example.com', 'haslo123', '2001-12-11 14:15:20');
+    ('Grzegorz', 'Szymanek', 'grzesio123','admin@example.com', 'haslo123', '2001-12-11');
 
 -- insert into
 --     roles (name)
