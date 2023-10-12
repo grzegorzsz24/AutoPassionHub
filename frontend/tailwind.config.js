@@ -10,6 +10,9 @@ export default {
       colors: {
         primaryDark: "#0F172A",
       },
+      backgroundImage: {
+        "futuristic-car": "url('/src/assets/images/register_page.webp')",
+      },
     },
   },
   plugins: [],
