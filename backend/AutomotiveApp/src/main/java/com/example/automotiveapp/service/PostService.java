@@ -36,7 +36,7 @@ public class PostService {
     public PostDto savePost(PostDto postDto) {
         Post post = postDtoMapper.map(postDto);
         post.setPostedAt(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
-        List<File> files = new ArrayList<>();
+        Set<File> files = new HashSet<>();
         if (postDto.getFile() != null) {
             List<String> savedImageNames = fileStorageService.saveImage(postDto.getFile());
             for(String imageName: savedImageNames) {

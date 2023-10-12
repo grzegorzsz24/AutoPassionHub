@@ -3,7 +3,7 @@ spring:
     url: jdbc:h2:mem:test
   liquibase:
     contexts: dev
-    change-log: classpath:db/changelog/master.xml
+    change-log: classpath:/db/changelog/master.xml
   web:
     resources:
       static-locations: classpath:/static/,file:./uploads/
