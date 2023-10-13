@@ -31,5 +31,8 @@ public class Post {
     private Set<File> files = new HashSet<>();
 
     @OneToMany(mappedBy = "post")
-    private Set<File> likes = new HashSet<>();
+    private Set<Like> likes = new HashSet<>();
+
+    @OneToMany(mappedBy = "post")
+    private Set<Comment> comments = new HashSet<>();
 }

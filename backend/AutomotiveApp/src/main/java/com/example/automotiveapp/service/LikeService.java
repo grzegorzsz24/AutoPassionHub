@@ -5,7 +5,6 @@ import com.example.automotiveapp.dto.LikeDto;
 import com.example.automotiveapp.dto.PostDto;
 import com.example.automotiveapp.mapper.LikeDtoMapper;
 import com.example.automotiveapp.repository.LikeRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -10,7 +10,7 @@
     <include file="0003_create_table_post_and_file.xml" relativeToChangelogFile="true"/>
     <include file="0004_create_table_article.xml" relativeToChangelogFile="true"/>
     <include file="0005_create_table_like.xml" relativeToChangelogFile="true"/>
-
+    <include file="0006_create_table_comment.xml" relativeToChangelogFile="true"/>
 
     <include file="../testdata/0001_user_and_role.sql" relativeToChangelogFile="true" context="dev"/>
 

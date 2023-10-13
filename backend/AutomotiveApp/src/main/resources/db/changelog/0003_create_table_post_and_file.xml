@@ -12,7 +12,9 @@
             <column name="content" type="VARCHAR(2000)">
                 <constraints nullable="false"/>
             </column>
-            <column name="posted_at" type="DATETIME"/>
+            <column name="posted_at" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
             <column name="is_liked" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>

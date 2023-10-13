@@ -35,16 +35,17 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.ignoringRequestMatchers(toH2Console()).disable())
                 .authorizeHttpRequests(requests -> {
                     requests
-                        .requestMatchers(toH2Console(), antMatcher("/auth/**"),
-                                antMatcher("/swagger-ui/**"),
-                                antMatcher("/swagger-ui.html"),
-                                antMatcher("/v3/**"),
-                                antMatcher("/api/v1/auth/**"))
-                        .permitAll();
+                            .requestMatchers(toH2Console(), antMatcher("/auth/**"),
+                                    antMatcher("/swagger-ui/**"),
+                                    antMatcher("/swagger-ui.html"),
+                                    antMatcher("/v3/**"),
+                                    antMatcher("/api/v1/auth/**"))
+                            .permitAll();
                     requests.requestMatchers(new AntPathRequestMatcher("/user/**"))
                             .hasAuthority("USER")
                             .anyRequest()
-                            .authenticated();})
+                            .authenticated();
+                })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

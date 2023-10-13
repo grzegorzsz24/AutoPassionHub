@@ -1,7 +1,6 @@
 package com.example.automotiveapp.auth;
 
 import com.example.automotiveapp.service.ValidationService;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
