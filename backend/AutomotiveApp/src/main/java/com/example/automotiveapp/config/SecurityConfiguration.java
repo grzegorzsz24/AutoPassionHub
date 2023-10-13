@@ -29,14 +29,6 @@ public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
 
-    private static final String[] AUTH_WHITELIST = {
-            "/swagger-ui/**",
-            "/swagger-ui.html",
-            "/v3/api-docs.yaml",
-            "/v3/api-docs/**",
-            "/api/v1/auth/**"
-    };
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http

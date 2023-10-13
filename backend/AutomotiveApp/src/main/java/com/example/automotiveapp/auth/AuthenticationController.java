@@ -1,6 +1,8 @@
 package com.example.automotiveapp.auth;
 
 import com.example.automotiveapp.service.ValidationService;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,11 +27,11 @@ public class AuthenticationController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> register(@Valid @RequestBody AuthenticationRequest authenticationRequest, BindingResult result) {
+    public ResponseEntity<AuthenticationResponse> register(@Valid @RequestBody AuthenticationRequest authenticationRequest, HttpServletResponse reponse, BindingResult result) {
         ResponseEntity errors = validationService.validate(result);
         if (errors != null) {
             return errors;
         }
-        return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
+        return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest, reponse));
     }
 }
