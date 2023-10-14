@@ -8,6 +8,7 @@ export default {
     },
     extend: {
       screens: {
+        tablet: "860px",
         "3xl": "1800px",
       },
       colors: {

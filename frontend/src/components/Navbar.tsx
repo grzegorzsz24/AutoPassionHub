@@ -7,10 +7,10 @@ import UserProfileButton from "../ui/UserProfileButton";
 
 const Navbar = () => {
   return (
-    <nav className="bg-white dark:bg-primaryDark text-bg-primaryDark dark:text-blue-50 shadow-sm px-6 py-6 flex items-center justify-between dark:border-b-2 border-blue-600">
+    <nav className="bg-white dark:bg-primaryDark text-bg-primaryDark dark:text-blue-50 shadow-sm px-4 py-4 xl:px-6 flex items-center justify-between dark:border-b-2 border-blue-600">
       <Logo />
       <SearchBar />
-      <div className="flex items-center gap-16">
+      <div className="flex items-center gap-8 xl:gap-16">
         <MessagesButton />
         <NotificationButton />
         <UserProfileButton />
