@@ -8,6 +8,7 @@ export default {
     },
     extend: {
       screens: {
+        tablet: "860px",
         "3xl": "1800px",
       },
       colors: {
@@ -18,6 +19,8 @@ export default {
       },
       backgroundImage: {
         "futuristic-car": "url('/src/assets/images/register_page.webp')",
+        "gears-dark": "url('/src/assets/gears-dark.svg')",
+        "gears-light": "url('/src/assets/gears-light.svg')",
       },
     },
   },

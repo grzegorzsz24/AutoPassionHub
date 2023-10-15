@@ -2,6 +2,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import AppLayout from "./pages/AppLayout";
 import LoginPage from "./pages/LoginPage";
+import MainPage from "./pages/MainPage";
 import MainPageLayout from "./pages/MainPageLayout";
 import Notification from "./ui/Notification";
 import RegisterPage from "./pages/RegisterPage";
@@ -17,7 +18,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: "/",
-            element: <p>Posty</p>,
+            element: <MainPage />,
           },
           {
             path: "/articles",

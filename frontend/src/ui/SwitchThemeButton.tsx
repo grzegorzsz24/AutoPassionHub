@@ -19,7 +19,7 @@ const SwitchThemeButton = () => {
   return (
     <button
       aria-label="Toogle Theme Button"
-      className="btn btn-outline-secondary text-blue-950 dark:text-blue-100  justify-self-end hover:scale-125 transition-all text-xl"
+      className="btn btn-outline-secondary text-blue-950 dark:text-blue-100  justify-self-end hover:scale-125 transition-all text-xl xl:text-2xl"
       onClick={toggleTheme}
     >
       {theme === "dark" ? <FaSun /> : <FaMoon />}
