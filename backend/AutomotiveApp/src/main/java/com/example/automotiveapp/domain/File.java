@@ -18,4 +18,8 @@ public class File {
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }

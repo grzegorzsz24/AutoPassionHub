@@ -38,9 +38,15 @@
             </column>
             <column name="file_url" type="VARCHAR(100)"/>
             <column name="post_id" type="BIGINT">
-                <constraints nullable="false"
+                <constraints nullable="true"
                              foreignKeyName="fk_file_post"
                              referencedTableName="post"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="true"
+                             foreignKeyName="fk_file_users"
+                             referencedTableName="users"
                              referencedColumnNames="id"/>
             </column>
         </createTable>
