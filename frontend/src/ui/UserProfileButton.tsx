@@ -12,11 +12,14 @@ const UserProfileButton = () => {
 
   return (
     <button
-      className="flex items-center gap-2 py-2 text-blue-900 dark:text-blue-50 relative"
+      className="flex items-center gap-2 py-2 text-blue-900 dark:text-blue-50 relative group"
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
     >
-      <img src="anonim.webp" className="w-8 h-8 xl:w-12 xl:h-12 rounded-full" />
+      <img
+        src="anonim.webp"
+        className="w-8 h-8 xl:w-12 xl:h-12 rounded-full group-hover:ring-4 group-hover:ring-blue-600 transition-all"
+      />
       <span className="block font-semibold text-sm xl:text-lg">
         Kacper Stępień
       </span>

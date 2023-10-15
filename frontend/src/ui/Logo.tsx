@@ -1,9 +1,16 @@
 import DarkLogo from "../assets/logo-dark.svg";
 import LightLogo from "../assets/logo-light.svg";
+import { useNavigate } from "react-router-dom";
 
 const Logo = () => {
+  const navigate = useNavigate();
+
+  const handleLogoClick = () => {
+    navigate("/");
+  };
+
   return (
-    <div className="logo text-xl">
+    <div className="logo text-xl cursor-pointer" onClick={handleLogoClick}>
       <img
         src={DarkLogo}
         alt="logo"

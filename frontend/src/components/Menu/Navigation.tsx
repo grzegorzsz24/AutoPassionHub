@@ -7,7 +7,7 @@ import {
 
 import { BsFillCalendarEventFill } from "react-icons/bs";
 import { MdForum } from "react-icons/md";
-import NavigationLink from "../ui/NavigationLink";
+import NavigationLink from "../../ui/NavigationLink";
 
 const links = [
   {

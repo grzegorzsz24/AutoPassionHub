@@ -1,14 +1,17 @@
-import Navbar from "../components/Navbar";
-import Navigation from "../components/Navigation";
+import Navbar from "../components/Menu/Navbar";
+import Navigation from "../components/Menu/Navigation";
 import { Outlet } from "react-router-dom";
 
 const MainPageLayout = () => {
   return (
-    <div className="min-h-screen">
-      <Navbar />
-      <Navigation />
-      <h1>Main Page Layout</h1>
-      <Outlet />
+    <div className="h-screen flex flex-col">
+      <div>
+        <Navbar />
+        <Navigation />
+      </div>
+      <div className="flex-grow overflow-hidden">
+        <Outlet />
+      </div>
     </div>
   );
 };

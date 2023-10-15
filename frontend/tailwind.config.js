@@ -19,6 +19,8 @@ export default {
       },
       backgroundImage: {
         "futuristic-car": "url('/src/assets/images/register_page.webp')",
+        "gears-dark": "url('/src/assets/gears-dark.svg')",
+        "gears-light": "url('/src/assets/gears-light.svg')",
       },
     },
   },
