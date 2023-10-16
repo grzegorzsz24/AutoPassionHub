@@ -16,10 +16,10 @@ public class Forum {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "forum")
+    @OneToMany(mappedBy = "forum", cascade = CascadeType.ALL)
     private Set<Post> posts = new HashSet<>();
 }

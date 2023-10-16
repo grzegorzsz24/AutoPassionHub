@@ -27,15 +27,26 @@ public class UserService {
                 .map(UserDtoMapper::map);
     }
 
-    public void saveProfilePicture(MultipartFile file) {
+    public void saveOrUpdateProfilePicture(MultipartFile file) {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         String imageUrl = fileStorageService.saveImage(List.of(file)).get(0);
-        File fileToSave = new File();
-        fileToSave.setFileUrl(imageUrl);
         Optional<User> user = userRepository.findByEmail(userEmail);
         if (user.isPresent()) {
-            fileToSave.setUser(user.get());
-            fileRepository.save(fileToSave);
+            Optional<File> fileToUpdate = fileRepository.findByUser_Id(user.get().getId());
+            if (fileToUpdate.isPresent()) {
+                fileToUpdate.get().setFileUrl(imageUrl);
+                fileRepository.save(fileToUpdate.get());
+            } else {
+                File fileToSave = new File();
+                fileToSave.setUser(user.get());
+                fileToSave.setFileUrl(imageUrl);
+                fileRepository.save(fileToSave);
+            }
         }
+    }
+
+    public void deleteAccount() {
+        Optional<User> user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        user.ifPresent(value -> userRepository.deleteById(value.getId()));
     }
 }
