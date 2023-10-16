@@ -26,11 +26,11 @@ public class AuthenticationController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> register(@Valid @RequestBody AuthenticationRequest authenticationRequest, HttpServletResponse reponse, BindingResult result) {
+    public ResponseEntity<AuthenticationResponse> register(@Valid @RequestBody AuthenticationRequest authenticationRequest, HttpServletResponse response, BindingResult result) {
         ResponseEntity errors = validationService.validate(result);
         if (errors != null) {
             return errors;
         }
-        return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest, reponse));
+        return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest, response));
     }
 }

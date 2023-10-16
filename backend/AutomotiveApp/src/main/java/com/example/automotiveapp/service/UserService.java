@@ -9,6 +9,7 @@ import com.example.automotiveapp.repository.UserRepository;
 import com.example.automotiveapp.storage.FileStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,6 +22,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final FileStorageService fileStorageService;
     private final FileRepository fileRepository;
+    private final UserDtoMapper userDtoMapper;
+    private final PasswordEncoder passwordEncoder;
 
     public Optional<UserDto> findUserByNickname(String nickname) {
         return userRepository.findByNicknameIgnoreCase(nickname)
@@ -48,5 +51,15 @@ public class UserService {
     public void deleteAccount() {
         Optional<User> user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         user.ifPresent(value -> userRepository.deleteById(value.getId()));
+    }
+
+    public Optional<UserDto> findUserById(Long id) {
+        return userRepository.findById(id).map(UserDtoMapper::map);
+    }
+
+    public void updateUser(UserDto userToUpdate) {
+        User user = userDtoMapper.map(userToUpdate);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
     }
 }

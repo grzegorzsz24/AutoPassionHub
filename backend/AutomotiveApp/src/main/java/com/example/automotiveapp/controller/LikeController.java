@@ -1,7 +1,6 @@
 package com.example.automotiveapp.controller;
 
 import com.example.automotiveapp.dto.LikeDto;
-import com.example.automotiveapp.dto.PostDto;
 import com.example.automotiveapp.service.LikeService;
 import com.example.automotiveapp.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
@@ -23,7 +21,7 @@ public class LikeController {
     private final PostService postService;
 
     @PostMapping
-    public ResponseEntity<LikeDto> addLike(@RequestBody LikeDto like) throws IOException {
+    public ResponseEntity<LikeDto> addLike(@RequestBody LikeDto like){
         LikeDto savedLike = likeService.saveLike(like);
         URI savedLikeURI = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -34,7 +32,7 @@ public class LikeController {
 
     @GetMapping("/{postId}")
     public ResponseEntity<List<LikeDto>> getAllPostLikes(@PathVariable Long postId) {
-        PostDto post = postService.findPostById(postId)
+        postService.findPostById(postId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return ResponseEntity.ok(likeService.getPostLikes(postId));
     }

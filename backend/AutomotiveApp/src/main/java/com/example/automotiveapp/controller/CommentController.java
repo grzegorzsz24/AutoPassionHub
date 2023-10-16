@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.NoSuchElementException;
 
@@ -24,7 +23,7 @@ public class CommentController {
     private final ObjectMapper objectMapper;
 
     @PostMapping
-    public ResponseEntity<CommentDto> addComment(@RequestBody CommentDto comment) throws IOException {
+    public ResponseEntity<CommentDto> addComment(@RequestBody CommentDto comment){
         CommentDto savedComment = commentService.saveComment(comment);
         URI savedCommentURI = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")

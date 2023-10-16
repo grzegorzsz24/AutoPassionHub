@@ -1,6 +1,5 @@
 package com.example.automotiveapp.controller;
 
-import com.example.automotiveapp.dto.ForumDto;
 import com.example.automotiveapp.dto.PostDto;
 import com.example.automotiveapp.service.ForumService;
 import com.example.automotiveapp.service.PostService;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -30,7 +28,7 @@ public class PostController {
     private final ForumService forumService;
 
     @PostMapping
-    public ResponseEntity<PostDto> addPost(@ModelAttribute PostDto post) throws IOException {
+    public ResponseEntity<PostDto> addPost(@ModelAttribute PostDto post){
         PostDto savedPost = postService.savePost(post);
         URI savedPostURI = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -62,7 +60,7 @@ public class PostController {
 
     @GetMapping("/{forumId}")
     public ResponseEntity<List<PostDto>> getAllForumPosts(@PathVariable Long forumId) {
-        ForumDto forum = forumService.findForumById(forumId)
+        forumService.findForumById(forumId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return ResponseEntity.ok(postService.findPostsByForumId(forumId));
     }
