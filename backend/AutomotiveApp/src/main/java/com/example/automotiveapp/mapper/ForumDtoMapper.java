@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ForumDtoMapper {
@@ -23,8 +25,8 @@ public class ForumDtoMapper {
     public Forum map(ForumDto forumDto) {
         Forum forum = new Forum();
         BeanUtils.copyProperties(forumDto, forum);
-        User user = userRepository.findByNicknameIgnoreCase(forumDto.getUser()).get();
-        forum.setUser(user);
+        Optional<User> user = userRepository.findByNicknameIgnoreCase(forumDto.getUser());
+        user.ifPresent(forum::setUser);
         return forum;
     }
 }

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -24,8 +25,8 @@ public class UserDtoMapper {
     public User map(UserDto userDto) {
         User user = new User();
         BeanUtils.copyProperties(userDto, user);
-        Role role = roleRepository.findById(1L).get();
-        user.setRoles(Set.of(role));
+        Optional<Role> role = roleRepository.findById(1L);
+        role.ifPresent(value -> user.setRoles(Set.of(value)));
         return user;
     }
 }

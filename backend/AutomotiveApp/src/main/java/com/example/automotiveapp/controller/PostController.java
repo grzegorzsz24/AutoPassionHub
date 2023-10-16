@@ -28,7 +28,7 @@ public class PostController {
     private final ForumService forumService;
 
     @PostMapping
-    public ResponseEntity<PostDto> addPost(@ModelAttribute PostDto post){
+    public ResponseEntity<PostDto> addPost(@ModelAttribute PostDto post) {
         PostDto savedPost = postService.savePost(post);
         URI savedPostURI = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")

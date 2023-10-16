@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "article")
@@ -17,10 +19,11 @@ public class Article {
     private String title;
     private String content;
     private LocalDateTime publishedAt;
+    private boolean isLiked;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-//    @OneToMany(mappedBy = "article")
-//    private Set<Like> likes = new HashSet<>();
+    @OneToMany(mappedBy = "article")
+    private Set<Like> likes = new HashSet<>();
 }

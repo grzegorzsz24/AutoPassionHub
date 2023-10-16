@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class CommentDtoMapper {
@@ -27,10 +29,10 @@ public class CommentDtoMapper {
     public Comment map(CommentDto commentDto) {
         Comment comment = new Comment();
         BeanUtils.copyProperties(commentDto, comment);
-        User user = userRepository.findByNicknameIgnoreCase(commentDto.getUser()).get();
-        Post post = postRepository.findById(commentDto.getPost()).get();
-        comment.setUser(user);
-        comment.setPost(post);
+        Optional<User> user = userRepository.findByNicknameIgnoreCase(commentDto.getUser());
+        Optional<Post> post = postRepository.findById(commentDto.getPost());
+        user.ifPresent(comment::setUser);
+        post.ifPresent(comment::setPost);
         return comment;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.automotiveapp.mapper;
 
+import com.example.automotiveapp.domain.Article;
 import com.example.automotiveapp.domain.Like;
 import com.example.automotiveapp.domain.Post;
 import com.example.automotiveapp.domain.User;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+
 @Service
 @RequiredArgsConstructor
 public class LikeDtoMapper {
@@ -24,17 +26,29 @@ public class LikeDtoMapper {
         LikeDto likeDto = new LikeDto();
         BeanUtils.copyProperties(like, likeDto);
         likeDto.setUser(like.getUser().getNickname());
-        likeDto.setPost(like.getPost().getId());
+        if (like.getArticle() != null) {
+            likeDto.setArticle(like.getArticle().getId());
+        } else if (like.getPost() != null) {
+            likeDto.setPost(like.getPost().getId());
+        }
         return likeDto;
     }
 
     public Like map(LikeDto likeDto) {
+        if (likeDto.getArticle() == null && likeDto.getPost() == null) {
+            throw new IllegalArgumentException("Musi być podany artykuł lub post");
+        }
         Like like = new Like();
         BeanUtils.copyProperties(likeDto, like);
-        User user = userRepository.findByNicknameIgnoreCase(likeDto.getUser()).get();
-        Optional<Post> post = postRepository.findById(likeDto.getPost());
-        like.setUser(user);
-        post.ifPresent(like::setPost);
+        Optional<User> user = userRepository.findByNicknameIgnoreCase(likeDto.getUser());
+        user.ifPresent(like::setUser);
+        if (likeDto.getPost() != null) {
+            Optional<Post> post = postRepository.findById(likeDto.getPost());
+            post.ifPresent(like::setPost);
+        } else if (likeDto.getArticle() != null) {
+            Optional<Article> article = articleRepository.findById(likeDto.getArticle());
+            article.ifPresent(like::setArticle);
+        }
         return like;
     }
 }

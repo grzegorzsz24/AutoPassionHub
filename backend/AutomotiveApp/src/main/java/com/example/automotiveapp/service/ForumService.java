@@ -4,7 +4,6 @@ import com.example.automotiveapp.domain.Forum;
 import com.example.automotiveapp.dto.ForumDto;
 import com.example.automotiveapp.mapper.ForumDtoMapper;
 import com.example.automotiveapp.repository.ForumRepository;
-import com.example.automotiveapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +14,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ForumService {
     private final ForumRepository forumRepository;
-    private final UserRepository userRepository;
     private final ForumDtoMapper forumDtoMapper;
 
     public ForumDto saveForum(ForumDto forumDto) {

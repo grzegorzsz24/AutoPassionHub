@@ -13,11 +13,11 @@ import java.util.Map;
 public class ValidationService {
     public ResponseEntity<?> validate(BindingResult result) {
         if (result.hasErrors()) {
-            Map<String, String> errorsMap = new HashMap<String, String>();
+            Map<String, String> errorsMap = new HashMap<>();
             for (FieldError error : result.getFieldErrors()) {
                 errorsMap.put(error.getField(), error.getDefaultMessage());
             }
-            return new ResponseEntity<Map<String, String>>(errorsMap, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
         return null;
     }

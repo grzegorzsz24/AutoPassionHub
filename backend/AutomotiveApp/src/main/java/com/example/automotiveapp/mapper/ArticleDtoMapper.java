@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ArticleDtoMapper {
@@ -23,8 +25,8 @@ public class ArticleDtoMapper {
     public Article map(ArticleDto articleDto) {
         Article article = new Article();
         BeanUtils.copyProperties(articleDto, article);
-        User user = userRepository.findByNicknameIgnoreCase(articleDto.getUser()).get();
-        article.setUser(user);
+        Optional<User> user = userRepository.findByNicknameIgnoreCase(articleDto.getUser());
+        user.ifPresent(article::setUser);
         return article;
     }
 }

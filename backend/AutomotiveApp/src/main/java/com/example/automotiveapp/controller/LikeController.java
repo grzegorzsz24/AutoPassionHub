@@ -21,7 +21,7 @@ public class LikeController {
     private final PostService postService;
 
     @PostMapping
-    public ResponseEntity<LikeDto> addLike(@RequestBody LikeDto like){
+    public ResponseEntity<LikeDto> addLike(@RequestBody LikeDto like) {
         LikeDto savedLike = likeService.saveLike(like);
         URI savedLikeURI = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")

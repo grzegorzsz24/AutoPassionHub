@@ -23,7 +23,7 @@ public class CommentController {
     private final ObjectMapper objectMapper;
 
     @PostMapping
-    public ResponseEntity<CommentDto> addComment(@RequestBody CommentDto comment){
+    public ResponseEntity<CommentDto> addComment(@RequestBody CommentDto comment) {
         CommentDto savedComment = commentService.saveComment(comment);
         URI savedCommentURI = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
