@@ -1,5 +1,6 @@
 package com.example.automotiveapp.auth;
 
+import com.example.automotiveapp.repository.UserRepository;
 import com.example.automotiveapp.service.ValidationService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -15,9 +16,14 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final ValidationService validationService;
+    private final UserRepository userRepository;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@Valid @RequestBody RegisterRequest registerRequest, BindingResult result) {
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest registerRequest, BindingResult result) {
+        if (userRepository.findByEmail(registerRequest.getEmail()).isPresent() &&
+                userRepository.findByNicknameIgnoreCase(registerRequest.getNickname()).isPresent()) {
+            return ResponseEntity.badRequest().body("Użytkownik o podanym emailu lub nicknamie już istnieje!");
+        }
         ResponseEntity errors = validationService.validate(result);
         if (errors != null) {
             return errors;

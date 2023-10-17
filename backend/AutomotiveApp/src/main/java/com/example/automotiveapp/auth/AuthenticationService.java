@@ -6,6 +6,7 @@ import com.example.automotiveapp.domain.User;
 import com.example.automotiveapp.repository.RoleRepository;
 import com.example.automotiveapp.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;

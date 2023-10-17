@@ -29,9 +29,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String jwt = null;
         final String userEmail;
 
-        for (Cookie cookie : request.getCookies()) {
-            if (cookie.getName().equals("jwt")) {
-                jwt = cookie.getValue();
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if (cookie.getName().equals("jwt")) {
+                    jwt = cookie.getValue();
+                }
             }
         }
 
@@ -39,7 +41,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-
 
         userEmail = jwtService.extractUsername(jwt);
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
