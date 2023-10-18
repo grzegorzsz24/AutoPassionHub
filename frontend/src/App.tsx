@@ -5,6 +5,7 @@ import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
 import MainPageLayout from "./pages/MainPageLayout";
 import Notification from "./ui/Notification";
+import ProtectedRoute from "./ProtectedRoute";
 import RegisterPage from "./pages/RegisterPage";
 
 const router = createBrowserRouter([
@@ -14,7 +15,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <MainPageLayout />,
+        element: <ProtectedRoute element={<MainPageLayout />} />,
         children: [
           {
             path: "/",
