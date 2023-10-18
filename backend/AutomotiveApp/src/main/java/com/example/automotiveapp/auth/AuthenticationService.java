@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Set;
 
 @Service
@@ -60,10 +61,10 @@ public class AuthenticationService {
         cookie.setPath("/"); // Global
         response.addCookie(cookie);
         String userId = String.valueOf(user.getId());
-        LocalDateTime expirationDate = LocalDateTime.now().plusDays(7);
+        LocalDateTime expirationDate = LocalDateTime.now().plusDays(7).truncatedTo(ChronoUnit.SECONDS);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
         String formattedDate = expirationDate.format(formatter);
-        return AuthenticationResponse.builder().cookieExpirationDate(formattedDate).userId(userId).build();
+        return AuthenticationResponse.builder().cookieExpirationDate(expirationDate.toString()).userId(userId).build();
     }
 }

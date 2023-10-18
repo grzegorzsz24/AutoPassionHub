@@ -7,7 +7,7 @@ export interface UserState {
   email: string;
   nickname: string;
   photoUrl: string;
-  cookieExpirationDate: Date;
+  cookieExpirationDate: string;
 }
 
 const initialState: UserState = {
@@ -17,7 +17,7 @@ const initialState: UserState = {
   email: "",
   nickname: "",
   photoUrl: "",
-  cookieExpirationDate: new Date("1970-01-01"),
+  cookieExpirationDate: "1970-01-01",
 };
 
 if (localStorage.getItem("MotoSplotUser")) {
@@ -28,7 +28,7 @@ if (localStorage.getItem("MotoSplotUser")) {
   initialState.email = user.email;
   initialState.nickname = user.nickname;
   initialState.photoUrl = user.photoUrl;
-  initialState.cookieExpirationDate = new Date(user.cookieExpirationDate);
+  initialState.cookieExpirationDate = user.cookieExpirationDate;
 }
 
 const UserSlice = createSlice({
@@ -52,7 +52,7 @@ const UserSlice = createSlice({
       state.email = "";
       state.nickname = "";
       state.photoUrl = "";
-      state.cookieExpirationDate = new Date("1970-01-01");
+      state.cookieExpirationDate = "1970-01-01";
     },
   },
 });
