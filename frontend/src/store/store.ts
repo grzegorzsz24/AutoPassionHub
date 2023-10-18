@@ -3,6 +3,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import LoadingReducer from "./features/loadingSlice";
 import NotificationReducer from "./features/notificationSlice";
 import ThemeReducer from "./features/themeSlice";
+import UserReducer from "./features/userSlice";
 import { configureStore } from "@reduxjs/toolkit";
 
 const store = configureStore({
@@ -10,6 +11,7 @@ const store = configureStore({
     theme: ThemeReducer,
     loading: LoadingReducer,
     notification: NotificationReducer,
+    user: UserReducer,
   },
 });
 
