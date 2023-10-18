@@ -1,5 +1,6 @@
 package com.example.automotiveapp.auth;
 
+import com.example.automotiveapp.exception.ApiRequestException;
 import com.example.automotiveapp.repository.UserRepository;
 import com.example.automotiveapp.service.ValidationService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,9 +21,12 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest registerRequest, BindingResult result) {
-        if (userRepository.findByEmail(registerRequest.getEmail()).isPresent() &&
-                userRepository.findByNicknameIgnoreCase(registerRequest.getNickname()).isPresent()) {
-            return ResponseEntity.badRequest().body("Użytkownik o podanym emailu lub nicknamie już istnieje!");
+        if (userRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
+            throw new ApiRequestException("Użytkownik o podanym emailu już istnieje!");
+        }
+
+        if (userRepository.findByNicknameIgnoreCase(registerRequest.getNickname()).isPresent()) {
+            throw new ApiRequestException("Użytkownik o podanym nicku już istnieje!");
         }
         ResponseEntity errors = validationService.validate(result);
         if (errors != null) {
