@@ -70,9 +70,7 @@ public class AuthenticationService {
         response.addCookie(cookie);
         String userId = String.valueOf(user.getId());
         LocalDateTime expirationDate = LocalDateTime.now().plusDays(7).truncatedTo(ChronoUnit.SECONDS);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
-        String formattedDate = expirationDate.format(formatter);
         return AuthenticationResponse.builder()
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())

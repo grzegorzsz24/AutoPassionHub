@@ -2,32 +2,32 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export interface UserState {
   userId: string;
-  fistsName: string;
+  firstName: string;
   lastName: string;
   email: string;
   nickname: string;
-  photoUrl: string;
+  imageUrl: string;
   cookieExpirationDate: string;
 }
 
 const initialState: UserState = {
   userId: "",
-  fistsName: "",
+  firstName: "",
   lastName: "",
   email: "",
   nickname: "",
-  photoUrl: "",
+  imageUrl: "",
   cookieExpirationDate: "1970-01-01",
 };
 
 if (localStorage.getItem("MotoSplotUser")) {
   const user = JSON.parse(localStorage.getItem("MotoSplotUser") || "");
   initialState.userId = user.userId;
-  initialState.fistsName = user.fistsName;
+  initialState.firstName = user.fistsName;
   initialState.lastName = user.lastName;
   initialState.email = user.email;
   initialState.nickname = user.nickname;
-  initialState.photoUrl = user.photoUrl;
+  initialState.imageUrl = user.imageUrl;
   initialState.cookieExpirationDate = user.cookieExpirationDate;
 }
 
@@ -37,21 +37,21 @@ const UserSlice = createSlice({
   reducers: {
     setUser(state, action: PayloadAction<UserState>) {
       state.userId = action.payload.userId;
-      state.fistsName = action.payload.fistsName;
+      state.firstName = action.payload.firstName;
       state.lastName = action.payload.lastName;
       state.email = action.payload.email;
       state.nickname = action.payload.nickname;
-      state.photoUrl = action.payload.photoUrl;
+      state.imageUrl = action.payload.imageUrl;
       state.cookieExpirationDate = action.payload.cookieExpirationDate;
       localStorage.setItem("MotoSplotUser", JSON.stringify(action.payload));
     },
     clearUser(state) {
       state.userId = "";
-      state.fistsName = "";
+      state.firstName = "";
       state.lastName = "";
       state.email = "";
       state.nickname = "";
-      state.photoUrl = "";
+      state.imageUrl = "";
       state.cookieExpirationDate = "1970-01-01";
     },
   },

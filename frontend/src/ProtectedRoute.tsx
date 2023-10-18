@@ -9,10 +9,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element }) => {
   const { cookieExpirationDate } = useAppSelector((state) => state.user);
 
   const isAuthenticated = new Date(cookieExpirationDate) > new Date();
-  console.log(new Date(cookieExpirationDate));
-  console.log(new Date());
-  console.log(`isAuthenticated: ${isAuthenticated}`);
-
   return isAuthenticated ? element : <Navigate to="/login" />;
 };
 

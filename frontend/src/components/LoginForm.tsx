@@ -7,6 +7,8 @@ import { startLoading, stopLoading } from "../store/features/loadingSlice";
 import FormInput from "../ui/FormInput";
 import PrimaryButton from "../ui/PrimaryButton";
 import Validator from "../utils/Validator";
+import handleError from "../services/errorHandler";
+import { loginUser } from "../services/userService";
 import { setUser } from "../store/features/userSlice";
 import { useAppDispatch } from "../store/store";
 import useInput from "../hooks/useInput";
@@ -50,56 +52,35 @@ const LoginForm = () => {
 
     try {
       dispatch(startLoading());
-      console.log(`email: ${email}, password: ${password}`);
-      const response = await fetch("http://localhost:8080/auth/authenticate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
-      const data = await response.json();
-      if (data.error) {
-        throw new Error(data.message);
+      const response = await loginUser(email, password);
+      if (response.status === "ok") {
+        dispatch(
+          setUser({
+            userId: response.userId,
+            firstName: response.firstName,
+            lastName: response.lastName,
+            email: response.email,
+            nickname: response.nickname,
+            imageUrl: response.imageUrl,
+            cookieExpirationDate: response.cookieExpirationDate,
+          })
+        );
+        dispatch(
+          addNotification({
+            message: response.message,
+            type: NotificationStatus.SUCCESS,
+          })
+        );
+        navigate("/");
       }
-      dispatch(
-        setUser({
-          userId: data.userId,
-          fistsName: data.firstName,
-          lastName: data.lastName,
-          email: data.email,
-          nickname: data.nickname,
-          photoUrl: data.photoUrl,
-          cookieExpirationDate: data.cookieExpirationDate,
-        })
-      );
+    } catch (error) {
+      const newError = handleError(error);
       dispatch(
         addNotification({
-          message: "Zalogowano pomyślnie",
-          type: NotificationStatus.SUCCESS,
+          message: newError.message,
+          type: NotificationStatus.ERROR,
         })
       );
-      navigate("/");
-    } catch (error) {
-      console.log(error);
-      if (error instanceof Error) {
-        dispatch(
-          addNotification({
-            message: error.message,
-            type: NotificationStatus.ERROR,
-          })
-        );
-      } else {
-        dispatch(
-          addNotification({
-            message: "Wystąpił błąd podczas logowania",
-            type: NotificationStatus.ERROR,
-          })
-        );
-      }
     } finally {
       dispatch(stopLoading());
     }
