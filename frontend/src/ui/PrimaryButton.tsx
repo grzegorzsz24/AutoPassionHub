@@ -2,7 +2,7 @@ import { FC, ReactNode } from "react";
 
 interface PrimaryButtonProps {
   onClick: () => void;
-  size?: "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
   fullWidth?: boolean;
   children: ReactNode;
   disabled?: boolean;
@@ -18,6 +18,9 @@ const PrimaryButton: FC<PrimaryButtonProps> = ({
   let sizeClasses: string;
 
   switch (size) {
+    case "xs":
+      sizeClasses = "py-1 px-2 text-xs";
+      break;
     case "sm":
       sizeClasses = "py-1 px-2 text-sm";
       break;
