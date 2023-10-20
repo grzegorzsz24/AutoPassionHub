@@ -42,9 +42,11 @@ const Post: FC<PostProps> = ({
       />
       <PostText text={content} />
       {photos.length > 0 && <PostPhotos photos={photos} />}
-      <p>{liked ? "Liked" : "Not liked"}</p>
-      <p>{likes} likes</p>
-      <p>{comments} comments</p>
+      <div>
+        <p>{liked ? "Liked" : "Not liked"}</p>
+        <p>{likes} likes</p>
+        <p>{comments} comments</p>
+      </div>
     </div>
   );
 };
