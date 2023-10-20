@@ -2,8 +2,8 @@ import { useState } from "react";
 
 type ValidityFunction = (value: string) => boolean;
 
-const useInput = (validate: ValidityFunction) => {
-  const [value, setValue] = useState("");
+const useInput = (validate: ValidityFunction, defaultValue = "") => {
+  const [value, setValue] = useState(defaultValue);
   const [isTouched, setIsTouched] = useState(false);
 
   const isValid = validate(value);

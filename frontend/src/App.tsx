@@ -5,8 +5,13 @@ import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
 import MainPageLayout from "./pages/MainPageLayout";
 import Notification from "./ui/Notification";
+import OutletLayout from "./pages/OutletLayout";
 import ProtectedRoute from "./ProtectedRoute";
 import RegisterPage from "./pages/RegisterPage";
+import UserCloseAccountPage from "./pages/UserCloseAccountPage";
+import UserSettingsDataPage from "./pages/UserSettingsDataPage";
+import UserSettingsPageLayout from "./pages/UserSettingsPageLayout";
+import UserSettingsPrivacyPage from "./pages/UserSettingsPrivacyPage";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +45,34 @@ const router = createBrowserRouter([
           {
             path: "/forum",
             element: <p>Forum</p>,
+          },
+          {
+            path: "/me",
+            element: <OutletLayout />,
+            children: [
+              {
+                path: "",
+                element: <p>Profil</p>,
+              },
+              {
+                path: "settings",
+                element: <UserSettingsPageLayout />,
+                children: [
+                  {
+                    path: "data",
+                    element: <UserSettingsDataPage />,
+                  },
+                  {
+                    path: "privacy",
+                    element: <UserSettingsPrivacyPage />,
+                  },
+                  {
+                    path: "close",
+                    element: <UserCloseAccountPage />,
+                  },
+                ],
+              },
+            ],
           },
         ],
       },
