@@ -78,4 +78,78 @@ const loginUser = async (email: string, password: string) => {
   }
 };
 
-export { registerUser, loginUser };
+const updateUserData = async (
+  userId: string,
+  firstName: string,
+  lastName: string,
+  nickname: string,
+  email: string
+) => {
+  try {
+    const response = await fetch(`http://localhost:8080/user/${userId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId,
+        firstName,
+        lastName,
+        nickname,
+        email,
+      }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message);
+    }
+
+    return {
+      status: "ok",
+      message: "Dane osobowe zostały zmienione.",
+    };
+  } catch (error) {
+    return {
+      status: "error",
+      message:
+        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
+    };
+  }
+};
+
+const updateUserPassword = async (
+  currentPassword: string,
+  newPassword: string
+) => {
+  try {
+    const response = await fetch("http://localhost:8080/user/password", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        currentPassword,
+        newPassword,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message);
+    }
+    return {
+      status: "ok",
+      message: "Hasło zostało zmienione.",
+    };
+  } catch (error) {
+    return {
+      status: "error",
+      message:
+        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
+    };
+  }
+};
+
+export { registerUser, loginUser, updateUserData, updateUserPassword };

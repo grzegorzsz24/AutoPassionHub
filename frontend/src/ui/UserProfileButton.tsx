@@ -41,7 +41,7 @@ const UserProfileButton = () => {
             <Link to="/me">Mój profil</Link>
           </li>
           <li className="hover:underline transition">
-            <Link to="/me/settings">Ustawienia</Link>
+            <Link to="/me/settings/data">Ustawienia</Link>
           </li>
           <li className="hover:underline transition mt-2">
             <PrimaryButton size="sm" onClick={logout}>

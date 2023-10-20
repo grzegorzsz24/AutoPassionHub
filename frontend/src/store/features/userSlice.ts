@@ -23,13 +23,17 @@ const initialState: UserState = {
 if (localStorage.getItem("MotoSplotUser")) {
   const user = JSON.parse(localStorage.getItem("MotoSplotUser") || "");
   initialState.userId = user.userId;
-  initialState.firstName = user.fistsName;
+  initialState.firstName = user.firstName;
   initialState.lastName = user.lastName;
   initialState.email = user.email;
   initialState.nickname = user.nickname;
   initialState.imageUrl = user.imageUrl;
   initialState.cookieExpirationDate = user.cookieExpirationDate;
 }
+
+const clearLocalStorage = () => {
+  localStorage.removeItem("MotoSplotUser");
+};
 
 const UserSlice = createSlice({
   name: "user",
@@ -45,6 +49,29 @@ const UserSlice = createSlice({
       state.cookieExpirationDate = action.payload.cookieExpirationDate;
       localStorage.setItem("MotoSplotUser", JSON.stringify(action.payload));
     },
+    updateUser(state, action: PayloadAction<Partial<UserState>>) {
+      if (action.payload.firstName !== undefined) {
+        state.firstName = action.payload.firstName;
+      }
+
+      if (action.payload.lastName !== undefined) {
+        state.lastName = action.payload.lastName;
+      }
+
+      if (action.payload.email !== undefined) {
+        state.email = action.payload.email;
+      }
+
+      if (action.payload.nickname !== undefined) {
+        state.nickname = action.payload.nickname;
+      }
+
+      if (action.payload.imageUrl !== undefined) {
+        state.imageUrl = action.payload.imageUrl;
+      }
+
+      localStorage.setItem("MotoSplotUser", JSON.stringify(state));
+    },
     clearUser(state) {
       state.userId = "";
       state.firstName = "";
@@ -53,9 +80,10 @@ const UserSlice = createSlice({
       state.nickname = "";
       state.imageUrl = "";
       state.cookieExpirationDate = "1970-01-01";
+      clearLocalStorage();
     },
   },
 });
 
-export const { setUser, clearUser } = UserSlice.actions;
+export const { setUser, clearUser, updateUser } = UserSlice.actions;
 export default UserSlice.reducer;

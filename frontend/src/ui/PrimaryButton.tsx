@@ -2,7 +2,7 @@ import { FC, ReactNode } from "react";
 
 interface PrimaryButtonProps {
   onClick: () => void;
-  size?: "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
   fullWidth?: boolean;
   children: ReactNode;
   disabled?: boolean;
@@ -18,6 +18,9 @@ const PrimaryButton: FC<PrimaryButtonProps> = ({
   let sizeClasses: string;
 
   switch (size) {
+    case "xs":
+      sizeClasses = "py-1 px-2 text-xs";
+      break;
     case "sm":
       sizeClasses = "py-1 px-2 text-sm";
       break;
@@ -35,7 +38,7 @@ const PrimaryButton: FC<PrimaryButtonProps> = ({
   return (
     <button
       onClick={onClickMethod}
-      className={`bg-blue-600 rounded-md text-blue-50 font-semibold shadow-md hover:bg-blue-700 transition-all ${sizeClasses}`}
+      className={`bg-blue-600 rounded-md text-blue-50 font-semibold shadow-md hover:bg-blue-700 transition-all ${sizeClasses} disabled:opacity-50 disabled:cursor-not-allowed`}
       disabled={disabled}
     >
       {children}
