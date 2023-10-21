@@ -6,8 +6,6 @@ const formatDate = (date: string): string => {
       new Date(then.toISOString()).getTime()) /
     1000;
 
-  console.log(then, now, diff);
-
   if (diff < 5) {
     return "Przed chwilą";
   } else if (diff < 60) {

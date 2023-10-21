@@ -1,7 +1,10 @@
 import { FC } from "react";
+import Gallery from "../Gallery";
+import PostFooter from "./PostFooter";
 import PostHeader from "./PostHeader";
-import PostPhotos from "./PostPhotos";
 import PostText from "./PostText";
+
+// import PostPhotos from "./PostPhotos";
 
 interface PostProps {
   firstName: string;
@@ -41,12 +44,12 @@ const Post: FC<PostProps> = ({
         createdAt={createdAt}
       />
       <PostText text={content} />
-      {photos.length > 0 && <PostPhotos photos={photos} />}
-      <div>
-        <p>{liked ? "Liked" : "Not liked"}</p>
-        <p>{likes} likes</p>
-        <p>{comments} comments</p>
-      </div>
+      {photos.length > 0 && (
+        <div className="h-96">
+          <Gallery images={photos} />
+        </div>
+      )}
+      <PostFooter liked={liked} likes={likes} comments={comments} />
     </div>
   );
 };

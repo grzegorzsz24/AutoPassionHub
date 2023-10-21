@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import OutlineButton from "../../ui/OutlineButton";
-import formatDate from "../../utils/FormatDate";
+import formatDate from "../../utils/formatDate";
 import { useNavigate } from "react-router-dom";
 
 interface PostHeaderProps {
@@ -48,9 +48,11 @@ const PostHeader: FC<PostHeaderProps> = ({
           <p className="text-md font-bold">
             {firstName} {lastName}
           </p>
-          <div className="flex gap-4 items-center">
+          <div className="flex gap-2 items-center">
             <p className="text-sm">@{nickname}</p>
-            <p className="text-xs font-bold">{formatDate(createdAt)}</p>
+            <p className="text-xs font-bold text-blue-600">
+              {formatDate(createdAt)}
+            </p>
           </div>
         </div>
       </div>
@@ -63,7 +65,7 @@ const PostHeader: FC<PostHeaderProps> = ({
           <BiDotsHorizontalRounded className="text-2xl" />
         </p>
         {optionsAreShown && (
-          <div className="absolute right-0 bg-grayLight text-primaryDark dark:bg-grayDark dark:text-blue-50  py-2 px-4 flex flex-col gap-2 text-sm rounded-md">
+          <div className="absolute z-40 right-0 bg-grayLight text-primaryDark dark:bg-grayDark dark:text-blue-50  py-2 px-4 flex flex-col gap-2 text-sm rounded-md shadow-md">
             <OutlineButton size="xs" fullWidth={true} onClick={() => {}}>
               Dodaj do ulubionych
             </OutlineButton>
