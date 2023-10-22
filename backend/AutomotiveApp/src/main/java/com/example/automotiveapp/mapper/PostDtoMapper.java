@@ -1,7 +1,6 @@
 package com.example.automotiveapp.mapper;
 
 import com.example.automotiveapp.domain.File;
-import com.example.automotiveapp.domain.Forum;
 import com.example.automotiveapp.domain.Post;
 import com.example.automotiveapp.domain.User;
 import com.example.automotiveapp.dto.PostDto;
@@ -25,7 +24,6 @@ public class PostDtoMapper {
         PostDto postDto = new PostDto();
         BeanUtils.copyProperties(post, postDto);
         postDto.setUser(post.getUser().getNickname());
-        postDto.setForum(post.getForum().getName());
         List<String> imageUrls = new ArrayList<>(post.getFiles().stream()
                 .map(File::getFileUrl)
                 .toList());
@@ -37,9 +35,7 @@ public class PostDtoMapper {
         Post post = new Post();
         BeanUtils.copyProperties(postDto, post);
         Optional<User> user = userRepository.findByNicknameIgnoreCase(postDto.getUser());
-        Optional<Forum> forum = forumRepository.findByNameIgnoreCase(postDto.getForum());
         user.ifPresent(post::setUser);
-        forum.ifPresent(post::setForum);
         return post;
     }
 }

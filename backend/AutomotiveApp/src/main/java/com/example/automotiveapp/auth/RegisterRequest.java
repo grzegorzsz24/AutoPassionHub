@@ -17,6 +17,8 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterRequest {
+    @NotBlank
+    @Size(min = 2, max = 50)
     private String firstName;
     @NotBlank
     @Size(min = 2, max = 50)

@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ApiExceptionHandler {
 
-    @ExceptionHandler(value = {ApiRequestException.class})
-    public ResponseEntity<Object> handleApiRequestException(ApiRequestException e) {
+    @ExceptionHandler(value = {BadRequestException.class})
+    public ResponseEntity<Object> handleBadRequestException(BadRequestException e) {
         HttpStatus badRequest = HttpStatus.BAD_REQUEST;
 
         ApiException apiException = new ApiException(
@@ -18,5 +18,17 @@ public class ApiExceptionHandler {
         );
 
         return new ResponseEntity<>(apiException, badRequest);
+    }
+
+    @ExceptionHandler(value = {ResourceNotFoundException.class})
+    public ResponseEntity<Object> handleNotFoundException(ResourceNotFoundException e) {
+        HttpStatus notFound = HttpStatus.NOT_FOUND;
+
+        ApiException apiException = new ApiException(
+                e.getMessage(),
+                notFound
+        );
+
+        return new ResponseEntity<>(apiException, notFound);
     }
 }

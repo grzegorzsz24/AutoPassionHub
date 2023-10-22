@@ -16,6 +16,5 @@ public class PostDto {
     private boolean isLiked;
     private List<MultipartFile> file;
     private String user;
-    private String forum;
     private List<String> imageUrls;
 }

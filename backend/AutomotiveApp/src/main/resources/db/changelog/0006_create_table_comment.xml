@@ -20,9 +20,15 @@
                                  referencedColumnNames="id"/>
                 </column>
                 <column name="post_id" type="BIGINT">
-                    <constraints nullable="false"
+                    <constraints nullable="true"
                                  foreignKeyName="fk_comment_post"
                                  referencedTableName="post"
+                                 referencedColumnNames="id"/>
+                </column>
+                <column name="forum_id" type="BIGINT">
+                    <constraints nullable="true"
+                                 foreignKeyName="fk_comment_forum"
+                                 referencedTableName="forum"
                                  referencedColumnNames="id"/>
                 </column>
             </createTable>

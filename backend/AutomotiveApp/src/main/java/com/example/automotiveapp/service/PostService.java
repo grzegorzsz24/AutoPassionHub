@@ -60,9 +60,4 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public List<PostDto> findPostsByForumId(Long id) {
-        return postRepository.findAllByForum_Id(id).stream()
-                .map(PostDtoMapper::map)
-                .toList();
-    }
 }

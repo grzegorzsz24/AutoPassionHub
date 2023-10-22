@@ -1,7 +1,6 @@
 package com.example.automotiveapp.controller;
 
 import com.example.automotiveapp.dto.PostDto;
-import com.example.automotiveapp.service.ForumService;
 import com.example.automotiveapp.service.PostService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -9,14 +8,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -25,7 +21,6 @@ import java.util.NoSuchElementException;
 public class PostController {
     private final PostService postService;
     private final ObjectMapper objectMapper;
-    private final ForumService forumService;
 
     @PostMapping
     public ResponseEntity<PostDto> addPost(@ModelAttribute PostDto post) {
@@ -56,13 +51,6 @@ public class PostController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/{forumId}")
-    public ResponseEntity<List<PostDto>> getAllForumPosts(@PathVariable Long forumId) {
-        forumService.findForumById(forumId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        return ResponseEntity.ok(postService.findPostsByForumId(forumId));
     }
 
     private PostDto applyPatch(PostDto postDto, JsonMergePatch patch) throws JsonPatchException, JsonProcessingException {

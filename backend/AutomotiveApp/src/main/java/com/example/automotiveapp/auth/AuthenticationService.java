@@ -16,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Set;
 
@@ -31,9 +30,12 @@ public class AuthenticationService {
     private final FileRepository fileRepository;
 
     public AuthenticationResponse register(RegisterRequest registerRequest) {
-        Role role = new Role("USER");
         File file = new File();
         file.setFileUrl("default_profile_picture.jpg");
+        Role userRole = roleRepository.findByName("USER").orElseGet(() -> {
+            Role newUserRole = new Role("USER");
+            return roleRepository.save(newUserRole);
+        });
 
         var user = User.builder()
                 .firstName(registerRequest.getFirstName())
@@ -41,12 +43,11 @@ public class AuthenticationService {
                 .nickname(registerRequest.getNickname())
                 .email(registerRequest.getEmail())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
-                .roles(Set.of(role))
+                .roles(Set.of(userRole))
                 .file(file)
                 .dateOfBirth(registerRequest.getDateOfBirth())
                 .build();
         file.setUser(user);
-        roleRepository.save(role);
         userRepository.save(user);
         fileRepository.save(file);
         return AuthenticationResponse.builder().build();

@@ -24,12 +24,6 @@
                              referencedTableName="users"
                              referencedColumnNames="id"/>
             </column>
-            <column name="forum_id" type="BIGINT">
-                <constraints nullable="false"
-                             foreignKeyName="fk_post_forum"
-                             referencedTableName="forum"
-                             referencedColumnNames="id"/>
-            </column>
         </createTable>
 
         <createTable tableName="file">

@@ -13,4 +13,5 @@ public class CommentDto {
     private LocalDateTime commentedAt;
     private String user;
     private Long post;
+    private Long forum;
 }

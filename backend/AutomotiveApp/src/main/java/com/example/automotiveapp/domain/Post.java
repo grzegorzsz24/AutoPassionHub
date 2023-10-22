@@ -19,13 +19,10 @@ public class Post {
     private String content;
     private LocalDateTime postedAt;
     private boolean isLiked;
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
-
-    @ManyToOne()
-    @JoinColumn(name = "forum_id")
-    private Forum forum;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private Set<File> files = new HashSet<>();
