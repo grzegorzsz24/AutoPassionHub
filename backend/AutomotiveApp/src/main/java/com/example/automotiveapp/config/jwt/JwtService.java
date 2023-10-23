@@ -1,4 +1,4 @@
-package com.example.automotiveapp.config;
+package com.example.automotiveapp.config.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

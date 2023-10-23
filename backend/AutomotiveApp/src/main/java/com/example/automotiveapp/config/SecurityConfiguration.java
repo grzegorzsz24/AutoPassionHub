@@ -1,5 +1,6 @@
 package com.example.automotiveapp.config;
 
+import com.example.automotiveapp.config.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,7 +42,7 @@ public class SecurityConfiguration {
                                     antMatcher("/v3/**"),
                                     antMatcher("/api/v1/auth/**"))
                             .permitAll();
-                    requests.requestMatchers(new AntPathRequestMatcher("/user/**"))
+                    requests.requestMatchers(new AntPathRequestMatcher("/user/**"), antMatcher("/uploads/**"))
                             .hasAuthority("USER")
                             .anyRequest()
                             .authenticated();

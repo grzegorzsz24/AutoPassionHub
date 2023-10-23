@@ -1,6 +1,6 @@
 package com.example.automotiveapp.auth;
 
-import com.example.automotiveapp.config.JwtService;
+import com.example.automotiveapp.config.jwt.JwtService;
 import com.example.automotiveapp.domain.File;
 import com.example.automotiveapp.domain.Role;
 import com.example.automotiveapp.domain.User;
@@ -65,19 +65,19 @@ public class AuthenticationService {
         var jwtToken = jwtService.generateToken(user);
         Cookie cookie = new Cookie("jwt", jwtToken);
         cookie.setMaxAge(7 * 24 * 60 * 60);
-//      cookie.setSecure(true);
+        // cookie.setSecure(true);
         cookie.setHttpOnly(true);
-        cookie.setPath("/"); // Global
+        cookie.setPath("/");
         response.addCookie(cookie);
         String userId = String.valueOf(user.getId());
         LocalDateTime expirationDate = LocalDateTime.now().plusDays(7).truncatedTo(ChronoUnit.SECONDS);
-
+        String resourceUrl = "http://localhost:8080/images/" + user.getFile().getFileUrl();
         return AuthenticationResponse.builder()
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .nickname(user.getNickname())
                 .email(user.getEmail())
-                .imageUrl(user.getFile().getFileUrl())
+                .imageUrl(resourceUrl)
                 .cookieExpirationDate(expirationDate.toString())
                 .userId(userId)
                 .build();

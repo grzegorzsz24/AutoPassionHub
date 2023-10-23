@@ -8,6 +8,7 @@ import com.example.automotiveapp.service.ValidationService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
@@ -19,6 +20,7 @@ import java.util.Optional;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 @CrossOrigin
+@Slf4j
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final ValidationService validationService;
