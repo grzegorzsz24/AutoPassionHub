@@ -1,6 +1,5 @@
 package com.example.automotiveapp.config.jwt;
 
-import com.example.automotiveapp.config.jwt.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;

@@ -1,10 +1,7 @@
 package com.example.automotiveapp.controller;
 
 import com.example.automotiveapp.dto.ArticleDto;
-import com.example.automotiveapp.exception.BadRequestException;
-import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.service.ArticleService;
-import com.example.automotiveapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

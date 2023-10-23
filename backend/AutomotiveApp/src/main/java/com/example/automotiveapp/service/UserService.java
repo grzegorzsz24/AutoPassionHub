@@ -1,43 +1,38 @@
 package com.example.automotiveapp.service;
 
-import com.example.automotiveapp.auth.AuthenticationRequest;
-import com.example.automotiveapp.auth.AuthenticationService;
 import com.example.automotiveapp.config.jwt.JwtService;
 import com.example.automotiveapp.domain.File;
 import com.example.automotiveapp.domain.User;
 import com.example.automotiveapp.dto.UserDto;
 import com.example.automotiveapp.exception.BadRequestException;
+import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.mapper.UserDtoMapper;
 import com.example.automotiveapp.repository.FileRepository;
 import com.example.automotiveapp.repository.UserRepository;
 import com.example.automotiveapp.storage.FileStorageService;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class UserService {
     private final UserRepository userRepository;
     private final FileStorageService fileStorageService;
     private final FileRepository fileRepository;
-    private final UserDtoMapper userDtoMapper;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
 
@@ -69,20 +64,44 @@ public class UserService {
         user.ifPresent(value -> userRepository.deleteById(value.getId()));
     }
 
-    public Optional<UserDto> findUserById(Long id) {
-        return userRepository.findById(id).map(UserDtoMapper::map);
-    }
+    public void updateUser(Map<String, Object> fields, HttpServletResponse response) {
+        Optional<User> user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        if (user.isEmpty()) {
+            throw new ResourceNotFoundException("Nie znaleziono użytkownika");
+        }
 
-    public void updateUser(UserDto userToUpdate, HttpServletResponse response) {
-        User user = userDtoMapper.map(userToUpdate);
-        userRepository.save(user);
-        updateSecurityContext(response, user);
+        if (fields.containsKey("email")) {
+            String email = (String) fields.get("email");
+            if (email.equals(user.get().getEmail())) {
+                throw new BadRequestException("Podałeś swój aktualny email");
+            } else if (userRepository.findByEmail(email).isPresent()) {
+                throw new BadRequestException("Użytkownik z podanym emailem już istnieje");
+            }
+        }
+
+        if (fields.containsKey("nickname")) {
+            String nickname = (String) fields.get("nickname");
+            if (nickname.equals(user.get().getNickname())) {
+                throw new BadRequestException("Podałes swój aktualny nickname");
+            } else if (userRepository.findByNicknameIgnoreCase(nickname).isPresent()) {
+                throw new BadRequestException("Użytkownik z podanym nickname już istnieje");
+            }
+        }
+
+        fields.forEach((key, value) -> {
+            Field field = ReflectionUtils.findField(User.class, key);
+            assert field != null;
+            field.setAccessible(true);
+            ReflectionUtils.setField(field, user.get(), value);
+        });
+
+        userRepository.save(user.get());
+        updateSecurityContext(response, user.get());
     }
 
     private void updateSecurityContext(HttpServletResponse response, User user) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication instanceof UsernamePasswordAuthenticationToken) {
-            UsernamePasswordAuthenticationToken currentAuth = (UsernamePasswordAuthenticationToken) authentication;
+        if (authentication instanceof UsernamePasswordAuthenticationToken currentAuth) {
 
             User userDetail = (User) currentAuth.getPrincipal();
             BeanUtils.copyProperties(user, userDetail);
@@ -100,21 +119,22 @@ public class UserService {
         response.addCookie(jwtCookie);
     }
 
-    public Optional<UserDto> findUserByEmail(String email) {
-        return userRepository.findByEmail(email).map(UserDtoMapper::map);
-    }
+    public void updatePassword(String oldPassword, String newPassword, HttpServletResponse response) {
+        Optional<User> user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 
-    public void updatePassword(String password, HttpServletResponse response) {
-        User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).get();
-        if (passwordEncoder.matches(password, user.getPassword())) {
-            throw new BadRequestException("Podano stare hasło");
+        if (user.isEmpty()) {
+            throw new ResourceNotFoundException("Nie znaleziono użytkownika");
         }
-        user.setPassword(passwordEncoder.encode(password));
-        userRepository.save(user);
-        updateSecurityContext(response, user);
-    }
 
-    public UserDto getCurrentUser() {
-        return userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).map(UserDtoMapper::map).get();
+        if (!passwordEncoder.matches(oldPassword, user.get().getPassword())) {
+            throw new BadRequestException("Podano nieprawidłowe obecne hasło");
+        }
+
+        if (newPassword.equals(oldPassword)) {
+            throw new BadRequestException("Podane hasło musi być inne niż poprzednie");
+        }
+        user.get().setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user.get());
+        updateSecurityContext(response, user.get());
     }
 }
