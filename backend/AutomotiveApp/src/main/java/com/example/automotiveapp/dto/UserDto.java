@@ -31,4 +31,5 @@ public class UserDto {
     @NotBlank
     @Size(min = 8)
     private String password;
+    private boolean publicProfile;
 }

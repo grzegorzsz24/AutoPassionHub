@@ -1,5 +1,6 @@
 package com.example.automotiveapp.controller;
 
+import com.example.automotiveapp.exception.BadRequestException;
 import com.example.automotiveapp.reponse.ApiResponse;
 import com.example.automotiveapp.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,24 +22,24 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/add-profile-picture")
-    public ResponseEntity<String> addProfilePicture(@RequestParam MultipartFile file) {
+    public ResponseEntity<?> addProfilePicture(@RequestParam MultipartFile file) {
         if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body("Wybrany plik jest pusty");
+            throw new BadRequestException("Nie podano pliku");
         }
         userService.saveOrUpdateProfilePicture(file);
-        return ResponseEntity.ok("Zdjęcie profilowe zostało pomyślnie zaktualizowane");
+        return ResponseEntity.ok(new ApiResponse("Zdjęcie profilowe zostało pomyślnie zaktualizowane", HttpStatus.OK));
     }
 
     @DeleteMapping
-    public ResponseEntity<String> deleteOwnAccount() {
+    public ResponseEntity<?> deleteOwnAccount() {
         userService.deleteAccount();
-        return ResponseEntity.ok("Twoje konto zostało pomyślnie usunięte");
+        return ResponseEntity.ok(new ApiResponse("Twoje konto zostało pomyślnie usunięte", HttpStatus.OK));
     }
 
     @PatchMapping
     public ResponseEntity<?> updateUserDetails(@Valid @RequestBody Map<String, Object> fields, HttpServletResponse response) {
         userService.updateUser(fields, response);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(new ApiResponse("Dane zostały pomyślnie zaktualizowane", HttpStatus.OK));
     }
 
     @PostMapping("/update-password")
@@ -46,4 +47,11 @@ public class UserController {
         userService.updatePassword(oldPassword, newPassword, response);
         return ResponseEntity.ok(new ApiResponse("Hasło zostało pomyślnie zmienione", HttpStatus.OK));
     }
+
+    @PostMapping("/profile-visibility")
+    public ResponseEntity<?> changeProfileVisibility(@RequestParam boolean visible) {
+        userService.setProfileVisibility(visible);
+        return ResponseEntity.ok(new ApiResponse("Widoczność profilu została zmieniona", HttpStatus.OK));
+    }
+
 }

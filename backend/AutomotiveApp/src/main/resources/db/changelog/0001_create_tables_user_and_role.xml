@@ -27,6 +27,7 @@
             <column name="date_of_birth" type="DATE">
                 <constraints nullable="false"/>
             </column>
+            <column name="public_profile" type="BOOLEAN"/>
         </createTable>
 
         <createTable tableName="roles">

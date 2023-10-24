@@ -46,6 +46,7 @@ public class AuthenticationService {
                 .roles(Set.of(userRole))
                 .file(file)
                 .dateOfBirth(registerRequest.getDateOfBirth())
+                .publicProfile(true)
                 .build();
         file.setUser(user);
         userRepository.save(user);

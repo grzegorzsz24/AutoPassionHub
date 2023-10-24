@@ -137,4 +137,17 @@ public class UserService {
         userRepository.save(user.get());
         updateSecurityContext(response, user.get());
     }
+
+    public void setProfileVisibility(boolean visible) {
+        Optional<User> user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        if (user.isEmpty()) {
+            throw new ResourceNotFoundException("Nie znaleziono użytkownika");
+        }
+        if (visible) {
+            user.get().setPublicProfile(true);
+        } else {
+            user.get().setPublicProfile(false);
+            }
+        userRepository.save(user.get());
+    }
 }

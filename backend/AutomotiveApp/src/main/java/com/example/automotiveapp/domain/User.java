@@ -29,6 +29,7 @@ public class User implements UserDetails {
     private String password;
     @Column(name = "date_of_birth", columnDefinition = "DATE")
     private Date dateOfBirth;
+    private boolean publicProfile;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_role",
