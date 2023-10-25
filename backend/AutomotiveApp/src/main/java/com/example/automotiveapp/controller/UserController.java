@@ -1,6 +1,7 @@
 package com.example.automotiveapp.controller;
 
 import com.example.automotiveapp.exception.BadRequestException;
+import com.example.automotiveapp.reponse.ApiImageResponse;
 import com.example.automotiveapp.reponse.ApiResponse;
 import com.example.automotiveapp.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,8 +28,9 @@ public class UserController {
         if (file.isEmpty()) {
             throw new BadRequestException("Nie podano pliku");
         }
-        userService.saveOrUpdateProfilePicture(file);
-        return ResponseEntity.ok(new ApiResponse("Zdjęcie profilowe zostało pomyślnie zaktualizowane", HttpStatus.OK));
+        String imageUrl = userService.saveOrUpdateProfilePicture(file);
+        return ResponseEntity.ok(new ApiImageResponse("Zdjęcie profilowe zostało pomyślnie zaktualizowane",
+                HttpStatus.OK, imageUrl));
     }
 
     @DeleteMapping

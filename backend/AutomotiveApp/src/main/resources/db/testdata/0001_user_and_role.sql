@@ -6,7 +6,7 @@ values
 insert into
     roles (name)
 values
-    ('USERTEST');
+    ('USER');
 
 insert into
     user_role (user_id, role_id)

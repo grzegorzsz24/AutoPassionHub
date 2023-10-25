@@ -41,7 +41,7 @@ public class UserService {
                 .map(UserDtoMapper::map);
     }
 
-    public void saveOrUpdateProfilePicture(MultipartFile file) {
+    public String saveOrUpdateProfilePicture(MultipartFile file) {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         String imageUrl = fileStorageService.saveImage(List.of(file)).get(0);
         Optional<User> user = userRepository.findByEmail(userEmail);
@@ -57,6 +57,7 @@ public class UserService {
                 fileRepository.save(fileToSave);
             }
         }
+        return "http://localhost:8080/images/" + imageUrl;
     }
 
     public void deleteAccount() {
