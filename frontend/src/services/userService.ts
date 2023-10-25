@@ -52,6 +52,7 @@ const loginUser = async (email: string, password: string) => {
   try {
     const response = await fetch("http://localhost:8080/auth/authenticate", {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -79,25 +80,25 @@ const loginUser = async (email: string, password: string) => {
 };
 
 const updateUserData = async (
-  userId: string,
-  firstName: string,
-  lastName: string,
-  nickname: string,
-  email: string
+  firstName?: string,
+  lastName?: string,
+  nickname?: string,
+  email?: string
 ) => {
   try {
-    const response = await fetch(`http://localhost:8080/user/${userId}`, {
+    const payload: { [key: string]: string } = {};
+    if (firstName) payload.firstName = firstName;
+    if (lastName) payload.lastName = lastName;
+    if (nickname) payload.nickname = nickname;
+    if (email) payload.email = email;
+
+    const response = await fetch(`http://localhost:8080/user`, {
       method: "PATCH",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        userId,
-        firstName,
-        lastName,
-        nickname,
-        email,
-      }),
+      body: JSON.stringify(payload),
     });
 
     const data = await response.json();
@@ -125,6 +126,7 @@ const updateUserPassword = async (
   try {
     const response = await fetch("http://localhost:8080/user/password", {
       method: "PATCH",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },

@@ -9,7 +9,9 @@ import { useState } from "react";
 const UserProfileButton = () => {
   const [isHovering, setIsHovering] = useState(false);
   const dispatch = useAppDispatch();
-  const { firstName, lastName } = useAppSelector((state) => state.user);
+  const { firstName, lastName, imageUrl } = useAppSelector(
+    (state) => state.user
+  );
 
   const logout = () => {
     dispatch(clearUser());
@@ -27,7 +29,7 @@ const UserProfileButton = () => {
     >
       <button className="flex items-center gap-2 py-2 text-blue-900 dark:text-blue-50 relative group">
         <img
-          src="anonim.webp"
+          src={`${imageUrl}`}
           className="w-8 h-8 xl:w-12 xl:h-12 rounded-full group-hover:ring-4 group-hover:ring-blue-600 transition-all"
         />
         <span className="block font-semibold text-sm xl:text-lg">

@@ -18,6 +18,7 @@ import java.util.Map;
 @RequestMapping("/user")
 @RequiredArgsConstructor
 @Slf4j
+@CrossOrigin(origins = "http://127.0.0.1:5173/")
 public class UserController {
     private final UserService userService;
 
