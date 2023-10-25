@@ -66,10 +66,17 @@ public class AuthenticationService {
         var jwtToken = jwtService.generateToken(user);
         Cookie cookie = new Cookie("jwt", jwtToken);
         cookie.setMaxAge(7 * 24 * 60 * 60);
-        // cookie.setSecure(true);
+         cookie.setSecure(false);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
         response.addCookie(cookie);
+//        response.addHeader("Set-Cookie", cookie.toString());
+        String cookieValue = "jwt=" + jwtToken + "; Max-Age=" + (7 * 24 * 60 * 60) + "; Secure; HttpOnly; Path=/; SameSite=None";
+        response.addHeader("Set-Cookie", cookieValue);
+        response.setHeader("Access-Control-Allow-Headers",
+                "Date, Content-Type, Accept, X-Requested-With, Authorization, From, X-Auth-Token, Request-Id");
+        response.setHeader("Access-Control-Expose-Headers", "Set-Cookie");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
         String userId = String.valueOf(user.getId());
         LocalDateTime expirationDate = LocalDateTime.now().plusDays(7).truncatedTo(ChronoUnit.SECONDS);
         String resourceUrl = "http://localhost:8080/images/" + user.getFile().getFileUrl();

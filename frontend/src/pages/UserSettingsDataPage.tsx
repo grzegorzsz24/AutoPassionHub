@@ -14,7 +14,7 @@ import useInput from "../hooks/useInput";
 
 const UserSettingsDataPage = () => {
   const dispatch = useAppDispatch();
-  const { firstName, lastName, email, nickname, userId } = useAppSelector(
+  const { firstName, lastName, email, nickname } = useAppSelector(
     (state) => state.user
   );
 
@@ -105,11 +105,10 @@ const UserSettingsDataPage = () => {
     try {
       dispatch(startLoading());
       const response = await updateUserData(
-        userId,
-        newFirstName,
-        newLastName,
-        newNickname,
-        newEmail
+        newFirstName === firstName ? "" : newFirstName,
+        newLastName === lastName ? "" : newLastName,
+        newNickname === nickname ? "" : newNickname,
+        newEmail === email ? "" : newEmail
       );
 
       if (response.status !== "ok") {

@@ -19,7 +19,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-@CrossOrigin
+//@CrossOrigin(origins = "http://127.0.0.1:5173/")
+@CrossOrigin(origins = "http://127.0.0.1:5173", allowCredentials = "true")
 @Slf4j
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
