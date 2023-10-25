@@ -43,7 +43,7 @@ public class SecurityConfiguration {
                                     antMatcher("/api/v1/auth/**"))
                             .permitAll();
                     requests.requestMatchers(new AntPathRequestMatcher("/user/**"), antMatcher("/uploads/**"))
-                            .hasAuthority("USER")
+                            .hasAnyAuthority("USER", "USERTEST")
                             .anyRequest()
                             .authenticated();
                 })

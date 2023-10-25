@@ -70,7 +70,6 @@ public class AuthenticationService {
         cookie.setHttpOnly(true);
         cookie.setPath("/");
         response.addCookie(cookie);
-//        response.addHeader("Set-Cookie", cookie.toString());
         String cookieValue = "jwt=" + jwtToken + "; Max-Age=" + (7 * 24 * 60 * 60) + "; Secure; HttpOnly; Path=/; SameSite=None";
         response.addHeader("Set-Cookie", cookieValue);
         response.setHeader("Access-Control-Allow-Headers",
