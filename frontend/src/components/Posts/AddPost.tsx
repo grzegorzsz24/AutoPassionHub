@@ -12,7 +12,13 @@ const AddPost = () => {
 
   const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = e.target.files;
-    const selectedFilesArray = Array.from(selectedFiles!);
+    const selectedFilesArray = Array.from(selectedFiles!).filter((file) => {
+      return (
+        file.type === "image/png" ||
+        file.type === "image/jpeg" ||
+        file.type === "image/jpg"
+      );
+    });
 
     const imagesArray = selectedFilesArray.map((file) => {
       return { file, url: URL.createObjectURL(file) };
@@ -35,13 +41,13 @@ const AddPost = () => {
         <img
           src="anonim.webp"
           alt=""
-          className="w-16 h-16 rounded-full shadow-md"
+          className="w-12 h-12 rounded-full shadow-md"
         />
         <textarea
           name=""
           id=""
           placeholder="Co słychać?"
-          className="bg-transparent resize-none w-full outline-none border-none h-32  overflow-auto my-4 px-2 "
+          className="bg-transparent resize-none w-full outline-none border-none rounded-md h-32  overflow-auto py-2 px-2 focus:ring-2 focus:ring-blue-600"
         />
       </div>
 

@@ -1,4 +1,4 @@
-import InfoAside from "../components/InfoAside";
+import InfoAside from "../components/InfoAside/InfoAside";
 import Posts from "../components/Posts/Posts";
 
 const MainPage = () => {

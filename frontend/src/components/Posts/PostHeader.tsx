@@ -1,8 +1,8 @@
 import { FC, useState } from "react";
 
 import { BiDotsHorizontalRounded } from "react-icons/bi";
+import DateFormatter from "../../utils/formatDate";
 import OutlineButton from "../../ui/OutlineButton";
-import formatDate from "../../utils/formatDate";
 import { useNavigate } from "react-router-dom";
 
 interface PostHeaderProps {
@@ -33,25 +33,27 @@ const PostHeader: FC<PostHeaderProps> = ({
 
   return (
     <div className=" py-4 px-4 flex items-center justify-between">
-      <div className="flex gap-2">
+      <div className="flex gap-4">
         <img
           src={avatar}
           alt={`${firstName} ${lastName} picture`}
-          className="w-16 h-16 rounded-full"
+          className="w-12 h-12 rounded-full"
         />
         <div
-          className="flex flex-col cursor-pointer"
+          className="flex flex-col gap-1"
           onClick={() => {
             navigate(`/user/${nickname}`);
           }}
         >
-          <p className="text-md font-bold">
-            {firstName} {lastName}
-          </p>
+          <div className="flex gap-2 items-center cursor-pointer">
+            <p className="text-md font-bold">
+              {firstName} {lastName}
+            </p>
+            <p className="text-sm text-blue-600">@{nickname}</p>
+          </div>
           <div className="flex gap-2 items-center">
-            <p className="text-sm">@{nickname}</p>
-            <p className="text-xs font-bold text-blue-600">
-              {formatDate(createdAt)}
+            <p className="text-[0.6rem] ">
+              {DateFormatter.formatDate(createdAt)}
             </p>
           </div>
         </div>
