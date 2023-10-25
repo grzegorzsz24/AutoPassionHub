@@ -87,6 +87,7 @@ public class AuthenticationService {
                 .imageUrl(resourceUrl)
                 .cookieExpirationDate(expirationDate.toString())
                 .userId(userId)
+                .publicProfile(user.isPublicProfile())
                 .build();
     }
 }

@@ -19,4 +19,5 @@ public class AuthenticationResponse {
     private String cookieExpirationDate;
     private String userId;
     private String imageUrl;
+    private boolean publicProfile;
 }
