@@ -8,10 +8,11 @@ import Notification from "./ui/Notification";
 import OutletLayout from "./pages/OutletLayout";
 import ProtectedRoute from "./ProtectedRoute";
 import RegisterPage from "./pages/RegisterPage";
-import UserCloseAccountPage from "./pages/UserCloseAccountPage";
-import UserSettingsDataPage from "./pages/UserSettingsDataPage";
-import UserSettingsPageLayout from "./pages/UserSettingsPageLayout";
-import UserSettingsPrivacyPage from "./pages/UserSettingsPrivacyPage";
+import UserCloseAccountPage from "./pages/UserSettings/UserCloseAccountPage";
+import UserSettingsDataPage from "./pages/UserSettings/UserSettingsDataPage";
+import UserSettingsPageLayout from "./pages/UserSettings/UserSettingsPageLayout";
+import UserSettingsPhoto from "./pages/UserSettings/UserSettingsPhoto";
+import UserSettingsPrivacyPage from "./pages/UserSettings/UserSettingsPrivacyPage";
 
 const router = createBrowserRouter([
   {
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
                   {
                     path: "close",
                     element: <UserCloseAccountPage />,
+                  },
+                  {
+                    path: "photo",
+                    element: <UserSettingsPhoto />,
                   },
                 ],
               },

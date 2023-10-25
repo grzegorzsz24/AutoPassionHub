@@ -6,6 +6,7 @@ interface PrimaryButtonProps {
   fullWidth?: boolean;
   children: ReactNode;
   disabled?: boolean;
+  type?: "button" | "submit" | "reset";
 }
 
 const PrimaryButton: FC<PrimaryButtonProps> = ({
@@ -14,6 +15,7 @@ const PrimaryButton: FC<PrimaryButtonProps> = ({
   fullWidth = false,
   children,
   disabled = false,
+  type = "button",
 }) => {
   let sizeClasses: string;
 
@@ -33,6 +35,18 @@ const PrimaryButton: FC<PrimaryButtonProps> = ({
 
   if (fullWidth) {
     sizeClasses += " w-full";
+  }
+
+  if (type === "submit") {
+    return (
+      <button
+        className={`bg-blue-600 rounded-md text-blue-50 font-semibold shadow-md hover:bg-blue-700 transition-all ${sizeClasses} disabled:opacity-50 disabled:cursor-not-allowed`}
+        disabled={disabled}
+        type={type}
+      >
+        {children}
+      </button>
+    );
   }
 
   return (

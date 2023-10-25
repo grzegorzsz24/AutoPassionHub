@@ -1,4 +1,4 @@
-import PrimaryButton from "../ui/PrimaryButton";
+import PrimaryButton from "../../ui/PrimaryButton";
 import { useState } from "react";
 
 const UserSettingsPrivacyPage = () => {
@@ -13,7 +13,7 @@ const UserSettingsPrivacyPage = () => {
   };
 
   return (
-    <div className="w-96">
+    <div className="max-w-xl">
       <h2 className="font-bold text-lg mb-6 dark:text-blue-50">
         Kto zobaczy twoje treści?
       </h2>

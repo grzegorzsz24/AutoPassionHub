@@ -82,8 +82,13 @@ const UserSlice = createSlice({
       state.cookieExpirationDate = "1970-01-01";
       clearLocalStorage();
     },
+    updateUserImage(state, action: PayloadAction<string>) {
+      state.imageUrl = action.payload;
+      localStorage.setItem("MotoSplotUser", JSON.stringify(state));
+    },
   },
 });
 
-export const { setUser, clearUser, updateUser } = UserSlice.actions;
+export const { setUser, clearUser, updateUser, updateUserImage } =
+  UserSlice.actions;
 export default UserSlice.reducer;
