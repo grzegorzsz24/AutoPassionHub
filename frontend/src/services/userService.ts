@@ -124,17 +124,16 @@ const updateUserPassword = async (
   newPassword: string
 ) => {
   try {
-    const response = await fetch("http://localhost:8080/user/password", {
-      method: "PATCH",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        currentPassword,
-        newPassword,
-      }),
-    });
+    const response = await fetch(
+      `http://localhost:8080/user/update-password?oldPassword=${currentPassword}&newPassword=${newPassword}`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     const data = await response.json();
 
@@ -154,4 +153,41 @@ const updateUserPassword = async (
   }
 };
 
-export { registerUser, loginUser, updateUserData, updateUserPassword };
+const updateUserPhoto = async (photo: File) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", photo);
+    const response = await fetch(
+      `http://localhost:8080/user/add-profile-picture`,
+      {
+        method: "Post",
+        credentials: "include",
+        body: formData,
+      }
+    );
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message);
+    }
+    return {
+      status: "ok",
+      message: "Zdjęcie zostało zmienione.",
+      url: data.url,
+    };
+  } catch (error) {
+    return {
+      status: "error",
+      message:
+        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
+    };
+  }
+};
+
+export {
+  registerUser,
+  loginUser,
+  updateUserData,
+  updateUserPassword,
+  updateUserPhoto,
+};

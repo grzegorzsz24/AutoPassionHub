@@ -1,16 +1,16 @@
 import {
   NotificationStatus,
   addNotification,
-} from "../store/features/notificationSlice";
-import { startLoading, stopLoading } from "../store/features/loadingSlice";
-import { useAppDispatch, useAppSelector } from "../store/store";
+} from "../../store/features/notificationSlice";
+import { startLoading, stopLoading } from "../../store/features/loadingSlice";
+import { updateUserData, updateUserPassword } from "../../services/userService";
+import { useAppDispatch, useAppSelector } from "../../store/store";
 
-import FormInput from "../ui/FormInput";
-import Validator from "../utils/Validator";
-import handleError from "../services/errorHandler";
-import { updateUser } from "../store/features/userSlice";
-import { updateUserData } from "../services/userService";
-import useInput from "../hooks/useInput";
+import FormInput from "../../ui/FormInput";
+import Validator from "../../utils/Validator";
+import handleError from "../../services/errorHandler";
+import { updateUser } from "../../store/features/userSlice";
+import useInput from "../../hooks/useInput";
 
 const UserSettingsDataPage = () => {
   const dispatch = useAppDispatch();
@@ -61,6 +61,7 @@ const UserSettingsDataPage = () => {
     valueChangeHandler: oldPasswordChangeHandler,
     inputBlurHandler: oldPasswordBlurHandler,
     // setIsTouched: setOldPasswordIsTouched,
+    reset: resetOldPassword,
   } = useInput(Validator.isPassword);
 
   const {
@@ -70,6 +71,7 @@ const UserSettingsDataPage = () => {
     valueChangeHandler: newPasswordChangeHandler,
     inputBlurHandler: newPasswordBlurHandler,
     // setIsTouched: setNewPasswordIsTouched,
+    reset: resetNewPassword,
   } = useInput(Validator.isPassword);
 
   const {
@@ -79,6 +81,7 @@ const UserSettingsDataPage = () => {
     valueChangeHandler: confirmNewPasswordChangeHandler,
     inputBlurHandler: confirmNewPasswordBlurHandler,
     // setIsTouched: setConfirmNewPasswordIsTouched,
+    reset: resetConfirmNewPassword,
   } = useInput(Validator.isPassword);
 
   const dataIsValid =
@@ -141,10 +144,40 @@ const UserSettingsDataPage = () => {
     }
   };
 
-  const submitChangePasswordHandler = (
+  const submitChangePasswordHandler = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
+    if (!passwordIsValid) {
+      return;
+    }
+    try {
+      dispatch(startLoading());
+      const response = await updateUserPassword(oldPassword, newPassword);
+      if (response.status !== "ok") {
+        throw new Error(response.message);
+      }
+
+      dispatch(
+        addNotification({
+          message: response.message,
+          type: NotificationStatus.SUCCESS,
+        })
+      );
+      resetOldPassword();
+      resetNewPassword();
+      resetConfirmNewPassword();
+    } catch (error) {
+      const newError = handleError(error);
+      dispatch(
+        addNotification({
+          message: newError.message,
+          type: NotificationStatus.ERROR,
+        })
+      );
+    } finally {
+      dispatch(stopLoading());
+    }
   };
 
   return (

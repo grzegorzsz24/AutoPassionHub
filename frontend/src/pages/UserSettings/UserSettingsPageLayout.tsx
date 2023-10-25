@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import UserSettingsMenu from "../components/Menu/UserSettingsMenu";
+import UserSettingsMenu from "../../components/Menu/UserSettingsMenu";
 
 const UserSettingsPageLayout = () => {
   return (
