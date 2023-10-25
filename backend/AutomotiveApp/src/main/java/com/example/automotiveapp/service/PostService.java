@@ -7,8 +7,8 @@ import com.example.automotiveapp.mapper.PostDtoMapper;
 import com.example.automotiveapp.repository.FileRepository;
 import com.example.automotiveapp.repository.PostRepository;
 import com.example.automotiveapp.storage.FileStorageService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,13 +20,13 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class PostService {
     private final PostRepository postRepository;
     private final PostDtoMapper postDtoMapper;
     private final FileStorageService fileStorageService;
     private final FileRepository fileRepository;
 
+    @Transactional
     public PostDto savePost(PostDto postDto) {
         Post post = postDtoMapper.map(postDto);
         post.setPostedAt(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));

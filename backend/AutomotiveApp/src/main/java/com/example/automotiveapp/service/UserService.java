@@ -143,11 +143,7 @@ public class UserService {
         if (user.isEmpty()) {
             throw new ResourceNotFoundException("Nie znaleziono użytkownika");
         }
-        if (visible) {
-            user.get().setPublicProfile(true);
-        } else {
-            user.get().setPublicProfile(false);
-            }
+        user.get().setPublicProfile(visible);
         userRepository.save(user.get());
     }
 }

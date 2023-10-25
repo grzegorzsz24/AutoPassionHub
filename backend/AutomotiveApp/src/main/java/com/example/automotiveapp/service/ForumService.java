@@ -8,8 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class ForumService {
@@ -33,9 +31,5 @@ public class ForumService {
         return forumRepository.findAllByNameContains(name).stream()
                 .map(ForumDtoMapper::map)
                 .toList();
-    }
-
-    public Optional<ForumDto> findForumById(Long id) {
-        return forumRepository.findById(id).map(ForumDtoMapper::map);
     }
 }

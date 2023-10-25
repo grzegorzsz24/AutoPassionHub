@@ -20,6 +20,6 @@ public class Forum {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "forum", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "forum", cascade = CascadeType.REMOVE)
     private Set<Comment> comments = new HashSet<>();
 }
