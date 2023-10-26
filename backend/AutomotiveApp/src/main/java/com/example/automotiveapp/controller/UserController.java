@@ -1,6 +1,8 @@
 package com.example.automotiveapp.controller;
 
+import com.example.automotiveapp.dto.UserDto;
 import com.example.automotiveapp.exception.BadRequestException;
+import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.reponse.ApiImageResponse;
 import com.example.automotiveapp.reponse.ApiResponse;
 import com.example.automotiveapp.service.UserService;
@@ -13,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -57,4 +60,14 @@ public class UserController {
         return ResponseEntity.ok(new ApiResponse("Widoczność profilu została zmieniona", HttpStatus.OK));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<UserDto>> searchAllUsers(@RequestParam String nickname) {
+        return ResponseEntity.ok(userService.searchUsers(nickname));
+    }
+
+    @GetMapping("/{nickname}")
+    public ResponseEntity<UserDto> getUser(@PathVariable String nickname) {
+        return ResponseEntity.ok(userService.findUserByNickname(nickname)
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika o podanym nickname")));
+    }
 }

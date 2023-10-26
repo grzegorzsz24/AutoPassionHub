@@ -23,6 +23,7 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -146,5 +147,15 @@ public class UserService {
         }
         user.get().setPublicProfile(visible);
         userRepository.save(user.get());
+    }
+
+    public List<UserDto> searchUsers(String keyword) {
+        List<UserDto> userlist =  userRepository.searchUsers(keyword).stream()
+                .map(UserDtoMapper::map)
+                .toList();
+        if (userlist.isEmpty()) {
+            throw new ResourceNotFoundException("Nie znaleziono żadnego użytkownika");
+        }
+        return userlist;
     }
 }
