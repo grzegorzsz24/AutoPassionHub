@@ -212,6 +212,30 @@ const updateUserPrivacy = async (publicProfile: boolean) => {
   }
 };
 
+const deleteUserAccount = async () => {
+  try {
+    const response = await fetch(`${API_URL}/user`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message);
+    }
+    return {
+      status: "ok",
+      message: "Konto zostało usunięte.",
+    };
+  } catch (error) {
+    return {
+      status: "error",
+      message:
+        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
+    };
+  }
+};
+
 export {
   registerUser,
   loginUser,
@@ -219,4 +243,5 @@ export {
   updateUserPassword,
   updateUserPhoto,
   updateUserPrivacy,
+  deleteUserAccount,
 };
