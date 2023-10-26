@@ -7,6 +7,8 @@ interface User {
   password: string;
 }
 
+const API_URL = import.meta.env.VITE_API_URL as string;
+
 const registerUser = async ({
   firstName,
   lastName,
@@ -16,7 +18,7 @@ const registerUser = async ({
   password,
 }: User) => {
   try {
-    const response = await fetch("http://localhost:8080/auth/register", {
+    const response = await fetch(`${API_URL}/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -50,7 +52,7 @@ const registerUser = async ({
 
 const loginUser = async (email: string, password: string) => {
   try {
-    const response = await fetch("http://localhost:8080/auth/authenticate", {
+    const response = await fetch(`${API_URL}/auth/authenticate`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -92,7 +94,7 @@ const updateUserData = async (
     if (nickname) payload.nickname = nickname;
     if (email) payload.email = email;
 
-    const response = await fetch(`http://localhost:8080/user`, {
+    const response = await fetch(`${API_URL}/user`, {
       method: "PATCH",
       credentials: "include",
       headers: {
@@ -125,7 +127,7 @@ const updateUserPassword = async (
 ) => {
   try {
     const response = await fetch(
-      `http://localhost:8080/user/update-password?oldPassword=${currentPassword}&newPassword=${newPassword}`,
+      `${API_URL}/user/update-password?oldPassword=${currentPassword}&newPassword=${newPassword}`,
       {
         method: "POST",
         credentials: "include",
@@ -157,14 +159,11 @@ const updateUserPhoto = async (photo: File) => {
   try {
     const formData = new FormData();
     formData.append("file", photo);
-    const response = await fetch(
-      `http://localhost:8080/user/add-profile-picture`,
-      {
-        method: "Post",
-        credentials: "include",
-        body: formData,
-      }
-    );
+    const response = await fetch(`${API_URL}/user/add-profile-picture`, {
+      method: "Post",
+      credentials: "include",
+      body: formData,
+    });
     const data = await response.json();
 
     if (!response.ok) {
@@ -173,7 +172,60 @@ const updateUserPhoto = async (photo: File) => {
     return {
       status: "ok",
       message: "Zdjęcie zostało zmienione.",
-      url: data.url,
+      imageUrl: data.imageUrl,
+    };
+  } catch (error) {
+    return {
+      status: "error",
+      message:
+        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
+    };
+  }
+};
+
+const updateUserPrivacy = async (publicProfile: boolean) => {
+  try {
+    const response = await fetch(
+      `${API_URL}/user/profile-visibility?visible=${publicProfile}`,
+      {
+        method: "POST",
+        credentials: "include",
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message);
+    }
+
+    return {
+      status: "ok",
+      message: "Ustawienia prywatności zostały zmienione.",
+    };
+  } catch (error) {
+    return {
+      status: "error",
+      message:
+        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
+    };
+  }
+};
+
+const deleteUserAccount = async () => {
+  try {
+    const response = await fetch(`${API_URL}/user`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message);
+    }
+    return {
+      status: "ok",
+      message: "Konto zostało usunięte.",
     };
   } catch (error) {
     return {
@@ -190,4 +242,6 @@ export {
   updateUserData,
   updateUserPassword,
   updateUserPhoto,
+  updateUserPrivacy,
+  deleteUserAccount,
 };

@@ -35,7 +35,7 @@ const UserSettingsPhoto = () => {
       if (response.status !== "ok") {
         throw new Error(response.message);
       }
-      dispatch(updateUserImage(response.url));
+      dispatch(updateUserImage(response.imageUrl));
       dispatch(
         addNotification({
           message: response.message,

@@ -8,6 +8,7 @@ export interface UserState {
   nickname: string;
   imageUrl: string;
   cookieExpirationDate: string;
+  publicProfile: boolean;
 }
 
 const initialState: UserState = {
@@ -18,6 +19,7 @@ const initialState: UserState = {
   nickname: "",
   imageUrl: "",
   cookieExpirationDate: "1970-01-01",
+  publicProfile: false,
 };
 
 if (localStorage.getItem("MotoSplotUser")) {
@@ -29,6 +31,7 @@ if (localStorage.getItem("MotoSplotUser")) {
   initialState.nickname = user.nickname;
   initialState.imageUrl = user.imageUrl;
   initialState.cookieExpirationDate = user.cookieExpirationDate;
+  initialState.publicProfile = user.publicProfile;
 }
 
 const clearLocalStorage = () => {
@@ -47,6 +50,7 @@ const UserSlice = createSlice({
       state.nickname = action.payload.nickname;
       state.imageUrl = action.payload.imageUrl;
       state.cookieExpirationDate = action.payload.cookieExpirationDate;
+      state.publicProfile = action.payload.publicProfile;
       localStorage.setItem("MotoSplotUser", JSON.stringify(action.payload));
     },
     updateUser(state, action: PayloadAction<Partial<UserState>>) {
@@ -86,9 +90,18 @@ const UserSlice = createSlice({
       state.imageUrl = action.payload;
       localStorage.setItem("MotoSplotUser", JSON.stringify(state));
     },
+    updateUserPrivacy(state, action: PayloadAction<boolean>) {
+      state.publicProfile = action.payload;
+      localStorage.setItem("MotoSplotUser", JSON.stringify(state));
+    },
   },
 });
 
-export const { setUser, clearUser, updateUser, updateUserImage } =
-  UserSlice.actions;
+export const {
+  setUser,
+  clearUser,
+  updateUser,
+  updateUserImage,
+  updateUserPrivacy,
+} = UserSlice.actions;
 export default UserSlice.reducer;
