@@ -7,6 +7,8 @@ interface User {
   password: string;
 }
 
+const API_URL = import.meta.env.VITE_API_URL as string;
+
 const registerUser = async ({
   firstName,
   lastName,
@@ -16,7 +18,7 @@ const registerUser = async ({
   password,
 }: User) => {
   try {
-    const response = await fetch("http://localhost:8080/auth/register", {
+    const response = await fetch(`${API_URL}/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -50,7 +52,7 @@ const registerUser = async ({
 
 const loginUser = async (email: string, password: string) => {
   try {
-    const response = await fetch("http://localhost:8080/auth/authenticate", {
+    const response = await fetch(`${API_URL}/auth/authenticate`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -61,9 +63,7 @@ const loginUser = async (email: string, password: string) => {
         password,
       }),
     });
-    console.log(response);
     const data = await response.json();
-    console.log(data);
     if (!response.ok) {
       throw new Error(data.message);
     }
@@ -94,7 +94,7 @@ const updateUserData = async (
     if (nickname) payload.nickname = nickname;
     if (email) payload.email = email;
 
-    const response = await fetch(`http://localhost:8080/user`, {
+    const response = await fetch(`${API_URL}/user`, {
       method: "PATCH",
       credentials: "include",
       headers: {
@@ -127,7 +127,7 @@ const updateUserPassword = async (
 ) => {
   try {
     const response = await fetch(
-      `http://localhost:8080/user/update-password?oldPassword=${currentPassword}&newPassword=${newPassword}`,
+      `${API_URL}/user/update-password?oldPassword=${currentPassword}&newPassword=${newPassword}`,
       {
         method: "POST",
         credentials: "include",
@@ -159,16 +159,12 @@ const updateUserPhoto = async (photo: File) => {
   try {
     const formData = new FormData();
     formData.append("file", photo);
-    const response = await fetch(
-      `http://localhost:8080/user/add-profile-picture`,
-      {
-        method: "Post",
-        credentials: "include",
-        body: formData,
-      }
-    );
+    const response = await fetch(`${API_URL}/user/add-profile-picture`, {
+      method: "Post",
+      credentials: "include",
+      body: formData,
+    });
     const data = await response.json();
-    console.log(data);
 
     if (!response.ok) {
       throw new Error(data.message);
@@ -190,7 +186,7 @@ const updateUserPhoto = async (photo: File) => {
 const updateUserPrivacy = async (publicProfile: boolean) => {
   try {
     const response = await fetch(
-      `http://localhost:8080/user/profile-visibility?visible=${publicProfile}`,
+      `${API_URL}/user/profile-visibility?visible=${publicProfile}`,
       {
         method: "POST",
         credentials: "include",
