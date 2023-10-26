@@ -30,7 +30,7 @@ const UserProfileButton = () => {
       <button className="flex items-center gap-2 py-2 text-blue-900 dark:text-blue-50 relative group">
         <img
           src={`${imageUrl}`}
-          className="w-8 h-8 xl:w-16 xl:h-16 rounded-full group-hover:ring-4 group-hover:ring-blue-600 transition-all"
+          className="w-10 h-10 3xl:w-14 3xl:h-14 rounded-full group-hover:ring-4 group-hover:ring-blue-600 transition-all"
         />
         <span className="block font-semibold text-sm xl:text-lg">
           {firstName} {lastName}

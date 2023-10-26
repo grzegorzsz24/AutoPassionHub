@@ -1,15 +1,50 @@
+import {
+  NotificationStatus,
+  addNotification,
+} from "../../store/features/notificationSlice";
+import { startLoading, stopLoading } from "../../store/features/loadingSlice";
+import { useAppDispatch, useAppSelector } from "../../store/store";
+
 import PrimaryButton from "../../ui/PrimaryButton";
+import { updateUserPrivacy } from "../../store/features/userSlice";
+import { updateUserPrivacy as updateUserPrivacyService } from "../../services/userService";
 import { useState } from "react";
 
 const UserSettingsPrivacyPage = () => {
-  const [newPrivacy, setNewPrivacy] = useState("public");
+  const dispatch = useAppDispatch();
+  const { publicProfile } = useAppSelector((state) => state.user);
+  const [newPrivacy, setNewPrivacy] = useState(
+    publicProfile ? "true" : "false"
+  );
 
-  const currentUserPrivacy = "public";
-
-  const userHasChangedPrivacy = newPrivacy !== currentUserPrivacy;
+  const userHasChangedPrivacy = newPrivacy !== publicProfile.toString();
 
   const changePrivacy = (newPrivacyValue: string) => {
     setNewPrivacy(newPrivacyValue);
+  };
+
+  const savePrivacy = async () => {
+    try {
+      dispatch(startLoading());
+      const response = await updateUserPrivacyService(newPrivacy === "true");
+      if (response.status !== "ok") throw new Error(response.message);
+      dispatch(updateUserPrivacy(newPrivacy === "true"));
+      dispatch(
+        addNotification({
+          message: response.message,
+          type: NotificationStatus.SUCCESS,
+        })
+      );
+    } catch {
+      dispatch(
+        addNotification({
+          message: "Nie udało się zmienić ustawień prywatności",
+          type: NotificationStatus.ERROR,
+        })
+      );
+    } finally {
+      dispatch(stopLoading());
+    }
   };
 
   return (
@@ -20,17 +55,17 @@ const UserSettingsPrivacyPage = () => {
       <div className="ml-4">
         <select
           className="bg-white text-grayDark rounded-md py-2 px-8 mb-6  leading-tight  focus:outline-none  focus:ring-2 focus:ring-blue-600 cursor-pointer w-full"
-          value={newPrivacy}
+          value={newPrivacy.toString()}
           onChange={(event) => changePrivacy(event.target.value)}
         >
-          <option value="public">Wszyscy</option>
-          <option value="private">Tylko znajomi</option>
+          <option value="true">Wszyscy</option>
+          <option value="false">Tylko znajomi</option>
         </select>
         <PrimaryButton
           size="md"
           fullWidth={true}
-          disabled={userHasChangedPrivacy}
-          onClick={() => {}}
+          disabled={!userHasChangedPrivacy}
+          onClick={savePrivacy}
         >
           Zatwierdź
         </PrimaryButton>

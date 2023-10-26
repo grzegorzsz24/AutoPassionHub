@@ -61,7 +61,9 @@ const loginUser = async (email: string, password: string) => {
         password,
       }),
     });
+    console.log(response);
     const data = await response.json();
+    console.log(data);
     if (!response.ok) {
       throw new Error(data.message);
     }
@@ -166,6 +168,7 @@ const updateUserPhoto = async (photo: File) => {
       }
     );
     const data = await response.json();
+    console.log(data);
 
     if (!response.ok) {
       throw new Error(data.message);
@@ -173,7 +176,36 @@ const updateUserPhoto = async (photo: File) => {
     return {
       status: "ok",
       message: "Zdjęcie zostało zmienione.",
-      url: data.url,
+      imageUrl: data.imageUrl,
+    };
+  } catch (error) {
+    return {
+      status: "error",
+      message:
+        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
+    };
+  }
+};
+
+const updateUserPrivacy = async (publicProfile: boolean) => {
+  try {
+    const response = await fetch(
+      `http://localhost:8080/user/profile-visibility?visible=${publicProfile}`,
+      {
+        method: "POST",
+        credentials: "include",
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message);
+    }
+
+    return {
+      status: "ok",
+      message: "Ustawienia prywatności zostały zmienione.",
     };
   } catch (error) {
     return {
@@ -190,4 +222,5 @@ export {
   updateUserData,
   updateUserPassword,
   updateUserPhoto,
+  updateUserPrivacy,
 };
