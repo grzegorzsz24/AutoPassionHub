@@ -40,6 +40,8 @@ public class SecurityConfiguration {
                                     antMatcher("/swagger-ui/**"),
                                     antMatcher("/swagger-ui.html"),
                                     antMatcher("/v3/**"),
+                                    antMatcher("/chat"),
+                                    antMatcher("/greetings"),
                                     antMatcher("/api/v1/auth/**"))
                             .permitAll();
                     requests.requestMatchers(new AntPathRequestMatcher("/user/**"), antMatcher("/uploads/**"))

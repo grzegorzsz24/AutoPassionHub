@@ -49,7 +49,7 @@ public class InvitationService {
         invitation.setReceiver(receiver.get());
         invitation.setStatus(InvitationStatus.PENDING);
         invitationRepository.save(invitation);
-        messagingTemplate.convertAndSendToUser(receiver.get().getEmail(), "/topic/invitations", "Nowe zaproszenie!");
+        messagingTemplate.convertAndSend("/topic/invitations", "Nowe zaproszenie!");
     }
 
     @Transactional

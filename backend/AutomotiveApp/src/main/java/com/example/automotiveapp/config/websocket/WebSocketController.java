@@ -7,8 +7,8 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class WebSocketController {
 
-    @MessageMapping("/invitations")
-    @SendTo("/topic/invitations")
+    @MessageMapping("/chat")
+    @SendTo("/topic/greetings")
     public String handleInvitations(String message) {
         return message;
     }
