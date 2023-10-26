@@ -4,6 +4,7 @@ import {
 } from "../../store/features/notificationSlice";
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 
+import ImageResizer from "../../utils/ImageResizer";
 import { MdPhoto } from "react-icons/md";
 import PrimaryButton from "../../ui/PrimaryButton";
 import handleError from "../../services/errorHandler";
@@ -29,9 +30,15 @@ const UserSettingsPhoto = () => {
   const onFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!selectedFile) return;
+    const resizedFile = await ImageResizer.resizeAndCropImage(
+      selectedFile,
+      960,
+      960,
+      0.8
+    );
     try {
       dispatch(startLoading());
-      const response = await updateUserPhoto(selectedFile);
+      const response = await updateUserPhoto(resizedFile);
       if (response.status !== "ok") {
         throw new Error(response.message);
       }
