@@ -12,6 +12,7 @@ import com.example.automotiveapp.repository.InvitationRepository;
 import com.example.automotiveapp.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ public class InvitationService {
     private final InvitationRepository invitationRepository;
     private final UserRepository userRepository;
     private final FriendshipRepository friendshipRepository;
+    private final SimpMessagingTemplate messagingTemplate;
 
     public List<InvitationDto> getPendingInvitations() {
         Optional<User> receiver = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -47,6 +49,7 @@ public class InvitationService {
         invitation.setReceiver(receiver.get());
         invitation.setStatus(InvitationStatus.PENDING);
         invitationRepository.save(invitation);
+        messagingTemplate.convertAndSendToUser(receiver.get().getEmail(), "/topic/invitations", "Nowe zaproszenie!");
     }
 
     @Transactional
