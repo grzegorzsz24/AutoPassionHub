@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -61,8 +63,11 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<UserDto>> searchAllUsers(@RequestParam String nickname) {
-        return ResponseEntity.ok(userService.searchUsers(nickname));
+    public ResponseEntity<List<UserDto>> searchAllUsers(@RequestParam String nickname,
+                                                        @RequestParam int page,
+                                                        @RequestParam int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return ResponseEntity.ok(userService.searchUsers(nickname, pageable));
     }
 
     @GetMapping("/{nickname}")

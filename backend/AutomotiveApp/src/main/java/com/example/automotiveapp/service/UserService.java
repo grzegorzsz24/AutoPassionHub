@@ -14,6 +14,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -148,8 +149,8 @@ public class UserService {
         userRepository.save(user.get());
     }
 
-    public List<UserDto> searchUsers(String keyword) {
-        List<UserDto> userlist = userRepository.searchUsers(keyword).stream()
+    public List<UserDto> searchUsers(String keyword, Pageable pageable) {
+        List<UserDto> userlist = userRepository.searchUsers(keyword, pageable).stream()
                 .map(UserDtoMapper::map)
                 .toList();
         if (userlist.isEmpty()) {

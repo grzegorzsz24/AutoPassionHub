@@ -13,6 +13,7 @@
     <include file="0006_create_table_comment.xml" relativeToChangelogFile="true"/>
     <include file="0007_create_table_invitation.xml" relativeToChangelogFile="true"/>
     <include file="0008_create_table_friendship.xml" relativeToChangelogFile="true"/>
+    <include file="0009_create_table_event.xml" relativeToChangelogFile="true"/>
 
     <include file="../testdata/0001_user_and_role.sql" relativeToChangelogFile="true" context="dev"/>
     <include file="../testdata/0002_file.sql" relativeToChangelogFile="true" context="dev"/>
