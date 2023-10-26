@@ -32,4 +32,8 @@ public class FriendshipController {
         friendshipService.removeFriend(friendId);
         return ResponseEntity.ok(new ApiResponse("Użytkownik został usunięty z listy znajomych", HttpStatus.OK));
     }
+    @GetMapping("/not-friends")
+    public ResponseEntity<List<UserDto>> findNotFriends() {
+        return ResponseEntity.ok(friendshipService.findNotFriends());
+    }
 }

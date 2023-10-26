@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -63,5 +65,21 @@ public class FriendshipService {
         } else {
             throw new BadRequestException("Nie znaleziono znajmości");
         }
+    }
+
+    public List<UserDto> findNotFriends() {
+        Optional<User> loggedUser = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        if (loggedUser.isEmpty()) {
+            throw new ResourceNotFoundException("Nie znaleziono użytkownika");
+        }
+        List<Friendship> friendships = friendshipRepository.findByUser1OrUser2(userRepository.getOne(loggedUser.get().getId()), userRepository.getOne(loggedUser.get().getId()));
+        List<Long> friendIds = friendships.stream()
+                .flatMap(friendship -> Stream.of(friendship.getUser1().getId(), friendship.getUser2().getId()))
+                .toList();
+
+        return userRepository.findAll().stream()
+                .filter(user -> !friendIds.contains(user.getId()) && !user.getId().equals(loggedUser.get().getId()))
+                .map(UserDtoMapper::map)
+                .toList();
     }
 }
