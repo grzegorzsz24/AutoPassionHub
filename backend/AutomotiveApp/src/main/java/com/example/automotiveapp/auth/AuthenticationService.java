@@ -66,7 +66,7 @@ public class AuthenticationService {
         var jwtToken = jwtService.generateToken(user);
         Cookie cookie = new Cookie("jwt", jwtToken);
         cookie.setMaxAge(7 * 24 * 60 * 60);
-         cookie.setSecure(false);
+        cookie.setSecure(false);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
         response.addCookie(cookie);

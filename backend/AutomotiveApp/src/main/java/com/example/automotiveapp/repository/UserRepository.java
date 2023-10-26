@@ -14,6 +14,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByNicknameIgnoreCase(String nickname);
 
     Optional<User> findByEmail(String email);
+
     @Query("SELECT u FROM User u WHERE " +
             "LOWER(u.nickname) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(u.firstName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +

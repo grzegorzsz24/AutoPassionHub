@@ -23,7 +23,6 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.lang.reflect.Field;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -150,7 +149,7 @@ public class UserService {
     }
 
     public List<UserDto> searchUsers(String keyword) {
-        List<UserDto> userlist =  userRepository.searchUsers(keyword).stream()
+        List<UserDto> userlist = userRepository.searchUsers(keyword).stream()
                 .map(UserDtoMapper::map)
                 .toList();
         if (userlist.isEmpty()) {
