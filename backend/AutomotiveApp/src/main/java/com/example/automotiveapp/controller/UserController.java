@@ -23,8 +23,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
-@Slf4j
-@CrossOrigin(origins = "http://127.0.0.1:5173/")
+//@CrossOrigin(origins = "http://127.0.0.1:5173/")
 public class UserController {
     private final UserService userService;
 
@@ -71,8 +70,14 @@ public class UserController {
     }
 
     @GetMapping("/{nickname}")
-    public ResponseEntity<UserDto> getUser(@PathVariable String nickname) {
+    public ResponseEntity<UserDto> getUserByNickname(@PathVariable String nickname) {
         return ResponseEntity.ok(userService.findUserByNickname(nickname)
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika o podanym nickname")));
+    }
+
+    @GetMapping("/id/{userId}")
+    public ResponseEntity<UserDto> getUserById(@PathVariable Long userId) {
+        return ResponseEntity.ok(userService.findUserById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika o podanym nickname")));
     }
 }

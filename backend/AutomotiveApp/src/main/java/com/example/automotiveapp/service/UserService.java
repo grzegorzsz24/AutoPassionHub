@@ -158,4 +158,8 @@ public class UserService {
         }
         return userlist;
     }
+
+    public Optional<UserDto> findUserById(Long userId) {
+        return userRepository.findById(userId).map(UserDtoMapper::map);
+    }
 }
