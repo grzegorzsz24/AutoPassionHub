@@ -38,4 +38,9 @@ public class InvitationController {
         invitationService.rejectInvitation(invitationId);
         return ResponseEntity.ok(new ApiResponse("Zaproszenie zostało odrzucone", HttpStatus.OK));
     }
+
+    @GetMapping("/sent")
+    public ResponseEntity<List<InvitationDto>> getSentInvitations() {
+        return ResponseEntity.ok(invitationService.getSentInvitations());
+    }
 }

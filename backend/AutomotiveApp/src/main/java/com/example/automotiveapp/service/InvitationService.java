@@ -71,4 +71,17 @@ public class InvitationService {
         invitation.get().setStatus(InvitationStatus.REJECTED);
         invitationRepository.save(invitation.get());
     }
+
+    public List<InvitationDto> getSentInvitations() {
+        Optional<User> user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        if (user.isEmpty()) {
+            throw new ResourceNotFoundException("Podany użytkownik nie istnieje");
+        }
+        List<Invitation> sentInvitations = invitationRepository.findBySenderAndStatus(user.get(), InvitationStatus.PENDING);
+
+        return sentInvitations.stream()
+                .map(InvitationDtoMapper::map)
+                .toList();
+
+    }
 }

@@ -11,4 +11,5 @@ import java.util.List;
 @Repository
 public interface InvitationRepository extends JpaRepository<Invitation, Long> {
     List<Invitation> findByReceiverAndStatus(User receiver, InvitationStatus status);
+    List<Invitation> findBySenderAndStatus(User sender, InvitationStatus status);
 }
