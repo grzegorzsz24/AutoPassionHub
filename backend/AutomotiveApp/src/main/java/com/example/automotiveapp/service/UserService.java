@@ -157,4 +157,12 @@ public class UserService {
         }
         return userlist;
     }
+
+    public Optional<UserDto> getUserById(Long id) {
+        Optional<UserDto> user = userRepository.findById(id).map(UserDtoMapper::map);
+        if (user.isEmpty()) {
+            throw new ResourceNotFoundException("Nie znaleziono użytkownika");
+        }
+        return user;
+    }
 }
