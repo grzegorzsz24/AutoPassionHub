@@ -28,7 +28,7 @@ const links = [
 
 const UserSettingsMenu = () => {
   return (
-    <nav className="bg-white rounded-md py-6 text-primaryDark2 dark:bg-primaryDark2 dark:text-white">
+    <nav className="bg-white rounded-md py-6 text-primaryDark2 dark:bg-primaryDark2 dark:text-white sticky top-12">
       {links.map(({ link, text, icon }) => (
         <NavLink
           key={link}

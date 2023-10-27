@@ -16,7 +16,7 @@ const links = [
     text: "Główna",
   },
   {
-    to: "/friends",
+    to: "/friends/list",
     icon: <FaUserFriends className="text-md lg:text-2xl" />,
     text: "Znajomi",
   },
