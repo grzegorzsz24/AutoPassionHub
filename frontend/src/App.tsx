@@ -9,6 +9,11 @@ import OutletLayout from "./pages/OutletLayout";
 import ProtectedRoute from "./ProtectedRoute";
 import RegisterPage from "./pages/RegisterPage";
 import UserCloseAccountPage from "./pages/UserSettings/UserCloseAccountPage";
+import UserFriendsInvitationsPage from "./pages/Friends/UserFriendsInvitationsPage";
+import UserFriendsPage from "./pages/Friends/UserFriendsPage";
+import UserFriendsPageLayout from "./pages/Friends/UserFriendsPageLayout";
+import UserFriendsSuggestionsPage from "./pages/Friends/UserFriendsSuggestionsPage";
+import UserPendingFriends from "./pages/Friends/UserPendingFriends";
 import UserSettingsDataPage from "./pages/UserSettings/UserSettingsDataPage";
 import UserSettingsPageLayout from "./pages/UserSettings/UserSettingsPageLayout";
 import UserSettingsPhoto from "./pages/UserSettings/UserSettingsPhoto";
@@ -37,7 +42,25 @@ const router = createBrowserRouter([
           },
           {
             path: "/friends",
-            element: <p>Znajomi</p>,
+            element: <UserFriendsPageLayout />,
+            children: [
+              {
+                path: "list",
+                element: <UserFriendsPage />,
+              },
+              {
+                path: "invitations",
+                element: <UserFriendsInvitationsPage />,
+              },
+              {
+                path: "suggestions",
+                element: <UserFriendsSuggestionsPage />,
+              },
+              {
+                path: "pending",
+                element: <UserPendingFriends />,
+              },
+            ],
           },
           {
             path: "/bookmarks",
