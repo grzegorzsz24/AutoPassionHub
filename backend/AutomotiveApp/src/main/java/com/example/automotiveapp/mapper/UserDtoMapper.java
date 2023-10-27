@@ -19,6 +19,7 @@ public class UserDtoMapper {
     public static UserDto map(User user) {
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(user, userDto);
+        userDto.setImageUrl("http://localhost:8080/images/" + user.getFile().getFileUrl());
         return userDto;
     }
 
