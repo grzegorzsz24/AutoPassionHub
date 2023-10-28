@@ -261,6 +261,40 @@ const getUserById = async (userId: number) => {
   }
 };
 
+const findUserBySearchQuery = async (
+  searchQuery: string,
+  page: number,
+  perPage: number,
+  abortController: AbortController
+) => {
+  try {
+    const response = await fetch(
+      `${API_URL}/user/search?nickname=${searchQuery}&page=${page}&size=${perPage}`,
+      {
+        method: "GET",
+        credentials: "include",
+        signal: abortController.signal,
+      }
+    );
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message);
+    }
+    return {
+      status: "ok",
+      message: "Pobrano dane użytkownika.",
+      users: data,
+    };
+  } catch (error) {
+    return {
+      status: "error",
+      message:
+        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
+    };
+  }
+};
+
 export {
   registerUser,
   loginUser,
@@ -270,4 +304,5 @@ export {
   updateUserPrivacy,
   deleteUserAccount,
   getUserById,
+  findUserBySearchQuery,
 };
