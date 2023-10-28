@@ -54,18 +54,26 @@ public class FriendshipService {
     }
 
     public void removeFriend(Long user2Id) {
-        Optional<User> user1 = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> user1 = userRepository.findByEmail(currentUserEmail);
         Optional<User> user2 = userRepository.findById(user2Id);
+
         if (user1.isEmpty() || user2.isEmpty()) {
             throw new ResourceNotFoundException("Nie znaleziono użytkownika");
         }
-        Optional<Friendship> friendship = friendshipRepository.findByUser1AndUser2(user1.get(), user2.get());
-        if (friendship.isPresent()) {
-            friendshipRepository.delete(friendship.get());
+
+        Optional<Friendship> friendship1 = friendshipRepository.findByUser1AndUser2(user1.get(), user2.get());
+        Optional<Friendship> friendship2 = friendshipRepository.findByUser1AndUser2(user2.get(), user1.get());
+
+        if (friendship1.isPresent()) {
+            friendshipRepository.delete(friendship1.get());
+        } else if (friendship2.isPresent()) {
+            friendshipRepository.delete(friendship2.get());
         } else {
-            throw new BadRequestException("Nie znaleziono znajmości");
+            throw new BadRequestException("Nie znaleziono znajomości");
         }
     }
+
 
     public List<UserDto> findNotFriends() {
         Optional<User> loggedUser = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
