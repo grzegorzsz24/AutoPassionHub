@@ -7,6 +7,7 @@ interface UserModel {
   dateOfBirth: string;
   password: string;
   publicProfile: boolean;
+  imageUrl: string;
 }
 
 export default UserModel;

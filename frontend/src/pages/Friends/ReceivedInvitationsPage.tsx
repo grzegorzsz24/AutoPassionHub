@@ -7,11 +7,11 @@ import { useEffect, useState } from "react";
 
 import FriendInvitation from "../../components/Friends/FriendInvitation";
 import PendingInvitationModel from "../../models/PendingInvitationModel";
-import { getPendingInvitations } from "../../services/friendsService";
+import { getReceivedInvitations } from "../../services/friendsService";
 import handleError from "../../services/errorHandler";
 import { useAppDispatch } from "../../store/store";
 
-const UserFriendsInvitationsPage = () => {
+const ReceivedInvitationsPage = () => {
   const dispatch = useAppDispatch();
   const [pendingInvitations, setPendingInvitations] = useState<
     PendingInvitationModel[]
@@ -20,7 +20,7 @@ const UserFriendsInvitationsPage = () => {
   const getInvitations = async () => {
     try {
       dispatch(startLoading());
-      const data = await getPendingInvitations();
+      const data = await getReceivedInvitations();
       if (data.status !== "ok") {
         throw new Error(data.message);
       }
@@ -38,16 +38,32 @@ const UserFriendsInvitationsPage = () => {
     }
   };
 
+  const removeInvitationFromList = (invitationId: number) => {
+    setPendingInvitations((prev) =>
+      prev.filter((invitation) => invitation.id !== invitationId)
+    );
+  };
+
   useEffect(() => {
     getInvitations();
   }, []);
+
   return (
-    <div>
+    <div className="text-primaryDark dark:text-blue-50 w-full py-4 flex flex-col gap-6 ">
       {pendingInvitations.map((invitation) => {
-        return <FriendInvitation key={invitation.id} invitation={invitation} />;
+        return (
+          <FriendInvitation
+            key={invitation.id}
+            invitation={invitation}
+            removeInvitationFromList={removeInvitationFromList}
+          />
+        );
       })}
+      {pendingInvitations.length === 0 && (
+        <h2 className="text-xl">Brak zaproszeń od innych użytkowników</h2>
+      )}
     </div>
   );
 };
 
-export default UserFriendsInvitationsPage;
+export default ReceivedInvitationsPage;

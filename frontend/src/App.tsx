@@ -7,13 +7,13 @@ import MainPageLayout from "./pages/MainPageLayout";
 import Notification from "./ui/Notification";
 import OutletLayout from "./pages/OutletLayout";
 import ProtectedRoute from "./ProtectedRoute";
+import ReceivedInvitationsPage from "./pages/Friends/ReceivedInvitationsPage";
 import RegisterPage from "./pages/RegisterPage";
+import SentInvitationsPage from "./pages/Friends/SentInvitationsPage";
 import UserCloseAccountPage from "./pages/UserSettings/UserCloseAccountPage";
-import UserFriendsInvitationsPage from "./pages/Friends/UserFriendsInvitationsPage";
 import UserFriendsPage from "./pages/Friends/UserFriendsPage";
 import UserFriendsPageLayout from "./pages/Friends/UserFriendsPageLayout";
 import UserFriendsSuggestionsPage from "./pages/Friends/UserFriendsSuggestionsPage";
-import UserPendingFriends from "./pages/Friends/UserPendingFriends";
 import UserSettingsDataPage from "./pages/UserSettings/UserSettingsDataPage";
 import UserSettingsPageLayout from "./pages/UserSettings/UserSettingsPageLayout";
 import UserSettingsPhoto from "./pages/UserSettings/UserSettingsPhoto";
@@ -45,12 +45,12 @@ const router = createBrowserRouter([
             element: <UserFriendsPageLayout />,
             children: [
               {
-                path: "list",
+                path: "",
                 element: <UserFriendsPage />,
               },
               {
                 path: "invitations",
-                element: <UserFriendsInvitationsPage />,
+                element: <ReceivedInvitationsPage />,
               },
               {
                 path: "suggestions",
@@ -58,7 +58,7 @@ const router = createBrowserRouter([
               },
               {
                 path: "pending",
-                element: <UserPendingFriends />,
+                element: <SentInvitationsPage />,
               },
             ],
           },

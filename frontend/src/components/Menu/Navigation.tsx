@@ -16,7 +16,7 @@ const links = [
     text: "Główna",
   },
   {
-    to: "/friends/list",
+    to: "/friends",
     icon: <FaUserFriends className="text-md lg:text-2xl" />,
     text: "Znajomi",
   },
@@ -46,7 +46,7 @@ const Navigation = () => {
   return (
     <nav className="w-content bg-blue-600 w-full md:w-min flex justify-between text-blue-50 md:rounded-ee-md overflow-hidden">
       {links.map((link) => (
-        <NavigationLink key={link.text} to={link.to}>
+        <NavigationLink key={link.text} to={link.to} end={false}>
           {link.icon}
           <span className="block text text-sm lg:text-xl">{link.text}</span>
         </NavigationLink>
