@@ -7,22 +7,26 @@ import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 import { FC } from "react";
 import PrimaryButton from "../../ui/PrimaryButton";
 import UserModel from "../../models/UserModel";
+import { deleteFriend } from "../../services/friendsService";
 import handleError from "../../services/errorHandler";
-import { sendFriendRequest } from "../../services/friendsService";
 import { useAppDispatch } from "../../store/store";
 import { useNavigate } from "react-router-dom";
 
-interface AddFriendElementProps {
+interface DeleteFriendElementProps {
   user: UserModel;
+  deleteUserFromList: (userId: number) => void;
 }
 
-const AddFriendElement: FC<AddFriendElementProps> = ({ user }) => {
+const DeleteFriendElement: FC<DeleteFriendElementProps> = ({
+  user,
+  deleteUserFromList,
+}) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const addFriend = async () => {
     try {
       dispatch(startLoading());
-      const data = await sendFriendRequest(user.id);
+      const data = await deleteFriend(user.id);
       if (data.status !== "ok") {
         throw new Error(data.message);
       }
@@ -32,6 +36,7 @@ const AddFriendElement: FC<AddFriendElementProps> = ({ user }) => {
           type: NotificationStatus.SUCCESS,
         })
       );
+      deleteUserFromList(user.id);
     } catch (err) {
       const newError = handleError(err);
       dispatch(
@@ -73,10 +78,10 @@ const AddFriendElement: FC<AddFriendElementProps> = ({ user }) => {
           addFriend();
         }}
       >
-        Dodaj
+        Usuń
       </PrimaryButton>
     </div>
   );
 };
 
-export default AddFriendElement;
+export default DeleteFriendElement;

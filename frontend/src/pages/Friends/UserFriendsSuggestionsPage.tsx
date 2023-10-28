@@ -21,6 +21,9 @@ const UserFriendsSuggestionsPage = () => {
         {nonFriends.map((user) => (
           <AddFriendElement key={user.id} user={user} />
         ))}
+        {nonFriends.length === 0 && (
+          <h2 className="text-xl">Brak propozycji nowych znajomości</h2>
+        )}
       </div>
     </div>
   );

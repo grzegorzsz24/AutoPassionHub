@@ -9,7 +9,7 @@ import { NavLink } from "react-router-dom";
 
 const links = [
   {
-    link: "/friends/list",
+    link: "/friends",
     text: "Twoi znajomi",
     icon: <FaUserFriends className="text-md lg:text-xl" />,
   },
@@ -43,6 +43,7 @@ const UserFriendsMenu = () => {
               ? "bg-blue-600 text-blue-50 px-24 py-2  flex flex-col md:flex-row items-center gap-2"
               : "px-24 py-2 flex flex-col md:flex-row items-center gap-2 hover:bg-blue-900 hover:text-white transition-all"
           }
+          end={true}
         >
           {icon}
           <span className="block text text-sm lg:text-xl">{text}</span>

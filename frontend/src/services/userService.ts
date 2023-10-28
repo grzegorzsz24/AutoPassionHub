@@ -236,6 +236,31 @@ const deleteUserAccount = async () => {
   }
 };
 
+const getUserById = async (userId: number) => {
+  try {
+    const response = await fetch(`${API_URL}/user/id/${userId}`, {
+      method: "GET",
+      credentials: "include",
+    });
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message);
+    }
+    return {
+      status: "ok",
+      message: "Pobrano dane użytkownika.",
+      user: data,
+    };
+  } catch (error) {
+    return {
+      status: "error",
+      message:
+        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
+    };
+  }
+};
+
 export {
   registerUser,
   loginUser,
@@ -244,4 +269,5 @@ export {
   updateUserPhoto,
   updateUserPrivacy,
   deleteUserAccount,
+  getUserById,
 };
