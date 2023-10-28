@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -57,5 +58,14 @@ public class PostController {
         JsonNode postNode = objectMapper.valueToTree(postDto);
         JsonNode postPatchedNode = patch.apply(postNode);
         return objectMapper.treeToValue(postPatchedNode, PostDto.class);
+    }
+    @GetMapping("/friends")
+    public ResponseEntity<List<PostDto>> getFriendsPosts() {
+        return ResponseEntity.ok(postService.getFriendsPosts());
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<List<PostDto>> getUserPosts(@RequestParam Long userId) {
+        return ResponseEntity.ok(postService.getUserPosts(userId));
     }
 }
