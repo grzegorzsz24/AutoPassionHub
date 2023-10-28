@@ -14,9 +14,13 @@ import { useNavigate } from "react-router-dom";
 
 interface AddFriendElementProps {
   user: UserModel;
+  deleteUserFromList: (id: number) => void;
 }
 
-const AddFriendElement: FC<AddFriendElementProps> = ({ user }) => {
+const AddFriendElement: FC<AddFriendElementProps> = ({
+  user,
+  deleteUserFromList,
+}) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const addFriend = async () => {
@@ -32,6 +36,7 @@ const AddFriendElement: FC<AddFriendElementProps> = ({ user }) => {
           type: NotificationStatus.SUCCESS,
         })
       );
+      deleteUserFromList(user.id);
     } catch (err) {
       const newError = handleError(err);
       dispatch(
