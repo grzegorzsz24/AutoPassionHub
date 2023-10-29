@@ -8,7 +8,7 @@ import { FC } from "react";
 import PrimaryButton from "../../ui/PrimaryButton";
 import UserModel from "../../models/UserModel";
 import handleError from "../../services/errorHandler";
-import { sendFriendRequest } from "../../services/friendsService";
+import { sendFriendRequest } from "../../services/friendService";
 import { useAppDispatch } from "../../store/store";
 import { useNavigate } from "react-router-dom";
 

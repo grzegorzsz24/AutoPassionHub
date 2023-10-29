@@ -14,6 +14,7 @@ import UserCloseAccountPage from "./pages/UserSettings/UserCloseAccountPage";
 import UserFriendsPage from "./pages/Friends/UserFriendsPage";
 import UserFriendsPageLayout from "./pages/Friends/UserFriendsPageLayout";
 import UserFriendsSuggestionsPage from "./pages/Friends/UserFriendsSuggestionsPage";
+import UserPage from "./pages/UserPage";
 import UserSettingsDataPage from "./pages/UserSettings/UserSettingsDataPage";
 import UserSettingsPageLayout from "./pages/UserSettings/UserSettingsPageLayout";
 import UserSettingsPhoto from "./pages/UserSettings/UserSettingsPhoto";
@@ -101,6 +102,10 @@ const router = createBrowserRouter([
                 ],
               },
             ],
+          },
+          {
+            path: "/user/:nickname",
+            element: <UserPage />,
           },
         ],
       },

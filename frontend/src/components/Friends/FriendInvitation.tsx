@@ -6,7 +6,7 @@ import {
 import {
   acceptFriendRequest,
   rejectFriendRequest,
-} from "../../services/friendsService";
+} from "../../services/friendService";
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 
 import PendingInvitationModel from "../../models/PendingInvitationModel";

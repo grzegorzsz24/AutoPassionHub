@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import AddFriendElement from "../../components/Friends/AddFriendElement";
 import UserModel from "../../models/UserModel";
-import { getUserNonFriends } from "../../services/friendsService";
+import { getUserNonFriends } from "../../services/friendService";
 
 const UserFriendsSuggestionsPage = () => {
   const [nonFriends, setNonFriends] = useState<UserModel[]>([]);

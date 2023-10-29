@@ -7,7 +7,7 @@ import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 import { FC } from "react";
 import PrimaryButton from "../../ui/PrimaryButton";
 import UserModel from "../../models/UserModel";
-import { deleteFriend } from "../../services/friendsService";
+import { deleteFriend } from "../../services/friendService";
 import handleError from "../../services/errorHandler";
 import { useAppDispatch } from "../../store/store";
 import { useNavigate } from "react-router-dom";
