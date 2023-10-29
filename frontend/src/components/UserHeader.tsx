@@ -1,7 +1,7 @@
 import { FC, useEffect, useRef, useState } from "react";
 
 import { IoMdCloseCircle } from "react-icons/io";
-import UserModel from "../../models/UserModel";
+import UserModel from "../models/UserModel";
 
 interface UserHeaderProps {
   user: UserModel | null;
@@ -50,7 +50,7 @@ const UserHeader: FC<UserHeaderProps> = ({ user }) => {
   }, [isProfilePictureOpen]);
 
   return (
-    <div className="flex flex-col items-center gap-4 p-4 text-blue-50 bg-blue-600 max-w-xl mx-auto rounded-md">
+    <div className="flex flex-col items-center gap-4 p-4 text-blue-50 bg-blue-600 max-w-2xl mx-auto rounded-md">
       {user && (
         <>
           <img

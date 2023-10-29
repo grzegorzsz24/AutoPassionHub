@@ -5,9 +5,12 @@ import {
 import { startLoading, stopLoading } from "../store/features/loadingSlice";
 import { useEffect, useState } from "react";
 
-import UserHeader from "./User/UserHeader";
+import Post from "../components/Posts/Post";
+import PostModel from "../models/PostModel";
+import UserHeader from "../components/UserHeader";
 import UserModel from "../models/UserModel";
 import { getUserByNickname } from "../services/userService";
+import { getUserPosts } from "../services/postService";
 import handleError from "../services/errorHandler";
 import { useAppDispatch } from "../store/store";
 import { useParams } from "react-router-dom";
@@ -16,6 +19,7 @@ const UserPage = () => {
   const dispatch = useAppDispatch();
   const { nickname } = useParams();
   const [user, setUser] = useState<UserModel | null>(null);
+  const [posts, setPosts] = useState<PostModel[]>([]);
 
   const getUserData = async () => {
     try {
@@ -39,15 +43,44 @@ const UserPage = () => {
     }
   };
 
+  const getUserPostsData = async () => {
+    try {
+      const data = await getUserPosts(user!.id);
+      if (data.status !== "ok") {
+        throw new Error(data.message);
+      }
+      setPosts(data.posts);
+    } catch (error) {
+      const newError = handleError(error);
+      dispatch(
+        addNotification({
+          type: NotificationStatus.ERROR,
+          message: newError.message,
+        })
+      );
+    }
+  };
+
   useEffect(() => {
     if (nickname) {
       getUserData();
     }
   }, [nickname]);
 
+  useEffect(() => {
+    if (user) {
+      getUserPostsData();
+    }
+  }, [user]);
+
   return (
-    <div className=" px-6 py-8">
+    <div className=" px-6 py-8 overflow-y-auto h-full flex-grow">
       <UserHeader user={user} />
+      <div className="flex flex-col gap-4 items-center my-6">
+        {posts.map((post) => (
+          <Post key={post.id} {...post} />
+        ))}
+      </div>
     </div>
   );
 };

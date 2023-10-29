@@ -103,7 +103,7 @@ const AddPost = () => {
           value={postText}
           onChange={onPostTextChange}
           placeholder={`Co słychać, ${firstName}?`}
-          className="bg-transparent resize-none w-full outline-none border-none rounded-md h-32  overflow-auto py-2 px-2 focus:ring-2 focus:ring-blue-600"
+          className="bg-transparent resize-none w-full outline-none border-none rounded-md h-32  overflow-auto py-2 px-2 mb-2 focus:ring-2 focus:ring-blue-600"
         />
       </div>
 

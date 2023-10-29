@@ -32,7 +32,7 @@ const createPost = async (content: string, files: File[]) => {
 
 const getPosts = async () => {
   try {
-    const response = await fetch(`${API_URL}/user/posts`, {
+    const response = await fetch(`${API_URL}/user/posts/friends`, {
       method: "GET",
       credentials: "include",
     });
@@ -55,4 +55,31 @@ const getPosts = async () => {
   }
 };
 
-export { createPost };
+const getUserPosts = async (id: number) => {
+  try {
+    const response = await fetch(`${API_URL}/user/posts/user?userId=${id}`, {
+      method: "GET",
+      credentials: "include",
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message);
+    }
+
+    return {
+      status: "ok",
+      message: "Pobrano posty.",
+      posts: data,
+    };
+  } catch (error) {
+    return {
+      status: "error",
+      message:
+        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
+    };
+  }
+};
+
+export { createPost, getPosts, getUserPosts };
