@@ -2,6 +2,7 @@ package com.example.automotiveapp.service;
 
 import com.example.automotiveapp.domain.Comment;
 import com.example.automotiveapp.dto.CommentDto;
+import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.mapper.CommentDtoMapper;
 import com.example.automotiveapp.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,6 +18,7 @@ import java.util.Optional;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final CommentDtoMapper commentDtoMapper;
+    private final PostService postService;
 
     public CommentDto saveComment(CommentDto commentDto) {
         Comment comment = commentDtoMapper.map(commentDto);
@@ -25,7 +28,8 @@ public class CommentService {
     }
 
     public Optional<CommentDto> findCommentById(long id) {
-        return commentRepository.findById(id).map(CommentDtoMapper::map);
+        return Optional.ofNullable(commentRepository.findById(id)
+                .map(CommentDtoMapper::map).orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono komentarza")));
     }
 
     public void updateComment(CommentDto commentToUpdate) {
@@ -38,4 +42,12 @@ public class CommentService {
     }
 
 
+    public List<CommentDto> findCommentsByPostId(Long postId) {
+        if (postService.findPostById(postId).isEmpty()) {
+            throw new ResourceNotFoundException("Nie znaleziono posta");
+        }
+        return commentRepository.findAllByPostId(postId).stream()
+                .map(CommentDtoMapper::map)
+                .toList();
+    }
 }

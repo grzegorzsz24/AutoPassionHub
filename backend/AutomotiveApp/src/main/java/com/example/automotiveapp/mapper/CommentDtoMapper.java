@@ -10,6 +10,7 @@ import com.example.automotiveapp.repository.PostRepository;
 import com.example.automotiveapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -25,6 +26,9 @@ public class CommentDtoMapper {
         CommentDto commentDto = new CommentDto();
         BeanUtils.copyProperties(comment, commentDto);
         commentDto.setUser(comment.getUser().getNickname());
+        commentDto.setFirstName(comment.getUser().getFirstName());
+        commentDto.setLastName(comment.getUser().getLastName());
+        commentDto.setUserImageUrl("http://localhost:8080/images/" + comment.getUser().getFile().getFileUrl());
         if (comment.getForum() != null) {
             commentDto.setForum(comment.getForum().getId());
         } else if (comment.getPost() != null) {
@@ -36,7 +40,7 @@ public class CommentDtoMapper {
     public Comment map(CommentDto commentDto) {
         Comment comment = new Comment();
         BeanUtils.copyProperties(commentDto, comment);
-        Optional<User> user = userRepository.findByNicknameIgnoreCase(commentDto.getUser());
+        Optional<User> user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         user.ifPresent(comment::setUser);
         if (commentDto.getPost() != null) {
             Optional<Post> post = postRepository.findById(commentDto.getPost());

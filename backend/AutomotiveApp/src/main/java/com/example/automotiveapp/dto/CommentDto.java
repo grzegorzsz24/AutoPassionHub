@@ -14,4 +14,7 @@ public class CommentDto {
     private String user;
     private Long post;
     private Long forum;
+    private String firstName;
+    private String lastName;
+    private String userImageUrl;
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -51,6 +52,11 @@ public class CommentController {
     public ResponseEntity<?> deleteComment(@PathVariable Long id) {
         commentService.deleteComment(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/post")
+    public ResponseEntity<List<CommentDto>> getPostComments(@RequestParam Long postId) {
+        return ResponseEntity.ok(commentService.findCommentsByPostId(postId));
     }
 
     private CommentDto applyPatch(CommentDto commentDto, JsonMergePatch patch) throws JsonPatchException, JsonProcessingException {

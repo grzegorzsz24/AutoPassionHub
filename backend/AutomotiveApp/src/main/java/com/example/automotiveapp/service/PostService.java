@@ -5,6 +5,7 @@ import com.example.automotiveapp.domain.Post;
 import com.example.automotiveapp.domain.User;
 import com.example.automotiveapp.dto.PostDto;
 import com.example.automotiveapp.exception.BadRequestException;
+import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.mapper.PostDtoMapper;
 import com.example.automotiveapp.repository.FileRepository;
 import com.example.automotiveapp.repository.PostRepository;
@@ -53,10 +54,24 @@ public class PostService {
     }
 
     public void deletePost(Long id) {
+        if (postRepository.findById(id).isEmpty()) {
+            throw new ResourceNotFoundException("Nie znaleziono posta");
+        }
+        PostDto postDto = PostDtoMapper.map(postRepository.findById(id).get());
+        for (String imageUrl : postDto.getImageUrls()) {
+            StringBuilder modifiedImageUrl = new StringBuilder(imageUrl);
+            modifiedImageUrl.delete(0, "http://localhost:8080/images/".length());
+            fileStorageService.deleteFile(modifiedImageUrl.toString());
+        }
+
         postRepository.deleteById(id);
     }
 
+
     public Optional<PostDto> findPostById(long id) {
+        if (postRepository.findById(id).isEmpty()) {
+            throw new ResourceNotFoundException("Nie znaleziono posta");
+        }
         return postRepository.findById(id).map(PostDtoMapper::map);
     }
 

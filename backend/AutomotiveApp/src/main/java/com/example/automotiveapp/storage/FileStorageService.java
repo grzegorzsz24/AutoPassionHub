@@ -82,4 +82,19 @@ public class FileStorageService {
                 .replace(":", ""));
         return timestamp + "." + fileExtension;
     }
+
+    public void deleteFile(String filePath) {
+        try {
+            Path fileToDelete = Paths.get("./uploads/img", filePath);
+            if (Files.exists(fileToDelete)) {
+                Files.delete(fileToDelete);
+                log.info("File deleted: " + filePath);
+            } else {
+                log.warn("File not found: " + filePath);
+            }
+        } catch (IOException e) {
+            log.error("Error deleting file: " + filePath, e);
+            throw new UncheckedIOException(e);
+        }
+    }
 }
