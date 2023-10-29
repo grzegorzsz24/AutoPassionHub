@@ -1,10 +1,8 @@
 package com.example.automotiveapp.mapper;
 
 import com.example.automotiveapp.domain.Event;
-import com.example.automotiveapp.domain.Forum;
 import com.example.automotiveapp.domain.User;
 import com.example.automotiveapp.dto.EventDto;
-import com.example.automotiveapp.dto.ForumDto;
 import com.example.automotiveapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;

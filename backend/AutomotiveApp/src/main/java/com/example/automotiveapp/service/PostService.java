@@ -34,6 +34,8 @@ public class PostService {
         post.setUser(userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).get());
         post.setPostedAt(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         post.setLiked(false);
+        post.setLikesNumber(0);
+        post.setCommentsNumber(0);
         Set<File> files = new HashSet<>();
         if (postDto.getFile() != null) {
             List<String> savedImageNames = fileStorageService.saveImage(postDto.getFile());
@@ -91,8 +93,7 @@ public class PostService {
             return postRepository.findAllByUserId(userId).stream()
                     .map(PostDtoMapper::map)
                     .toList();
-        }
-        else {
+        } else {
             throw new BadRequestException("Użytkownik ma prywatny profil");
         }
     }

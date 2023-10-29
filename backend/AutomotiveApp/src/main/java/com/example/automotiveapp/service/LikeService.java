@@ -26,6 +26,7 @@ public class LikeService {
         if (like.getPost() != null) {
             Optional<PostDto> likedPost = postService.findPostById(likeDto.getPost());
             likedPost.ifPresent(postDto -> postDto.setLiked(true));
+            likedPost.get().setLikesNumber(likedPost.get().getLikesNumber() + 1);
             postService.updatePost(likedPost.get());
         } else if (like.getArticle() != null) {
             ArticleDto likedArticle = ArticleDtoMapper.map(like.getArticle());

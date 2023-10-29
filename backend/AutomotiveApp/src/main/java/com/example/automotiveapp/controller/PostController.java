@@ -59,6 +59,7 @@ public class PostController {
         JsonNode postPatchedNode = patch.apply(postNode);
         return objectMapper.treeToValue(postPatchedNode, PostDto.class);
     }
+
     @GetMapping("/friends")
     public ResponseEntity<List<PostDto>> getFriendsPosts() {
         return ResponseEntity.ok(postService.getFriendsPosts());

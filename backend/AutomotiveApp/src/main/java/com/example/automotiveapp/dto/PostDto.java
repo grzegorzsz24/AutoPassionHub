@@ -17,4 +17,9 @@ public class PostDto {
     private List<MultipartFile> file;
     private String user;
     private List<String> imageUrls;
+    private int likesNumber;
+    private int commentsNumber;
+    private String firstName;
+    private String lastName;
+    private String userImageUrl;
 }

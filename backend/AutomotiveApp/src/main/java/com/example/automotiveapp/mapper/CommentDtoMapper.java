@@ -40,7 +40,10 @@ public class CommentDtoMapper {
         user.ifPresent(comment::setUser);
         if (commentDto.getPost() != null) {
             Optional<Post> post = postRepository.findById(commentDto.getPost());
-            post.ifPresent(comment::setPost);
+            if (post.isPresent()) {
+                post.ifPresent(comment::setPost);
+                post.get().setCommentsNumber(post.get().getCommentsNumber() + 1);
+            }
         } else if (commentDto.getForum() != null) {
             Optional<Forum> forum = forumRepository.findById(commentDto.getForum());
             forum.ifPresent(comment::setForum);

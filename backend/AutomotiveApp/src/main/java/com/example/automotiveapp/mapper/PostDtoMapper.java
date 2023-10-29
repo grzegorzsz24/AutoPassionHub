@@ -1,6 +1,5 @@
 package com.example.automotiveapp.mapper;
 
-import com.example.automotiveapp.domain.File;
 import com.example.automotiveapp.domain.Post;
 import com.example.automotiveapp.domain.User;
 import com.example.automotiveapp.dto.PostDto;
@@ -25,9 +24,12 @@ public class PostDtoMapper {
         BeanUtils.copyProperties(post, postDto);
         postDto.setUser(post.getUser().getNickname());
         List<String> imageUrls = new ArrayList<>(post.getFiles().stream()
-                .map(File::getFileUrl)
+                .map(file -> "http://localhost:8080/images/" + file.getFileUrl())
                 .toList());
         postDto.setImageUrls(imageUrls);
+        postDto.setFirstName(post.getUser().getFirstName());
+        postDto.setLastName(post.getUser().getLastName());
+        postDto.setUserImageUrl("http://localhost:8080/images/" + post.getUser().getFile().getFileUrl());
         return postDto;
     }
 

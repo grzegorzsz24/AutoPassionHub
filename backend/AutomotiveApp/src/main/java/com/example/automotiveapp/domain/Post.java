@@ -19,6 +19,8 @@ public class Post {
     private String content;
     private LocalDateTime postedAt;
     private boolean isLiked;
+    private int likesNumber;
+    private int commentsNumber;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

@@ -1,7 +1,6 @@
 package com.example.automotiveapp.repository;
 
 import com.example.automotiveapp.domain.User;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,6 +21,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "LOWER(u.firstName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(u.lastName) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<User> searchUsers(@Param("keyword") String keyword, Pageable pageable);
+
     @Query("SELECT u2 FROM User u1 JOIN Friendship f ON u1 = f.user1 JOIN User u2 ON f.user2 = u2 WHERE u1.email = :keyword")
     List<User> findUserFriends(@Param("keyword") String email);
 

@@ -1,7 +1,5 @@
 package com.example.automotiveapp.dto;
 
-import com.example.automotiveapp.domain.User;
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 

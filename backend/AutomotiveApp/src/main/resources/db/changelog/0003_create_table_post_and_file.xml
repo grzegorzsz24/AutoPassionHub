@@ -24,6 +24,12 @@
                              referencedTableName="users"
                              referencedColumnNames="id"/>
             </column>
+            <column name="likes_number" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comments_number" type="INT">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
 
         <createTable tableName="file">

@@ -1,12 +1,9 @@
 package com.example.automotiveapp.service;
 
 import com.example.automotiveapp.domain.Event;
-import com.example.automotiveapp.domain.Forum;
 import com.example.automotiveapp.dto.EventDto;
-import com.example.automotiveapp.dto.ForumDto;
 import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.mapper.EventDtoMapper;
-import com.example.automotiveapp.mapper.ForumDtoMapper;
 import com.example.automotiveapp.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
