@@ -5,6 +5,11 @@ interface PostModel {
   file: string | null;
   user: string;
   imageUrls: string[];
+  likesNumber: number;
+  commentsNumber: number;
+  firstName: string;
+  lastName: string;
+  userImageUrl: string;
   liked: boolean;
 }
 

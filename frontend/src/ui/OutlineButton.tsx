@@ -6,6 +6,7 @@ interface OutlineButtonProps {
   fullWidth?: boolean;
   children: ReactNode;
   disabled?: boolean;
+  color?: "blue" | "red" | "green";
 }
 
 const OutlineButton: FC<OutlineButtonProps> = ({
@@ -14,6 +15,7 @@ const OutlineButton: FC<OutlineButtonProps> = ({
   fullWidth = false,
   children,
   disabled = false,
+  color = "blue",
 }) => {
   let sizeClasses: string;
 
@@ -31,6 +33,20 @@ const OutlineButton: FC<OutlineButtonProps> = ({
       sizeClasses = "py-2 px-4 text-lg";
   }
 
+  switch (color) {
+    case "red":
+      sizeClasses +=
+        " border-red-600 text-red-600 hover:bg-red-600 hover:text-red-50   transition-all";
+      break;
+    case "green":
+      sizeClasses +=
+        " border-green-600 text-green-600 hover:bg-green-600 hover:text-green-50  transition-all";
+      break;
+    default:
+      sizeClasses +=
+        " border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-blue-50 transition-all";
+  }
+
   if (fullWidth) {
     sizeClasses += " w-full";
   }
@@ -38,7 +54,7 @@ const OutlineButton: FC<OutlineButtonProps> = ({
   return (
     <button
       onClick={onClickMethod}
-      className={`border-2 border-blue-600 text-blue-600 font-semibold dark:border-blue-50 dark:text-blue-50 hover:bg-blue-600 hover:text-blue-50 dark:hover:bg-blue-50 dark:hover:text-blue-600 transition-all shadow-md rounded-md ${sizeClasses}`}
+      className={`border-2 font-semibold  transition-all shadow-md rounded-md ${sizeClasses}`}
       disabled={disabled}
     >
       {children}

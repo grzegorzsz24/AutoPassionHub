@@ -2,6 +2,8 @@ import {
   NotificationStatus,
   addNotification,
 } from "../../store/features/notificationSlice";
+import { deletePost, editPost } from "../../services/postService";
+import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 import { useEffect, useState } from "react";
 
 import AddPost from "./AddPost";
@@ -10,99 +12,6 @@ import PostModel from "../../models/PostModel";
 import { getPosts } from "../../services/postService";
 import handleError from "../../services/errorHandler";
 import { useAppDispatch } from "../../store/store";
-
-// const posts = [
-//   {
-//     firstName: "John",
-//     lastName: "Doe",
-//     nickname: "jdoe",
-//     avatar: "anonim.webp",
-//     createdAt: "2023-10-20T16:00:00Z",
-//     content: "Moja nowa fura jest super kozacka",
-//     photos: ["1155344.jpg", "1155344.jpg", "1155344.jpg"],
-//     liked: true,
-//     likes: 10,
-//     comments: 2,
-//   },
-//   {
-//     firstName: "Grzegorz",
-//     lastName: "Szymanek",
-//     nickname: "gszymanek",
-//     avatar: "anonim.webp",
-//     createdAt: "2023-10-18T15:30:00Z",
-//     content: "Stuningowałem maluszka. Co o tym sądzicie?",
-//     photos: ["1155344.jpg", "1155344.jpg"],
-//     liked: false,
-//     likes: 123,
-//     comments: 12,
-//   },
-//   {
-//     firstName: "John",
-//     lastName: "Doe",
-//     nickname: "jdoe",
-//     avatar: "anonim.webp",
-//     createdAt: "2023-10-20T16:00:00Z",
-//     content: "Moja nowa fura jest super kozacka",
-//     photos: ["1155344.jpg", "1155344.jpg", "1155344.jpg"],
-//     liked: true,
-//     likes: 10,
-//     comments: 2,
-//   },
-//   {
-//     firstName: "Grzegorz",
-//     lastName: "Szymanek",
-//     nickname: "gszymanek",
-//     avatar: "anonim.webp",
-//     createdAt: "2023-10-18T15:30:00Z",
-//     content: "Stuningowałem maluszka. Co o tym sądzicie?",
-//     photos: ["1155344.jpg", "1155344.jpg"],
-//     liked: false,
-//     likes: 123,
-//     comments: 12,
-//   },
-//   {
-//     firstName: "John",
-//     lastName: "Doe",
-//     nickname: "jdoe",
-//     avatar: "anonim.webp",
-//     createdAt: "2021-10-19T12:00:00Z",
-//     content: "Moja nowa fura jest super kozacka",
-//     photos: ["1155344.jpg"],
-//     liked: true,
-//     likes: 10,
-//     comments: 2,
-//   },
-//   {
-//     firstName: "John",
-//     lastName: "Doe",
-//     nickname: "jdoe",
-//     avatar: "anonim.webp",
-//     createdAt: "2021-10-19T12:00:00Z",
-//     content: "Moja nowa fura jest super kozacka",
-//     photos: ["1155344.jpg", "anonim.webp", "1155344.jpg", "anonim.webp"],
-//     liked: true,
-//     likes: 10,
-//     comments: 2,
-//   },
-//   {
-//     firstName: "John",
-//     lastName: "Doe",
-//     nickname: "jdoe",
-//     avatar: "anonim.webp",
-//     createdAt: "2021-10-19T12:00:00Z",
-//     content: "Moja nowa fura jest super kozacka",
-//     photos: [
-//       "1155344.jpg",
-//       "anonim.webp",
-//       "1155344.jpg",
-//       "anonim.webp",
-//       "1155344.jpg",
-//     ],
-//     liked: true,
-//     likes: 10,
-//     comments: 2,
-//   },
-// ];
 
 const Posts = () => {
   const dispatch = useAppDispatch();
@@ -115,6 +24,7 @@ const Posts = () => {
         throw new Error(data.message);
       }
       setPosts(data.posts);
+      console.log(data.posts);
     } catch (error) {
       const newError = handleError(error);
       dispatch(
@@ -126,6 +36,71 @@ const Posts = () => {
     }
   };
 
+  const addPostToList = (post: PostModel) => {
+    setPosts((prev) => [post, ...prev]);
+  };
+
+  const deletePostHandler = async (id: number) => {
+    try {
+      dispatch(startLoading());
+      const data = await deletePost(id);
+      if (data.status !== "ok") {
+        throw new Error(data.message);
+      }
+      dispatch(
+        addNotification({
+          type: NotificationStatus.SUCCESS,
+          message: data.message,
+        })
+      );
+      setPosts((prev) => prev.filter((post) => post.id !== id));
+    } catch (error) {
+      const newError = handleError(error);
+      dispatch(
+        addNotification({
+          type: NotificationStatus.ERROR,
+          message: newError.message,
+        })
+      );
+    } finally {
+      dispatch(stopLoading());
+    }
+  };
+
+  const editPostHandler = async (id: number, content: string) => {
+    try {
+      dispatch(startLoading());
+      const data = await editPost(id, content);
+      if (data.status !== "ok") {
+        throw new Error(data.message);
+      }
+      dispatch(
+        addNotification({
+          type: NotificationStatus.SUCCESS,
+          message: data.message,
+        })
+      );
+      setPosts((prev) =>
+        prev.map((post) => {
+          if (post.id === id) {
+            return { ...post, content };
+          }
+          return post;
+        })
+      );
+    } catch (error) {
+      const newError = handleError(error);
+      dispatch(
+        addNotification({
+          type: NotificationStatus.ERROR,
+          message: newError.message,
+        })
+      );
+    } finally {
+      dispatch(stopLoading());
+    }
+  };
+
   useEffect(() => {
     downloadPosts();
   }, []);
@@ -133,7 +108,7 @@ const Posts = () => {
   return (
     <div className="bg-gears-light dark:bg-gears-dark bg-no-repeat bg-contain bg-center gap-8 items-center overflow-y-auto h-full flex-grow">
       <div className="flex flex-col items-center gap-12 py-12">
-        <AddPost />
+        <AddPost addPostToList={addPostToList} />
         {posts.map((post) => (
           <Post
             key={post.id}
@@ -143,24 +118,16 @@ const Posts = () => {
             file={post.file}
             user={post.user}
             imageUrls={post.imageUrls}
-            liked={post.liked}
-          />
-        ))}
-        {/* {posts.map((post, index) => (
-          <Post
-            key={index}
+            likesNumber={post.likesNumber}
+            commentsNumber={post.commentsNumber}
             firstName={post.firstName}
             lastName={post.lastName}
-            nickname={post.nickname}
-            avatar={post.avatar}
-            createdAt={post.createdAt}
-            content={post.content}
-            photos={post.photos}
+            userImageUrl={post.userImageUrl}
             liked={post.liked}
-            likes={post.likes}
-            comments={post.comments}
+            deletePostHandler={deletePostHandler}
+            editPostHandler={editPostHandler}
           />
-        ))} */}
+        ))}
       </div>
     </div>
   );

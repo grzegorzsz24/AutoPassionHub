@@ -10,6 +10,7 @@ import {
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 
 import PendingInvitationModel from "../../models/PendingInvitationModel";
+import PrimaryButton from "../../ui/PrimaryButton";
 import UserModel from "../../models/UserModel";
 import { getUserById } from "../../services/userService";
 import handleError from "../../services/errorHandler";
@@ -133,18 +134,12 @@ const FriendInvitation: FC<PendingInvitationProps> = ({
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <button
-              className="text-white bg-green-500 hover:bg-green-600 px-4 py-2 rounded-md"
-              onClick={acceptInvitation}
-            >
+            <PrimaryButton onClick={acceptInvitation} color="green">
               Akceptuj
-            </button>
-            <button
-              className="text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-md"
-              onClick={rejectInvitation}
-            >
+            </PrimaryButton>
+            <PrimaryButton onClick={rejectInvitation} color="red">
               Odrzuć
-            </button>
+            </PrimaryButton>
           </div>
         </div>
       )}

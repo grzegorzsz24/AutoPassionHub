@@ -1,4 +1,4 @@
-import { FaComment, FaHeart, FaRegHeart } from "react-icons/fa";
+import { FaHeart, FaRegComment, FaRegHeart } from "react-icons/fa";
 
 import { FC } from "react";
 
@@ -18,7 +18,7 @@ const PostFooter: FC<PostFooterProps> = ({ liked, likes, comments }) => {
       <div className="flex items-center gap-2">
         <button>
           {" "}
-          <FaComment />
+          <FaRegComment />
         </button>
         <p className="text-sm">{comments}</p>
       </div>

@@ -13,6 +13,7 @@ const createPost = async (content: string, files: File[]) => {
       body: formData,
     });
     const data = await response.json();
+    console.log(data);
     if (!response.ok) {
       throw new Error(data.message);
     }
@@ -82,4 +83,54 @@ const getUserPosts = async (id: number) => {
   }
 };
 
-export { createPost, getPosts, getUserPosts };
+const deletePost = async (id: number) => {
+  try {
+    const response = await fetch(`${API_URL}/user/posts/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    if (response.ok) {
+      return {
+        status: "ok",
+        message: "Usunięto post.",
+      };
+    }
+    const data = await response.json();
+    throw new Error(data.message);
+  } catch (error) {
+    return {
+      status: "error",
+      message:
+        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
+    };
+  }
+};
+
+const editPost = async (id: number, content: string) => {
+  try {
+    const response = await fetch(`${API_URL}/user/posts/${id}`, {
+      method: "PATCH",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content }),
+    });
+    if (response.ok) {
+      return {
+        status: "ok",
+        message: "Edytowano post.",
+      };
+    }
+    const data = await response.json();
+    throw new Error(data.message);
+  } catch (error) {
+    return {
+      status: "error",
+      message:
+        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
+    };
+  }
+};
+
+export { createPost, getPosts, getUserPosts, deletePost, editPost };

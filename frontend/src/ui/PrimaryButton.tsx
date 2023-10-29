@@ -7,6 +7,7 @@ interface PrimaryButtonProps {
   children: ReactNode;
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
+  color?: "blue" | "red" | "green";
 }
 
 const PrimaryButton: FC<PrimaryButtonProps> = ({
@@ -16,6 +17,7 @@ const PrimaryButton: FC<PrimaryButtonProps> = ({
   children,
   disabled = false,
   type = "button",
+  color = "blue",
 }) => {
   let sizeClasses: string;
 
@@ -33,6 +35,17 @@ const PrimaryButton: FC<PrimaryButtonProps> = ({
       sizeClasses = "py-2 px-4 text-lg";
   }
 
+  switch (color) {
+    case "red":
+      sizeClasses += " bg-red-600 hover:bg-red-700 ";
+      break;
+    case "green":
+      sizeClasses += " bg-green-600 hover:bg-green-700 ";
+      break;
+    default:
+      sizeClasses += " bg-blue-600 hover:bg-blue-700 ";
+  }
+
   if (fullWidth) {
     sizeClasses += " w-full";
   }
@@ -40,7 +53,7 @@ const PrimaryButton: FC<PrimaryButtonProps> = ({
   if (type === "submit") {
     return (
       <button
-        className={`bg-blue-600 rounded-md text-blue-50 font-semibold shadow-md hover:bg-blue-700 transition-all ${sizeClasses} disabled:opacity-50 disabled:cursor-not-allowed`}
+        className={` rounded-md text-blue-50 font-semibold shadow-md hover:bg-blue-700 transition-all ${sizeClasses} disabled:opacity-50 disabled:cursor-not-allowed`}
         disabled={disabled}
         type={type}
       >
@@ -52,7 +65,7 @@ const PrimaryButton: FC<PrimaryButtonProps> = ({
   return (
     <button
       onClick={onClickMethod}
-      className={`bg-blue-600 rounded-md text-blue-50 font-semibold shadow-md hover:bg-blue-700 transition-all ${sizeClasses} disabled:opacity-50 disabled:cursor-not-allowed`}
+      className={` rounded-md text-blue-50 font-semibold shadow-md hover:bg-blue-700 transition-all ${sizeClasses} disabled:opacity-50 disabled:cursor-not-allowed`}
       disabled={disabled}
     >
       {children}

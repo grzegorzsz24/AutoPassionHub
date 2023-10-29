@@ -1,19 +1,24 @@
+import { FC, useCallback, useState } from "react";
 import {
   NotificationStatus,
   addNotification,
 } from "../../store/features/notificationSlice";
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 import { useAppDispatch, useAppSelector } from "../../store/store";
-import { useCallback, useState } from "react";
 
 import Gallery from "../Gallery";
 import ImageResizer from "../../utils/ImageResizer";
 import { MdPhoto } from "react-icons/md";
+import PostModel from "../../models/PostModel";
 import PrimaryButton from "../../ui/PrimaryButton";
 import { createPost } from "../../services/postService";
 import handleError from "../../services/errorHandler";
 
-const AddPost = () => {
+interface AddPostProps {
+  addPostToList: (post: PostModel) => void;
+}
+
+const AddPost: FC<AddPostProps> = ({ addPostToList }) => {
   const dispatch = useAppDispatch();
   const { imageUrl, firstName } = useAppSelector((state) => state.user);
   const [postText, setPostText] = useState<string>("");
@@ -75,6 +80,7 @@ const AddPost = () => {
           message: "Dodano post",
         })
       );
+      addPostToList(data.post);
       clearForm();
     } catch (error) {
       const newError = handleError(error);
