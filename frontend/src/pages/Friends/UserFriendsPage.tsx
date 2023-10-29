@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 
 import DeleteFriendElement from "../../components/Friends/DeleteFriendElement";
 import UserModel from "../../models/UserModel";
-import { getUserFriends } from "../../services/friendsService";
+import { getUserFriends } from "../../services/friendService";
 import handleError from "../../services/errorHandler";
 
 const UserFriendsPage = () => {

@@ -1,10 +1,22 @@
+import {
+  NotificationStatus,
+  addNotification,
+} from "../../store/features/notificationSlice";
+import { startLoading, stopLoading } from "../../store/features/loadingSlice";
+import { useAppDispatch, useAppSelector } from "../../store/store";
 import { useCallback, useState } from "react";
 
 import Gallery from "../Gallery";
+import ImageResizer from "../../utils/ImageResizer";
 import { MdPhoto } from "react-icons/md";
 import PrimaryButton from "../../ui/PrimaryButton";
+import { createPost } from "../../services/postService";
+import handleError from "../../services/errorHandler";
 
 const AddPost = () => {
+  const dispatch = useAppDispatch();
+  const { imageUrl, firstName } = useAppSelector((state) => state.user);
+  const [postText, setPostText] = useState<string>("");
   const [selectedImages, setSelectedImages] = useState<
     { file: File; url: string }[]
   >([]);
@@ -35,18 +47,62 @@ const AddPost = () => {
     });
   }, []);
 
+  const onPostTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setPostText(e.target.value);
+  };
+
+  const clearForm = () => {
+    setPostText("");
+    setSelectedImages([]);
+  };
+
+  const submitHandler = async () => {
+    try {
+      dispatch(startLoading());
+      const resizedImages = await Promise.all(
+        selectedImages.map((img) =>
+          ImageResizer.scaleDownAndReduceImageQuality(img.file, 1920, 1080, 0.8)
+        )
+      );
+      const data = await createPost(postText, resizedImages);
+      if (data.status !== "ok") {
+        throw new Error(data.message);
+      }
+
+      dispatch(
+        addNotification({
+          type: NotificationStatus.SUCCESS,
+          message: "Dodano post",
+        })
+      );
+      clearForm();
+    } catch (error) {
+      const newError = handleError(error);
+      dispatch(
+        addNotification({
+          type: NotificationStatus.ERROR,
+          message: newError.message,
+        })
+      );
+    } finally {
+      dispatch(stopLoading());
+    }
+  };
+
   return (
     <div className="bg-white dark:bg-primaryDark2 text-primaryDark dark:text-blue-50 rounded-md  py-4 max-w-2xl w-full shadow-md ">
       <div className="flex gap-6 px-4">
         <img
-          src="anonim.webp"
-          alt=""
+          src={imageUrl}
+          alt="Your profile picture"
           className="w-12 h-12 rounded-full shadow-md"
         />
         <textarea
           name=""
           id=""
-          placeholder="Co słychać?"
+          value={postText}
+          onChange={onPostTextChange}
+          placeholder={`Co słychać, ${firstName}?`}
           className="bg-transparent resize-none w-full outline-none border-none rounded-md h-32  overflow-auto py-2 px-2 focus:ring-2 focus:ring-blue-600"
         />
       </div>
@@ -89,7 +145,7 @@ const AddPost = () => {
           size="sm"
           fullWidth={true}
           disabled={!formIsValid}
-          onClick={() => {}}
+          onClick={submitHandler}
         >
           Dodaj post
         </PrimaryButton>

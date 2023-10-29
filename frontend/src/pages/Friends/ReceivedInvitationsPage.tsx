@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 
 import FriendInvitation from "../../components/Friends/FriendInvitation";
 import PendingInvitationModel from "../../models/PendingInvitationModel";
-import { getReceivedInvitations } from "../../services/friendsService";
+import { getReceivedInvitations } from "../../services/friendService";
 import handleError from "../../services/errorHandler";
 import { useAppDispatch } from "../../store/store";
 

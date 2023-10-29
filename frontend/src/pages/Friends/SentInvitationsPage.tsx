@@ -22,7 +22,7 @@ import { useEffect, useState } from "react";
 
 import PendingInvitation from "../../components/Friends/PendingInvitation";
 import PendingInvitationModel from "../../models/PendingInvitationModel";
-import { getSentInvitations } from "../../services/friendsService";
+import { getSentInvitations } from "../../services/friendService";
 import handleError from "../../services/errorHandler";
 import { useAppDispatch } from "../../store/store";
 
