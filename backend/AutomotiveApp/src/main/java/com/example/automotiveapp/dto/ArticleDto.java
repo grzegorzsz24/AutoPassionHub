@@ -14,4 +14,5 @@ public class ArticleDto {
     private LocalDateTime publishedAt;
     private String user;
     private boolean isLiked;
+    private int likesNumber;
 }

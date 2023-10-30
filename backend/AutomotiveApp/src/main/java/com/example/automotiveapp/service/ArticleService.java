@@ -38,7 +38,7 @@ public class ArticleService {
         articleRepository.save(article);
     }
 
-    public Optional<ArticleDto> findArticleByTitle(String title) {
-        return articleRepository.findByTitle(title).map(ArticleDtoMapper::map);
+    Optional<ArticleDto> findArticleById(Long id) {
+        return articleRepository.findById(id).map((ArticleDtoMapper::map));
     }
 }

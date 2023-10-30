@@ -16,6 +16,7 @@ public class Forum {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private int commentsNumber;
     @ManyToOne()
     @JoinColumn(name = "user_id")
     private User user;

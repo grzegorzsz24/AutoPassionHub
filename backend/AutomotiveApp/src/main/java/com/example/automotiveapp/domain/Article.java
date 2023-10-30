@@ -20,6 +20,7 @@ public class Article {
     private String content;
     private LocalDateTime publishedAt;
     private boolean isLiked;
+    private int likesNumber;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

@@ -9,4 +9,5 @@ public class ForumDto {
     private Long id;
     private String name;
     private String user;
+    private int commentsNumber;
 }

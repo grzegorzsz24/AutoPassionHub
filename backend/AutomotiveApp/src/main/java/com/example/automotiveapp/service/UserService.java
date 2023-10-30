@@ -9,6 +9,7 @@ import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.mapper.UserDtoMapper;
 import com.example.automotiveapp.repository.FileRepository;
 import com.example.automotiveapp.repository.UserRepository;
+import com.example.automotiveapp.service.utils.SecurityUtils;
 import com.example.automotiveapp.storage.FileStorageService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -43,9 +44,8 @@ public class UserService {
     }
 
     public String saveOrUpdateProfilePicture(MultipartFile file) {
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         String imageUrl = fileStorageService.saveImage(List.of(file)).get(0);
-        Optional<User> user = userRepository.findByEmail(userEmail);
+        Optional<User> user = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail());
         if (user.isPresent()) {
             Optional<File> fileToUpdate = fileRepository.findByUser_Id(user.get().getId());
             if (fileToUpdate.isPresent()) {
@@ -62,12 +62,12 @@ public class UserService {
     }
 
     public void deleteAccount() {
-        Optional<User> user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        Optional<User> user = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail());
         user.ifPresent(value -> userRepository.deleteById(value.getId()));
     }
 
     public void updateUser(Map<String, Object> fields, HttpServletResponse response) {
-        Optional<User> user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        Optional<User> user = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail());
         if (user.isEmpty()) {
             throw new ResourceNotFoundException("Nie znaleziono użytkownika");
         }
@@ -122,7 +122,7 @@ public class UserService {
     }
 
     public void updatePassword(String oldPassword, String newPassword, HttpServletResponse response) {
-        Optional<User> user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        Optional<User> user = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail());
 
         if (user.isEmpty()) {
             throw new ResourceNotFoundException("Nie znaleziono użytkownika");
@@ -141,7 +141,7 @@ public class UserService {
     }
 
     public void setProfileVisibility(boolean visible) {
-        Optional<User> user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        Optional<User> user = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail());
         if (user.isEmpty()) {
             throw new ResourceNotFoundException("Nie znaleziono użytkownika");
         }

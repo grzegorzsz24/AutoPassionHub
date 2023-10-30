@@ -10,9 +10,9 @@ import com.example.automotiveapp.mapper.InvitationDtoMapper;
 import com.example.automotiveapp.repository.FriendshipRepository;
 import com.example.automotiveapp.repository.InvitationRepository;
 import com.example.automotiveapp.repository.UserRepository;
+import com.example.automotiveapp.service.utils.SecurityUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public class InvitationService {
     private final FriendshipRepository friendshipRepository;
 
     public List<InvitationDto> getPendingInvitations() {
-        Optional<User> receiver = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        Optional<User> receiver = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail());
         if (receiver.isEmpty()) {
             throw new ResourceNotFoundException("Podany użytkownik nie istnieje");
         }
@@ -38,7 +38,7 @@ public class InvitationService {
 
     public void sendInvitation(Long receiverId) {
         Invitation invitation = new Invitation();
-        Optional<User> sender = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        Optional<User> sender = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail());
         Optional<User> receiver = userRepository.findById(receiverId);
         if (sender.isEmpty() || receiver.isEmpty()) {
             throw new ResourceNotFoundException("Nie znaleziono użytkownika");
@@ -73,7 +73,7 @@ public class InvitationService {
     }
 
     public List<InvitationDto> getSentInvitations() {
-        Optional<User> user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        Optional<User> user = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail());
         if (user.isEmpty()) {
             throw new ResourceNotFoundException("Podany użytkownik nie istnieje");
         }

@@ -8,12 +8,13 @@ import com.example.automotiveapp.exception.BadRequestException;
 import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.mapper.PostDtoMapper;
 import com.example.automotiveapp.repository.FileRepository;
+import com.example.automotiveapp.repository.LikeRepository;
 import com.example.automotiveapp.repository.PostRepository;
 import com.example.automotiveapp.repository.UserRepository;
+import com.example.automotiveapp.service.utils.SecurityUtils;
 import com.example.automotiveapp.storage.FileStorageService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,11 +29,12 @@ public class PostService {
     private final FileStorageService fileStorageService;
     private final FileRepository fileRepository;
     private final UserRepository userRepository;
+    private final LikeRepository likeRepository;
 
     @Transactional
     public PostDto savePost(PostDto postDto) {
         Post post = postDtoMapper.map(postDto);
-        post.setUser(userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).get());
+        post.setUser(userRepository.findByEmail(SecurityUtils.getCurrentUserEmail()).get());
         post.setPostedAt(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         post.setLiked(false);
         post.setLikesNumber(0);
@@ -81,15 +83,20 @@ public class PostService {
     }
 
     public List<PostDto> getFriendsPosts() {
-        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        List<User> friends = userRepository.findUserFriends(currentUserEmail);
+        List<User> friends = userRepository.findUserFriends(SecurityUtils.getCurrentUserEmail());
 
         List<PostDto> friendsPosts = new ArrayList<>();
 
         for (User friend : friends) {
             List<Post> friendPosts = postRepository.findByUser(friend);
             for (Post post : friendPosts) {
-                friendsPosts.add(PostDtoMapper.map(post));
+                PostDto postDto = PostDtoMapper.map(post);
+                if (likeRepository.getLikeByUser_EmailAndPostId(SecurityUtils.getCurrentUserEmail(), post.getId()) != null) {
+                    postDto.setLiked(true);
+                } else {
+                    postDto.setLiked(false);
+                }
+                friendsPosts.add(postDto);
             }
         }
         List<User> publicProfiles = userRepository.findPublicProfiles();
@@ -99,7 +106,6 @@ public class PostService {
                 friendsPosts.add(PostDtoMapper.map(post));
             }
         }
-
         return friendsPosts;
     }
 
@@ -112,5 +118,4 @@ public class PostService {
             throw new BadRequestException("Użytkownik ma prywatny profil");
         }
     }
-
 }

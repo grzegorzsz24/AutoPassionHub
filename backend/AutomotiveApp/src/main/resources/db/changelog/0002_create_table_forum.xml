@@ -18,6 +18,9 @@
                     referencedTableName="users"
                     referencedColumnNames="id"/>
             </column>
+            <column name="comments_number" type="INT">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
 

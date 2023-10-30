@@ -1,6 +1,8 @@
 package com.example.automotiveapp.service;
 
 import com.example.automotiveapp.domain.Comment;
+import com.example.automotiveapp.domain.Forum;
+import com.example.automotiveapp.domain.Post;
 import com.example.automotiveapp.dto.CommentDto;
 import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.mapper.CommentDtoMapper;
@@ -23,6 +25,17 @@ public class CommentService {
     public CommentDto saveComment(CommentDto commentDto) {
         Comment comment = commentDtoMapper.map(commentDto);
         comment.setCommentedAt((LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)));
+
+        if (comment.getPost() != null) {
+            Post post = comment.getPost();
+            post.getComments().add(comment);
+            post.setCommentsNumber(post.getCommentsNumber() + 1);
+        } else if (comment.getForum() != null) {
+            Forum forum = comment.getForum();
+            forum.getComments().add(comment);
+            forum.setCommentsNumber(forum.getCommentsNumber() + 1);
+        }
+
         Comment savedComment = commentRepository.save(comment);
         return CommentDtoMapper.map(savedComment);
     }
@@ -38,9 +51,21 @@ public class CommentService {
     }
 
     public void deleteComment(Long id) {
-        commentRepository.deleteById(id);
+        Optional<Comment> comment = commentRepository.findById(id);
+        if (comment.isPresent()) {
+            Comment commentToDelete = comment.get();
+            if (commentToDelete.getPost() != null) {
+                commentToDelete.getPost().setCommentsNumber(commentToDelete.getPost().getCommentsNumber() - 1);
+                commentToDelete.getPost().getComments().remove(commentToDelete);
+            } else if (commentToDelete.getForum() != null) {
+                commentToDelete.getForum().setCommentsNumber(commentToDelete.getForum().getCommentsNumber() - 1);
+                commentToDelete.getForum().getComments().remove(commentToDelete);
+            }
+            commentRepository.deleteById(id);
+        } else {
+            throw new ResourceNotFoundException("Nie znaleziono komentarza");
+        }
     }
-
 
     public List<CommentDto> findCommentsByPostId(Long postId) {
         if (postService.findPostById(postId).isEmpty()) {

@@ -5,6 +5,7 @@ import com.example.automotiveapp.domain.Forum;
 import com.example.automotiveapp.domain.Post;
 import com.example.automotiveapp.domain.User;
 import com.example.automotiveapp.dto.CommentDto;
+import com.example.automotiveapp.exception.BadRequestException;
 import com.example.automotiveapp.repository.ForumRepository;
 import com.example.automotiveapp.repository.PostRepository;
 import com.example.automotiveapp.repository.UserRepository;
@@ -44,13 +45,12 @@ public class CommentDtoMapper {
         user.ifPresent(comment::setUser);
         if (commentDto.getPost() != null) {
             Optional<Post> post = postRepository.findById(commentDto.getPost());
-            if (post.isPresent()) {
-                post.ifPresent(comment::setPost);
-                post.get().setCommentsNumber(post.get().getCommentsNumber() + 1);
-            }
+            post.ifPresent(comment::setPost);
         } else if (commentDto.getForum() != null) {
             Optional<Forum> forum = forumRepository.findById(commentDto.getForum());
             forum.ifPresent(comment::setForum);
+        } else {
+            throw new BadRequestException("Podaj post lub forum");
         }
         return comment;
     }

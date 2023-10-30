@@ -11,8 +11,8 @@ import com.example.automotiveapp.mapper.UserDtoMapper;
 import com.example.automotiveapp.repository.FriendshipRepository;
 import com.example.automotiveapp.repository.InvitationRepository;
 import com.example.automotiveapp.repository.UserRepository;
+import com.example.automotiveapp.service.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class FriendshipService {
     }
 
     public void addFriend(Long user2Id) {
-        Optional<User> user1 = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        Optional<User> user1 = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail());
         Optional<User> user2 = userRepository.findById(user2Id);
         if (user1.isEmpty() || user2.isEmpty()) {
             throw new ResourceNotFoundException("Nie znaleziono użytkownika");
@@ -58,8 +58,8 @@ public class FriendshipService {
     }
 
     public void removeFriend(Long user2Id) {
-        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<User> user1 = userRepository.findByEmail(currentUserEmail);
+
+        Optional<User> user1 = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail());
         Optional<User> user2 = userRepository.findById(user2Id);
 
         if (user1.isEmpty() || user2.isEmpty()) {
@@ -80,7 +80,7 @@ public class FriendshipService {
 
 
     public List<UserDto> findNotFriends() {
-        Optional<User> loggedUser = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        Optional<User> loggedUser = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail());
         if (loggedUser.isEmpty()) {
             throw new ResourceNotFoundException("Nie znaleziono użytkownika");
         }
