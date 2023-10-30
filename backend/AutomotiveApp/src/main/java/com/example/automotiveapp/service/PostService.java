@@ -15,6 +15,7 @@ import com.example.automotiveapp.service.utils.SecurityUtils;
 import com.example.automotiveapp.storage.FileStorageService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,6 +24,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PostService {
     private final PostRepository postRepository;
     private final PostDtoMapper postDtoMapper;
@@ -89,33 +91,38 @@ public class PostService {
 
         for (User friend : friends) {
             List<Post> friendPosts = postRepository.findByUser(friend);
-            for (Post post : friendPosts) {
-                PostDto postDto = PostDtoMapper.map(post);
-                if (likeRepository.getLikeByUser_EmailAndPostId(SecurityUtils.getCurrentUserEmail(), post.getId()) != null) {
-                    postDto.setLiked(true);
-                } else {
-                    postDto.setLiked(false);
-                }
-                friendsPosts.add(postDto);
-            }
+            setPostLikes(friendPosts, friendsPosts);
         }
         List<User> publicProfiles = userRepository.findPublicProfiles();
         for (User publicProfile : publicProfiles) {
             List<Post> publicProfilePosts = postRepository.findByUser(publicProfile);
-            for (Post post : publicProfilePosts) {
-                friendsPosts.add(PostDtoMapper.map(post));
-            }
+            setPostLikes(publicProfilePosts, friendsPosts);
         }
         return friendsPosts;
     }
 
     public List<PostDto> getUserPosts(Long userId) {
         if (userRepository.findById(userId).get().isPublicProfile()) {
-            return postRepository.findAllByUserId(userId).stream()
-                    .map(PostDtoMapper::map)
-                    .toList();
+            List<PostDto> friendsPosts = new ArrayList<>();
+            List<Post> posts = postRepository.findAllByUserId(userId);
+            setPostLikes(posts, friendsPosts);
+            return friendsPosts;
         } else {
             throw new BadRequestException("Użytkownik ma prywatny profil");
+        }
+    }
+
+    private void setPostLikes(List<Post> posts, List<PostDto> friendsPosts) {
+        for (Post post : posts) {
+            PostDto postDto = PostDtoMapper.map(post);
+            if (likeRepository.getLikeByUser_EmailAndPostId(SecurityUtils.getCurrentUserEmail(), post.getId()).isPresent()) {
+                postDto.setLiked(true);
+                log.info("Ustawiono na true");
+            } else {
+                postDto.setLiked(false);
+                log.info("Ustawiono na true");
+            }
+            friendsPosts.add(postDto);
         }
     }
 }
