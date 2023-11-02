@@ -3,6 +3,7 @@ import {
   NotificationStatus,
   addNotification,
 } from "../../store/features/notificationSlice";
+import { debounce, throttle } from "lodash";
 
 import EditPost from "./EditPost";
 import Gallery from "../Gallery";
@@ -43,18 +44,11 @@ const Post: FC<PostProps> = ({
   //   const [commentsAreShown, setCommentsAreShown] = useState(false);
   //   const [downloadingComments, setDownloadingComments] = useState(false);
 
-  const toggleLikeHandler = async () => {
+  const debouncedToggleLike = debounce(async () => {
     try {
       const data = await toggleLike(id);
       if (data.status !== "ok") {
         throw new Error(data.message);
-      }
-      if (isLiked) {
-        setIsLiked(false);
-        setLikesNumber((prev) => prev - 1);
-      } else {
-        setIsLiked(true);
-        setLikesNumber((prev) => prev + 1);
       }
     } catch (error) {
       const newError = handleError(error);
@@ -64,7 +58,16 @@ const Post: FC<PostProps> = ({
           type: NotificationStatus.ERROR,
         })
       );
+      // Jeśli wystąpi błąd, przywracamy poprzedni stan
+      setIsLiked((prev) => !prev);
+      setLikesNumber((prev) => (isLiked ? prev - 1 : prev + 1));
     }
+  }, 500);
+
+  const toggleLikeHandler = () => {
+    setIsLiked((prev) => !prev);
+    setLikesNumber((prev) => (isLiked ? prev - 1 : prev + 1));
+    debouncedToggleLike();
   };
 
   return (
