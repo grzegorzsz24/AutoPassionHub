@@ -6,13 +6,22 @@ interface PostFooterProps {
   liked: boolean;
   likes: number;
   comments: number;
+  toogleLikeHandler: () => void;
 }
 
-const PostFooter: FC<PostFooterProps> = ({ liked, likes, comments }) => {
+const PostFooter: FC<PostFooterProps> = ({
+  liked,
+  likes,
+  comments,
+  toogleLikeHandler,
+}) => {
   return (
     <div className="px-4 py-4 flex gap-8 text-blue-700 dark:text-blue-200">
       <div className="flex items-center gap-2">
-        <button> {liked ? <FaHeart /> : <FaRegHeart />}</button>
+        <button onClick={toogleLikeHandler}>
+          {" "}
+          {liked ? <FaHeart /> : <FaRegHeart />}
+        </button>
         <p className="text-sm">{likes}</p>
       </div>
       <div className="flex items-center gap-2">

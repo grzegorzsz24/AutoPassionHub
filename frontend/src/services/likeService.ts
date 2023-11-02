@@ -1,6 +1,6 @@
 const API_URL = import.meta.env.VITE_API_URL as string;
 
-const addLikeToPost = async (postId: number) => {
+const toggleLike = async (postId: number) => {
   try {
     const response = await fetch(`${API_URL}/user/likes`, {
       method: "POST",
@@ -8,7 +8,7 @@ const addLikeToPost = async (postId: number) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ id: postId }),
+      body: JSON.stringify({ post: postId }),
     });
     const data = await response.json();
     if (!response.ok) {
@@ -28,27 +28,4 @@ const addLikeToPost = async (postId: number) => {
   }
 };
 
-const deleteLikeFromPost = async (postId: number) => {
-  try {
-    const response = await fetch(`${API_URL}/user/likes?id=${postId}`, {
-      method: "DELETE",
-      credentials: "include",
-    });
-    if (response.ok) {
-      return {
-        status: "ok",
-        message: "Usunięto like.",
-      };
-    }
-    const data = await response.json();
-    throw new Error(data.message);
-  } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
-  }
-};
-
-export { addLikeToPost, deleteLikeFromPost };
+export { toggleLike };
