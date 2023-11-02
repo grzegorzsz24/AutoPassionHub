@@ -11,6 +11,7 @@ import ImageResizer from "../../utils/ImageResizer";
 import { MdPhoto } from "react-icons/md";
 import PostModel from "../../models/PostModel";
 import PrimaryButton from "../../ui/PrimaryButton";
+import TextareaAutosize from "react-textarea-autosize";
 import { createPost } from "../../services/postService";
 import handleError from "../../services/errorHandler";
 
@@ -103,13 +104,13 @@ const AddPost: FC<AddPostProps> = ({ addPostToList }) => {
           alt="Your profile picture"
           className="w-12 h-12 rounded-full shadow-md"
         />
-        <textarea
-          name=""
-          id=""
+        <TextareaAutosize
           value={postText}
           onChange={onPostTextChange}
+          //   maxLength={300}
+          minRows={2}
           placeholder={`Co słychać, ${firstName}?`}
-          className="bg-transparent resize-none w-full outline-none border-none rounded-md h-32  overflow-auto py-2 px-2 mb-2 focus:ring-2 focus:ring-blue-600"
+          className="bg-transparent resize-none w-full outline-none border-none rounded-md overflow-auto py-2 px-2 mb-2 focus:ring-2 focus:ring-blue-600"
         />
       </div>
 

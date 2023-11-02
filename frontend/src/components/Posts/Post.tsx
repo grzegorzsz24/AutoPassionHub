@@ -3,14 +3,22 @@ import {
   NotificationStatus,
   addNotification,
 } from "../../store/features/notificationSlice";
-import { debounce, throttle } from "lodash";
+import {
+  addComment,
+  deleteComment,
+  editComment,
+} from "../../services/commentService";
+import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 
+import CommentModel from "../../models/CommentModel";
+import Comments from "./Comments";
 import EditPost from "./EditPost";
 import Gallery from "../Gallery";
 import PostFooter from "./PostFooter";
 import PostHeader from "./PostHeader";
 import PostModel from "../../models/PostModel";
 import PostText from "./PostText";
+import { debounce } from "lodash";
 import handleError from "../../services/errorHandler";
 import { toggleLike } from "../../services/likeService";
 import { useAppDispatch } from "../../store/store";
@@ -27,7 +35,7 @@ const Post: FC<PostProps> = ({
   // file,
   user,
   imageUrls,
-  likesNumber: likes,
+  likesNumber,
   commentsNumber,
   firstName,
   lastName,
@@ -39,10 +47,12 @@ const Post: FC<PostProps> = ({
   const dispatch = useAppDispatch();
   const [editMode, setEditMode] = useState(false);
   const [isLiked, setIsLiked] = useState(liked);
-  const [likesNumber, setLikesNumber] = useState(likes);
+  const [numberOfLikes, setNumberOfLikes] = useState(likesNumber);
+  const [comments, setComments] = useState<CommentModel[]>([]);
+  const [commentsAreLoading, setCommentsAreLoading] = useState(false);
+  const [numberOfComments, setNumberOfComments] = useState(commentsNumber);
 
-  //   const [commentsAreShown, setCommentsAreShown] = useState(false);
-  //   const [downloadingComments, setDownloadingComments] = useState(false);
+  const [commentsAreShown, setCommentsAreShown] = useState(false);
 
   const debouncedToggleLike = debounce(async () => {
     try {
@@ -58,16 +68,112 @@ const Post: FC<PostProps> = ({
           type: NotificationStatus.ERROR,
         })
       );
-      // Jeśli wystąpi błąd, przywracamy poprzedni stan
       setIsLiked((prev) => !prev);
-      setLikesNumber((prev) => (isLiked ? prev - 1 : prev + 1));
+      setNumberOfLikes((prev) => (isLiked ? prev - 1 : prev + 1));
     }
   }, 500);
 
   const toggleLikeHandler = () => {
     setIsLiked((prev) => !prev);
-    setLikesNumber((prev) => (isLiked ? prev - 1 : prev + 1));
+    setNumberOfLikes((prev) => (isLiked ? prev - 1 : prev + 1));
     debouncedToggleLike();
+  };
+
+  const toogleCommentsVisibilityHandler = () => {
+    if (commentsAreShown) {
+      setComments([]);
+    }
+    setCommentsAreShown((prev) => !prev);
+  };
+
+  const deleteCommentHandler = async (commentId: number) => {
+    try {
+      dispatch(startLoading());
+      const data = await deleteComment(commentId);
+      if (data.status !== "ok") {
+        throw new Error(data.message);
+      }
+      setComments((prev) => prev.filter((comment) => comment.id !== commentId));
+      setNumberOfComments((prev) => prev - 1);
+      dispatch(
+        addNotification({
+          message: data.message,
+          type: NotificationStatus.SUCCESS,
+        })
+      );
+    } catch (error) {
+      const newError = handleError(error);
+      dispatch(
+        addNotification({
+          message: newError.message,
+          type: NotificationStatus.ERROR,
+        })
+      );
+    } finally {
+      dispatch(stopLoading());
+    }
+  };
+
+  const editCommentHandler = async (commentId: number, content: string) => {
+    try {
+      dispatch(startLoading());
+      const data = await editComment(commentId, content);
+      if (data.status !== "ok") {
+        throw new Error(data.message);
+      }
+      setComments((prev) =>
+        prev.map((comment) => {
+          if (comment.id === commentId) {
+            return { ...comment, content };
+          }
+          return comment;
+        })
+      );
+      dispatch(
+        addNotification({
+          message: data.message,
+          type: NotificationStatus.SUCCESS,
+        })
+      );
+    } catch (error) {
+      const newError = handleError(error);
+      dispatch(
+        addNotification({
+          message: newError.message,
+          type: NotificationStatus.ERROR,
+        })
+      );
+    } finally {
+      dispatch(stopLoading());
+    }
+  };
+
+  const addCommentHandler = async (content: string) => {
+    try {
+      dispatch(startLoading());
+      const data = await addComment(id, content);
+      if (data.status !== "ok") {
+        throw new Error(data.message);
+      }
+      setComments((prev) => [data.comment, ...prev]);
+      setNumberOfComments((prev) => prev + 1);
+      dispatch(
+        addNotification({
+          message: data.message,
+          type: NotificationStatus.SUCCESS,
+        })
+      );
+    } catch (error) {
+      const newError = handleError(error);
+      dispatch(
+        addNotification({
+          message: newError.message,
+          type: NotificationStatus.ERROR,
+        })
+      );
+    } finally {
+      dispatch(stopLoading());
+    }
   };
 
   return (
@@ -99,9 +205,22 @@ const Post: FC<PostProps> = ({
       <PostFooter
         liked={isLiked}
         toogleLikeHandler={toggleLikeHandler}
-        likes={likesNumber}
-        comments={commentsNumber}
+        likes={numberOfLikes}
+        comments={numberOfComments}
+        toogleCommentsVisibilityHandler={toogleCommentsVisibilityHandler}
       />
+      {commentsAreShown && (
+        <Comments
+          id={id}
+          comments={comments}
+          setComments={setComments}
+          commentsAreLoading={commentsAreLoading}
+          setCommentsAreLoading={setCommentsAreLoading}
+          deleteCommentHandler={deleteCommentHandler}
+          editCommentHandler={editCommentHandler}
+          addCommentHandler={addCommentHandler}
+        />
+      )}
     </div>
   );
 };

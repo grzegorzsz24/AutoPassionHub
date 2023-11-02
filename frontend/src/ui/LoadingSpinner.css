@@ -25,6 +25,18 @@
 .lds-ring div:nth-child(3) {
   animation-delay: -0.15s;
 }
+
+.lds-ring.small {
+  width: 40px;
+  height: 40px;
+}
+.lds-ring.small div {
+  width: 32px;
+  height: 32px;
+  margin: 4px;
+  border-width: 4px;
+  border-color: #2563eb transparent transparent transparent;
+}
 @keyframes lds-ring {
   0% {
     transform: rotate(0deg);

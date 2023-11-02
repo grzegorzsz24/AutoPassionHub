@@ -1,6 +1,30 @@
 import "./LoadingSpinner.css";
 
-const LoadingSpinner = () => {
+import { FC } from "react";
+
+interface LoadingSpinnerProps {
+  small?: boolean;
+  message?: string;
+}
+
+const LoadingSpinner: FC<LoadingSpinnerProps> = ({ small, message }) => {
+  if (small) {
+    return (
+      <div
+        className="flex items-center flex-col justify-center gap-2 
+      "
+      >
+        <div className="lds-ring small">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        {message && <p className="text-sm text-blue-600">{message}</p>}
+      </div>
+    );
+  }
+
   return (
     <div
       role="status"
@@ -13,6 +37,7 @@ const LoadingSpinner = () => {
         <div></div>
         <div></div>
       </div>
+      {message && <p className="text-md">{message}</p>}
     </div>
   );
 };

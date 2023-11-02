@@ -1,6 +1,6 @@
 const API_URL = import.meta.env.VITE_API_URL as string;
 
-const AddComment = async (content: string, postId: number) => {
+const addComment = async (postId: number, content: string) => {
   try {
     const response = await fetch(`${API_URL}/user/comments`, {
       method: "POST",
@@ -8,7 +8,7 @@ const AddComment = async (content: string, postId: number) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ content, postId }),
+      body: JSON.stringify({ content, post: postId }),
     });
     const data = await response.json();
     if (!response.ok) {
@@ -28,7 +28,7 @@ const AddComment = async (content: string, postId: number) => {
   }
 };
 
-const DeleteComment = async (id: number) => {
+const deleteComment = async (id: number) => {
   try {
     const response = await fetch(`${API_URL}/user/comments/${id}`, {
       method: "DELETE",
@@ -51,7 +51,7 @@ const DeleteComment = async (id: number) => {
   }
 };
 
-const EditComment = async (id: number, content: string) => {
+const editComment = async (id: number, content: string) => {
   try {
     const response = await fetch(`${API_URL}/user/comments/${id}`, {
       method: "PATCH",
@@ -105,4 +105,4 @@ const getPostComments = async (postId: number) => {
   }
 };
 
-export { AddComment, DeleteComment, EditComment, getPostComments };
+export { addComment, deleteComment, editComment, getPostComments };
