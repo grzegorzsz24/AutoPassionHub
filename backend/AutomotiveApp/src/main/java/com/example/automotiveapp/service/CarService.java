@@ -7,13 +7,14 @@ import com.example.automotiveapp.repository.CarRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class CarService {
     private final CarRepository carRepository;
-
     public List<CarDto> getCars() {
         return carRepository.findAll().stream()
                 .map(CarDtoMapper::map)
@@ -28,5 +29,17 @@ public class CarService {
         carRepository.findByBrand(carBrand)
                 .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono samochodu"));
         return carRepository.findBrandsByModelOrderedAlphabetically(carBrand);
+    }
+
+    public Map<String, List<String>> getBrandsWithModels() {
+        List<String> brands = carRepository.findDistinctBrandsOrderedAlphabetically();
+        Map<String, List<String>> brandsWithModels = new HashMap<>();
+
+        for (String brand : brands) {
+            List<String> models = carRepository.findBrandsByModelOrderedAlphabetically(brand);
+            brandsWithModels.put(brand, models);
+        }
+
+        return brandsWithModels;
     }
 }
