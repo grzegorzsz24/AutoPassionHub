@@ -19,7 +19,7 @@ public class EventController {
     private final EventService eventService;
 
     @PostMapping
-    public ResponseEntity<EventDto> addEvent(@RequestBody EventDto event) {
+    public ResponseEntity<EventDto> addEvent(@ModelAttribute EventDto event) {
         EventDto savedEvent = eventService.saveEvent(event);
         URI savedEventURI = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
