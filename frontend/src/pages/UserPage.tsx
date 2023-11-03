@@ -2,25 +2,31 @@ import {
   NotificationStatus,
   addNotification,
 } from "../store/features/notificationSlice";
+import { deletePost, editPost } from "../services/postService";
 import { startLoading, stopLoading } from "../store/features/loadingSlice";
+import { useAppDispatch, useAppSelector } from "../store/store";
 import { useEffect, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
 
+import AddPost from "../components/Posts/AddPost";
 import Post from "../components/Posts/Post";
 import PostModel from "../models/PostModel";
 import UserHeader from "../components/UserHeader";
 import UserModel from "../models/UserModel";
-import { deletePost } from "../services/postService";
 import { getUserByNickname } from "../services/userService";
 import { getUserPosts } from "../services/postService";
 import handleError from "../services/errorHandler";
-import { useAppDispatch } from "../store/store";
-import { useParams } from "react-router-dom";
 
 const UserPage = () => {
   const dispatch = useAppDispatch();
-  const { nickname } = useParams();
+  const location = useLocation();
+  const { nickname: userNickname } = useAppSelector((state) => state.user);
+  const { nicknameFromParams } = useParams();
   const [user, setUser] = useState<UserModel | null>(null);
   const [posts, setPosts] = useState<PostModel[]>([]);
+
+  const nickname =
+    location.pathname === "/me" ? userNickname : nicknameFromParams;
 
   const getUserData = async () => {
     try {
@@ -31,6 +37,71 @@ const UserPage = () => {
       }
       setUser(data.user);
       console.log(data.user);
+    } catch (error) {
+      const newError = handleError(error);
+      dispatch(
+        addNotification({
+          type: NotificationStatus.ERROR,
+          message: newError.message,
+        })
+      );
+    } finally {
+      dispatch(stopLoading());
+    }
+  };
+
+  const addPostToList = (post: PostModel) => {
+    setPosts((prev) => [post, ...prev]);
+  };
+
+  const deletePostHandler = async (id: number) => {
+    try {
+      dispatch(startLoading());
+      const data = await deletePost(id);
+      if (data.status !== "ok") {
+        throw new Error(data.message);
+      }
+      dispatch(
+        addNotification({
+          type: NotificationStatus.SUCCESS,
+          message: data.message,
+        })
+      );
+      setPosts((prev) => prev.filter((post) => post.id !== id));
+    } catch (error) {
+      const newError = handleError(error);
+      dispatch(
+        addNotification({
+          type: NotificationStatus.ERROR,
+          message: newError.message,
+        })
+      );
+    } finally {
+      dispatch(stopLoading());
+    }
+  };
+
+  const editPostHandler = async (id: number, content: string) => {
+    try {
+      dispatch(startLoading());
+      const data = await editPost(id, content);
+      if (data.status !== "ok") {
+        throw new Error(data.message);
+      }
+      dispatch(
+        addNotification({
+          type: NotificationStatus.SUCCESS,
+          message: data.message,
+        })
+      );
+      setPosts((prev) =>
+        prev.map((post) => {
+          if (post.id === id) {
+            return { ...post, content };
+          }
+          return post;
+        })
+      );
     } catch (error) {
       const newError = handleError(error);
       dispatch(
@@ -62,33 +133,6 @@ const UserPage = () => {
     }
   };
 
-  const deletePostHandler = async (id: number) => {
-    try {
-      dispatch(startLoading());
-      const data = await deletePost(id);
-      if (data.status !== "ok") {
-        throw new Error(data.message);
-      }
-      dispatch(
-        addNotification({
-          type: NotificationStatus.SUCCESS,
-          message: data.message,
-        })
-      );
-      setPosts((prev) => prev.filter((post) => post.id !== id));
-    } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
-    } finally {
-      dispatch(stopLoading());
-    }
-  };
-
   useEffect(() => {
     if (nickname) {
       getUserData();
@@ -105,8 +149,16 @@ const UserPage = () => {
     <div className=" px-6 py-8 overflow-y-auto h-full flex-grow">
       <UserHeader user={user} />
       <div className="flex flex-col gap-4 items-center my-6">
+        {user && userNickname === nickname && (
+          <AddPost addPostToList={addPostToList} />
+        )}
         {posts.map((post) => (
-          <Post key={post.id} {...post} deletePostHandler={deletePostHandler} />
+          <Post
+            key={post.id}
+            {...post}
+            deletePostHandler={deletePostHandler}
+            editPostHandler={editPostHandler}
+          />
         ))}
       </div>
     </div>
