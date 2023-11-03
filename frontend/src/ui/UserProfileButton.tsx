@@ -1,12 +1,13 @@
+import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store/store";
 
 import { FaChevronDown } from "react-icons/fa";
-import { Link } from "react-router-dom";
 import PrimaryButton from "./PrimaryButton";
 import { clearUser } from "../store/features/userSlice";
 import { useState } from "react";
 
 const UserProfileButton = () => {
+  const navigate = useNavigate();
   const [isHovering, setIsHovering] = useState(false);
   const dispatch = useAppDispatch();
   const { firstName, lastName, imageUrl } = useAppSelector(
@@ -21,6 +22,10 @@ const UserProfileButton = () => {
 
   const handleMouseOut = () => setIsHovering(false);
 
+  const navigateToUserPage = () => {
+    navigate("/me");
+  };
+
   return (
     <div
       className="relative"
@@ -31,8 +36,12 @@ const UserProfileButton = () => {
         <img
           src={`${imageUrl}`}
           className="w-10 h-10 3xl:w-14 3xl:h-14 rounded-full group-hover:ring-4 group-hover:ring-blue-600 transition-all"
+          onClick={navigateToUserPage}
         />
-        <span className="block font-semibold text-sm xl:text-lg">
+        <span
+          className="block font-semibold text-sm xl:text-lg"
+          onClick={navigateToUserPage}
+        >
           {firstName} {lastName}
         </span>
         <FaChevronDown className="text-md xl:text-xl" />

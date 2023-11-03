@@ -6,9 +6,10 @@ import { deletePost, editPost } from "../services/postService";
 import { startLoading, stopLoading } from "../store/features/loadingSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import AddPost from "../components/Posts/AddPost";
+import OutlineButton from "../ui/OutlineButton";
 import Post from "../components/Posts/Post";
 import PostModel from "../models/PostModel";
 import UserHeader from "../components/UserHeader";
@@ -20,14 +21,18 @@ import handleError from "../services/errorHandler";
 const UserPage = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
+  const navigate = useNavigate();
   const { nickname: userNickname } = useAppSelector((state) => state.user);
-  const { nicknameFromParams } = useParams();
+  const { nickname: nicknameFromParams } = useParams();
   const [user, setUser] = useState<UserModel | null>(null);
   const [posts, setPosts] = useState<PostModel[]>([]);
 
+  console.log(`location.pathname: ${location.pathname}`);
+  console.log(`userNickname: ${userNickname}`);
+  console.log(`nicknameFromParams: ${nicknameFromParams}`);
   const nickname =
     location.pathname === "/me" ? userNickname : nicknameFromParams;
-
+  console.log(nickname);
   const getUserData = async () => {
     try {
       dispatch(startLoading());
@@ -133,6 +138,10 @@ const UserPage = () => {
     }
   };
 
+  const navigateToSettingsPage = () => {
+    navigate("/me/settings/data");
+  };
+
   useEffect(() => {
     if (nickname) {
       getUserData();
@@ -146,8 +155,15 @@ const UserPage = () => {
   }, [user]);
 
   return (
-    <div className=" px-6 py-8 overflow-y-auto h-full flex-grow">
+    <div className=" px-6 py-8 overflow-y-auto h-full flex-grow max-w-2xl mx-auto">
       <UserHeader user={user} />
+      <div className="py-4">
+        {nickname === userNickname && (
+          <OutlineButton size="sm" fullWidth onClick={navigateToSettingsPage}>
+            Ustawienia
+          </OutlineButton>
+        )}
+      </div>
       <div className="flex flex-col gap-4 items-center my-6">
         {user && userNickname === nickname && (
           <AddPost addPostToList={addPostToList} />
