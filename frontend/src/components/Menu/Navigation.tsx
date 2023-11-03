@@ -21,9 +21,9 @@ const links = [
     text: "Znajomi",
   },
   {
-    to: "/forum",
+    to: "/forums",
     icon: <MdForum className="text-md lg:text-2xl" />,
-    text: "Forum",
+    text: "Fora",
   },
   {
     to: "/articles",

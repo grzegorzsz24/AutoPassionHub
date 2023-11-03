@@ -1,6 +1,8 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import AppLayout from "./pages/AppLayout";
+import ForumPageLayout from "./pages/Forums/ForumPageLayout";
+import ForumsPage from "./pages/Forums/ForumsPage";
 import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
 import MainPageLayout from "./pages/MainPageLayout";
@@ -68,8 +70,22 @@ const router = createBrowserRouter([
             element: <p>Zapisane</p>,
           },
           {
-            path: "/forum",
-            element: <p>Forum</p>,
+            path: "/forums",
+            element: <ForumPageLayout />,
+            children: [
+              {
+                path: "",
+                element: <ForumsPage />,
+              },
+              {
+                path: ":forum",
+                element: <p>Forum</p>,
+              },
+              {
+                path: "add",
+                element: <p>Dodaj forum</p>,
+              },
+            ],
           },
           {
             path: "/me",
