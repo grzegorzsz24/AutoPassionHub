@@ -62,19 +62,19 @@ public class UserService {
     }
 
     public void deleteAccount() {
-        Optional<User> user = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail());
-        user.ifPresent(value -> userRepository.deleteById(value.getId()));
+        User user = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail())
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika"));
+        userRepository.deleteById(user.getId());
     }
 
+
     public void updateUser(Map<String, Object> fields, HttpServletResponse response) {
-        Optional<User> user = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail());
-        if (user.isEmpty()) {
-            throw new ResourceNotFoundException("Nie znaleziono użytkownika");
-        }
+        User user = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail())
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika"));
 
         if (fields.containsKey("email")) {
             String email = (String) fields.get("email");
-            if (email.equals(user.get().getEmail())) {
+            if (email.equals(user.getEmail())) {
                 throw new BadRequestException("Podałeś swój aktualny email");
             } else if (userRepository.findByEmail(email).isPresent()) {
                 throw new BadRequestException("Użytkownik z podanym emailem już istnieje");
@@ -83,7 +83,7 @@ public class UserService {
 
         if (fields.containsKey("nickname")) {
             String nickname = (String) fields.get("nickname");
-            if (nickname.equals(user.get().getNickname())) {
+            if (nickname.equals(user.getNickname())) {
                 throw new BadRequestException("Podałes swój aktualny nickname");
             } else if (userRepository.findByNicknameIgnoreCase(nickname).isPresent()) {
                 throw new BadRequestException("Użytkownik z podanym nickname już istnieje");
@@ -94,11 +94,11 @@ public class UserService {
             Field field = ReflectionUtils.findField(User.class, key);
             assert field != null;
             field.setAccessible(true);
-            ReflectionUtils.setField(field, user.get(), value);
+            ReflectionUtils.setField(field, user, value);
         });
 
-        userRepository.save(user.get());
-        updateSecurityContext(response, user.get());
+        userRepository.save(user);
+        updateSecurityContext(response, user);
     }
 
     private void updateSecurityContext(HttpServletResponse response, User user) {
@@ -122,31 +122,27 @@ public class UserService {
     }
 
     public void updatePassword(String oldPassword, String newPassword, HttpServletResponse response) {
-        Optional<User> user = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail());
+        User user = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail())
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika"));
 
-        if (user.isEmpty()) {
-            throw new ResourceNotFoundException("Nie znaleziono użytkownika");
-        }
-
-        if (!passwordEncoder.matches(oldPassword, user.get().getPassword())) {
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             throw new BadRequestException("Podano nieprawidłowe obecne hasło");
         }
 
         if (newPassword.equals(oldPassword)) {
             throw new BadRequestException("Podane hasło musi być inne niż poprzednie");
         }
-        user.get().setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user.get());
-        updateSecurityContext(response, user.get());
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        updateSecurityContext(response, user);
     }
 
     public void setProfileVisibility(boolean visible) {
-        Optional<User> user = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail());
-        if (user.isEmpty()) {
-            throw new ResourceNotFoundException("Nie znaleziono użytkownika");
-        }
-        user.get().setPublicProfile(visible);
-        userRepository.save(user.get());
+        User user = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail())
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika"));
+
+        user.setPublicProfile(visible);
+        userRepository.save(user);
     }
 
     public List<UserDto> searchUsers(String keyword, Pageable pageable) {

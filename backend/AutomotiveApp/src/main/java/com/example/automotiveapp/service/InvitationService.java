@@ -26,11 +26,10 @@ public class InvitationService {
     private final FriendshipRepository friendshipRepository;
 
     public List<InvitationDto> getPendingInvitations() {
-        Optional<User> receiver = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail());
-        if (receiver.isEmpty()) {
-            throw new ResourceNotFoundException("Podany użytkownik nie istnieje");
-        }
-        return invitationRepository.findByReceiverAndStatus(receiver.get(), InvitationStatus.PENDING)
+        User receiver = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail())
+                .orElseThrow(() -> new ResourceNotFoundException("Podany użytkownik nie istnieje"));
+
+        return invitationRepository.findByReceiverAndStatus(receiver, InvitationStatus.PENDING)
                 .stream()
                 .map(InvitationDtoMapper::map)
                 .toList();
@@ -51,33 +50,29 @@ public class InvitationService {
 
     @Transactional
     public void acceptInvitation(Long invitationId) {
-        Optional<Invitation> invitation = invitationRepository.findById(invitationId);
-        if (invitation.isEmpty()) {
-            throw new ResourceNotFoundException("Nie znaleziono zaproszenia");
-        }
-        invitation.get().setStatus(InvitationStatus.ACCEPTED);
-        invitationRepository.save(invitation.get());
+        Invitation invitation = invitationRepository.findById(invitationId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono zaproszenia"));
+
+        invitation.setStatus(InvitationStatus.ACCEPTED);
+        invitationRepository.save(invitation);
         Friendship friendship = new Friendship();
-        friendship.setUser1(invitation.get().getSender());
-        friendship.setUser2(invitation.get().getReceiver());
+        friendship.setUser1(invitation.getSender());
+        friendship.setUser2(invitation.getReceiver());
         friendshipRepository.save(friendship);
     }
 
     public void rejectInvitation(Long invitationId) {
-        Optional<Invitation> invitation = invitationRepository.findById(invitationId);
-        if (invitation.isEmpty()) {
-            throw new ResourceNotFoundException("Nie znaleziono zaproszenia");
-        }
-        invitation.get().setStatus(InvitationStatus.REJECTED);
-        invitationRepository.save(invitation.get());
+        Invitation invitation = invitationRepository.findById(invitationId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono zaproszenia"));
+
+        invitation.setStatus(InvitationStatus.REJECTED);
+        invitationRepository.save(invitation);
     }
 
     public List<InvitationDto> getSentInvitations() {
-        Optional<User> user = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail());
-        if (user.isEmpty()) {
-            throw new ResourceNotFoundException("Podany użytkownik nie istnieje");
-        }
-        List<Invitation> sentInvitations = invitationRepository.findBySenderAndStatus(user.get(), InvitationStatus.PENDING);
+        User user = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail())
+                .orElseThrow(() ->new ResourceNotFoundException("Podany użytkownik nie istnieje"));
+        List<Invitation> sentInvitations = invitationRepository.findBySenderAndStatus(user, InvitationStatus.PENDING);
 
         return sentInvitations.stream()
                 .map(InvitationDtoMapper::map)

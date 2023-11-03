@@ -5,8 +5,10 @@ import com.example.automotiveapp.dto.ArticleDto;
 import com.example.automotiveapp.dto.LikeDto;
 import com.example.automotiveapp.dto.PostDto;
 import com.example.automotiveapp.exception.BadRequestException;
+import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.mapper.LikeDtoMapper;
 import com.example.automotiveapp.repository.LikeRepository;
+import com.example.automotiveapp.repository.PostRepository;
 import com.example.automotiveapp.service.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ public class LikeService {
     private final LikeDtoMapper likeDtoMapper;
     private final PostService postService;
     private final ArticleService articleService;
+    private final PostRepository postRepository;
 
     public LikeDto saveLike(LikeDto likeDto) {
         if (likeDto.getPost() == null && likeDto.getArticle() == null) {
@@ -39,42 +42,43 @@ public class LikeService {
     }
 
     private void updatePostLike(Like like) {
-        Optional<PostDto> likedPost = postService.findPostById(like.getPost().getId());
-        if (likedPost.isPresent()) {
-            PostDto postDto = likedPost.get();
-            Optional<Like> userLike = likeRepository.getLikeByUser_EmailAndPostId(SecurityUtils.getCurrentUserEmail(), like.getPost().getId());
-            if (userLike.isPresent()) {
-                postDto.setLikesNumber(postDto.getLikesNumber() - 1);
-                likeRepository.delete(userLike.get());
-            } else {
-                postDto.setLikesNumber(postDto.getLikesNumber() + 1);
-                likeRepository.save(like);
-            }
-            postService.updatePost(postDto);
+        PostDto likedPost = postService.findPostById(like.getPost().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono posta"));
+        Optional<Like> userLike = likeRepository.getLikeByUser_EmailAndPostId(SecurityUtils.getCurrentUserEmail(), like.getPost().getId());
+        if (userLike.isPresent()) {
+            likedPost.setLikesNumber(likedPost.getLikesNumber() - 1);
+            likeRepository.delete(userLike.get());
+        } else {
+            likedPost.setLikesNumber(likedPost.getLikesNumber() + 1);
+            likeRepository.save(like);
         }
+        postService.updatePost(likedPost);
     }
 
     private void updateArticleLike(Like like) {
-        Optional<ArticleDto> likedArticle = articleService.findArticleById(like.getArticle().getId());
-        if (likedArticle.isPresent()) {
-            ArticleDto articleDto = likedArticle.get();
-            Optional<Like> userLike = likeRepository.getLikeByUser_EmailAndArticleId(SecurityUtils.getCurrentUserEmail(), like.getArticle().getId());
-            if (userLike.isPresent()) {
-                articleDto.setLikesNumber(articleDto.getLikesNumber() - 1);
-                likeRepository.delete(userLike.get());
-            } else {
-                articleDto.setLikesNumber(articleDto.getLikesNumber() + 1);
-                likeRepository.save(like);
-            }
-            articleService.updateArticle(articleDto);
+        ArticleDto likedArticle = articleService.findArticleById(like.getArticle().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono artykułu"));
+
+        Optional<Like> userLike = likeRepository.getLikeByUser_EmailAndArticleId(SecurityUtils.getCurrentUserEmail(), like.getArticle().getId());
+        if (userLike.isPresent()) {
+            likedArticle.setLikesNumber(likedArticle.getLikesNumber() - 1);
+            likeRepository.delete(userLike.get());
+        } else {
+            likedArticle.setLikesNumber(likedArticle.getLikesNumber() + 1);
+            likeRepository.save(like);
         }
+        articleService.updateArticle(likedArticle);
     }
 
     public List<LikeDto> getPostLikes(Long postId) {
+        postRepository.findById(postId)
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono posta"));
+
         return likeRepository.findAllByPost_Id(postId).stream()
                 .map(LikeDtoMapper::map)
                 .toList();
     }
+
 
     public void deleteLike(Long likeId) {
         likeRepository.deleteById(likeId);

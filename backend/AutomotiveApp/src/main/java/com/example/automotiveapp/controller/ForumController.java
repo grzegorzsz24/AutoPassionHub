@@ -1,6 +1,7 @@
 package com.example.automotiveapp.controller;
 
 import com.example.automotiveapp.dto.ForumDto;
+import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.service.ForumService;
 import com.example.automotiveapp.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -33,12 +34,16 @@ public class ForumController {
     @GetMapping("/{nickname}")
     public ResponseEntity<List<ForumDto>> getAllUserForums(@PathVariable String nickname) {
         userService.findUserByNickname(nickname)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika o podanym nickname"));
         return ResponseEntity.ok(forumService.findForumsByUserNickname(nickname));
     }
 
-    @GetMapping
-    public ResponseEntity<List<ForumDto>> getAllByFilters(@RequestParam String name) {
-        return ResponseEntity.ok(forumService.findAllByFilters(name));
+    @GetMapping("/all")
+    public ResponseEntity<List<ForumDto>> getAllByFilters(
+            @RequestParam(defaultValue = "") String name,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(forumService.findAllByFilters(name, page, size));
     }
 }

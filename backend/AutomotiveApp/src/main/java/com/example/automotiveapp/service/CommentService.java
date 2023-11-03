@@ -53,35 +53,28 @@ public class CommentService {
     }
 
     public void deleteComment(Long id) {
-        Optional<Comment> comment = commentRepository.findById(id);
-        if (comment.isPresent()) {
-            Comment commentToDelete = comment.get();
-            if (commentToDelete.getPost() != null) {
-                commentToDelete.getPost().setCommentsNumber(commentToDelete.getPost().getCommentsNumber() - 1);
-                commentToDelete.getPost().getComments().remove(commentToDelete);
-            } else if (commentToDelete.getForum() != null) {
-                commentToDelete.getForum().setCommentsNumber(commentToDelete.getForum().getCommentsNumber() - 1);
-                commentToDelete.getForum().getComments().remove(commentToDelete);
-            }
-            commentRepository.deleteById(id);
-        } else {
-            throw new ResourceNotFoundException("Nie znaleziono komentarza");
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono komentarza"));
+        if (comment.getPost() != null) {
+            comment.getPost().setCommentsNumber(comment.getPost().getCommentsNumber() - 1);
+            comment.getPost().getComments().remove(comment);
+        } else if (comment.getForum() != null) {
+            comment.getForum().setCommentsNumber(comment.getForum().getCommentsNumber() - 1);
+            comment.getForum().getComments().remove(comment);
         }
+        commentRepository.deleteById(id);
     }
 
     public List<CommentDto> findCommentsByPostId(Long postId) {
-        if (postService.findPostById(postId).isEmpty()) {
-            throw new ResourceNotFoundException("Nie znaleziono posta");
-        }
+        postService.findPostById(postId).orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono posta"));
         return commentRepository.findAllByPostId(postId).stream()
                 .map(CommentDtoMapper::map)
                 .toList();
     }
 
     public List<CommentDto> findCommentsByForumId(Long forumId) {
-        if (forumRepository.findById(forumId).isEmpty()) {
-            throw new ResourceNotFoundException("Nie znaleziono forum");
-        }
+        forumRepository.findById(forumId).orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono forum"));
+
         return commentRepository.findAllByForum_Id(forumId).stream()
                 .map(CommentDtoMapper::map)
                 .toList();

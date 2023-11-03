@@ -29,11 +29,9 @@ public class FriendshipService {
     private final InvitationRepository invitationRepository;
 
     public List<UserDto> getUserFriends(Long userId) {
-        Optional<User> user = userRepository.findById(userId);
-        if (user.isEmpty()) {
-            throw new ResourceNotFoundException("Nie znaleziono użytkownika");
-        }
-        List<Friendship> friendships = friendshipRepository.findByUser1OrUser2(user.get(), user.get());
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika"));
+        List<Friendship> friendships = friendshipRepository.findByUser1OrUser2(user, user);
 
         List<User> friends = new ArrayList<>();
         for (Friendship friendship : friendships) {
@@ -80,23 +78,20 @@ public class FriendshipService {
 
 
     public List<UserDto> findNotFriends() {
-        Optional<User> loggedUser = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail());
-        if (loggedUser.isEmpty()) {
-            throw new ResourceNotFoundException("Nie znaleziono użytkownika");
-        }
-
-        List<Friendship> friendships = friendshipRepository.findByUser1OrUser2(loggedUser.get(), loggedUser.get());
+        User loggedUser = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail())
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika"));
+        List<Friendship> friendships = friendshipRepository.findByUser1OrUser2(loggedUser, loggedUser);
         List<Long> friendIds = friendships.stream()
                 .flatMap(friendship -> Stream.of(friendship.getUser1().getId(), friendship.getUser2().getId()))
                 .toList();
 
-        List<Invitation> sentInvitations = invitationRepository.findInvitationsBySenderAndStatus(loggedUser.get(), InvitationStatus.PENDING);
+        List<Invitation> sentInvitations = invitationRepository.findInvitationsBySenderAndStatus(loggedUser, InvitationStatus.PENDING);
 
-        List<Invitation> receivedInvitations = invitationRepository.findInvitationsByReceiverAndStatus(loggedUser.get(), InvitationStatus.PENDING);
+        List<Invitation> receivedInvitations = invitationRepository.findInvitationsByReceiverAndStatus(loggedUser, InvitationStatus.PENDING);
 
         return userRepository.findAll().stream()
                 .filter(user -> !friendIds.contains(user.getId()) &&
-                        !user.getId().equals(loggedUser.get().getId()) &&
+                        !user.getId().equals(loggedUser.getId()) &&
                         !sentInvitations.stream().anyMatch(invitation -> invitation.getReceiver().getId().equals(user.getId())) &&
                         !receivedInvitations.stream().anyMatch(invitation -> invitation.getSender().getId().equals(user.getId())))
                 .map(UserDtoMapper::map)

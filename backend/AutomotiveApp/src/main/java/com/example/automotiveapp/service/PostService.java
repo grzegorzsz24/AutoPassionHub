@@ -41,7 +41,8 @@ public class PostService {
     public PostDto savePost(PostSaveRequest postToSave) {
         Post post = new Post();
         post.setContent(postToSave.getContent());
-        post.setUser(userRepository.findByEmail(SecurityUtils.getCurrentUserEmail()).get());
+        post.setUser(userRepository.findByEmail(SecurityUtils.getCurrentUserEmail())
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika")));
         post.setPostedAt(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         post.setLiked(false);
         post.setLikesNumber(0);
@@ -108,7 +109,10 @@ public class PostService {
     }
 
     public Page<PostDto> getUserPosts(Long userId, Pageable pageable) {
-        if (userRepository.findById(userId).get().isPublicProfile()) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika"));
+
+        if (user.isPublicProfile()) {
             List<PostDto> friendsPosts = new ArrayList<>();
             List<Post> posts = postRepository.findAllByUserId(userId);
             setPostLikes(posts, friendsPosts);
@@ -116,13 +120,13 @@ public class PostService {
         } else {
             throw new BadRequestException("Użytkownik ma prywatny profil");
         }
+
     }
 
     private static Page<PostDto> getPostDtos(Pageable pageable, List<PostDto> friendsPosts) {
         int start = (int) pageable.getOffset();
         int end = Math.min(start + pageable.getPageSize(), friendsPosts.size());
-        Page<PostDto> page = new PageImpl<>(friendsPosts.subList(start, end), pageable, friendsPosts.size());
-        return page;
+        return new PageImpl<>(friendsPosts.subList(start, end), pageable, friendsPosts.size());
     }
 
     private void setPostLikes(List<Post> posts, List<PostDto> friendsPosts) {
