@@ -5,10 +5,8 @@ import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.service.ForumService;
 import com.example.automotiveapp.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -40,10 +38,12 @@ public class ForumController {
 
     @GetMapping("/all")
     public ResponseEntity<List<ForumDto>> getAllByFilters(
-            @RequestParam(defaultValue = "") String name,
+            @RequestParam(defaultValue = "") String title,
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String carBrand,
+            @RequestParam(required = false) String carModel
     ) {
-        return ResponseEntity.ok(forumService.findAllByFilters(name, page, size));
+        return ResponseEntity.ok(forumService.findAllByFilters(title, carBrand, carModel, page, size));
     }
 }

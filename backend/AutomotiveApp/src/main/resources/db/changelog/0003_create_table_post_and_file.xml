@@ -49,6 +49,12 @@
                              referencedTableName="users"
                              referencedColumnNames="id"/>
             </column>
+            <column name="event_id" type="BIGINT">
+                <constraints nullable="true"
+                             foreignKeyName="fk_file_event"
+                             referencedTableName="event"
+                             referencedColumnNames="id"/>
+            </column>
         </createTable>
     </changeSet>
 

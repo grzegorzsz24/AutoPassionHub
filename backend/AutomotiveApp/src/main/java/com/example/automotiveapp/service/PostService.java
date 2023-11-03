@@ -51,6 +51,7 @@ public class PostService {
         if (postToSave.getFiles() != null) {
             List<String> savedImageNames = fileStorageService.saveImage(postToSave.getFiles());
             for (String imageName : savedImageNames) {
+                log.info(imageName);
                 File file = new File();
                 file.setFileUrl(imageName);
                 file.setPost(post);

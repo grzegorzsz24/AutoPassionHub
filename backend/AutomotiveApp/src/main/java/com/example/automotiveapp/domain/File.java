@@ -22,4 +22,9 @@ public class File {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToOne
+    @JoinColumn(name = "event_id")
+    private Event event;
+
 }

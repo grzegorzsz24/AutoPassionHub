@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 
@@ -36,9 +35,9 @@ public class ForumService {
                 .toList();
     }
 
-    public List<ForumDto> findAllByFilters(String name, int page, int size) {
+    public List<ForumDto> findAllByFilters(String title, String carBrand, String carModel, int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
-        return forumRepository.findAllByNameContains(name, pageable).stream()
+        return forumRepository.findAllByTitleAndCarBrandAndCarModel(title, carBrand, carModel, pageable).stream()
                 .map(ForumDtoMapper::map)
                 .toList();
     }

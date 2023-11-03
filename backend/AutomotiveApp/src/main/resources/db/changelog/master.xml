@@ -5,17 +5,20 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd">
 
+    <include file="0010_create_table_car.xml" relativeToChangelogFile="true"/>
     <include file="0001_create_tables_user_and_role.xml" relativeToChangelogFile="true"/>
     <include file="0002_create_table_forum.xml" relativeToChangelogFile="true"/>
+    <include file="0009_create_table_event.xml" relativeToChangelogFile="true"/>
     <include file="0003_create_table_post_and_file.xml" relativeToChangelogFile="true"/>
     <include file="0004_create_table_article.xml" relativeToChangelogFile="true"/>
     <include file="0005_create_table_like.xml" relativeToChangelogFile="true"/>
     <include file="0006_create_table_comment.xml" relativeToChangelogFile="true"/>
     <include file="0007_create_table_invitation.xml" relativeToChangelogFile="true"/>
     <include file="0008_create_table_friendship.xml" relativeToChangelogFile="true"/>
-    <include file="0009_create_table_event.xml" relativeToChangelogFile="true"/>
+
 
     <include file="../testdata/0001_user_and_role.sql" relativeToChangelogFile="true" context="dev"/>
     <include file="../testdata/0002_file.sql" relativeToChangelogFile="true" context="dev"/>
+    <include file="../testdata/0003_car.sql" relativeToChangelogFile="true" context="dev"/>
 
 </databaseChangeLog>

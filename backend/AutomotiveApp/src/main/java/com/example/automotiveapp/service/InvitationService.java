@@ -51,7 +51,7 @@ public class InvitationService {
     @Transactional
     public void acceptInvitation(Long invitationId) {
         Invitation invitation = invitationRepository.findById(invitationId)
-                        .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono zaproszenia"));
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono zaproszenia"));
 
         invitation.setStatus(InvitationStatus.ACCEPTED);
         invitationRepository.save(invitation);
@@ -63,7 +63,7 @@ public class InvitationService {
 
     public void rejectInvitation(Long invitationId) {
         Invitation invitation = invitationRepository.findById(invitationId)
-                        .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono zaproszenia"));
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono zaproszenia"));
 
         invitation.setStatus(InvitationStatus.REJECTED);
         invitationRepository.save(invitation);
@@ -71,7 +71,7 @@ public class InvitationService {
 
     public List<InvitationDto> getSentInvitations() {
         User user = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail())
-                .orElseThrow(() ->new ResourceNotFoundException("Podany użytkownik nie istnieje"));
+                .orElseThrow(() -> new ResourceNotFoundException("Podany użytkownik nie istnieje"));
         List<Invitation> sentInvitations = invitationRepository.findBySenderAndStatus(user, InvitationStatus.PENDING);
 
         return sentInvitations.stream()
