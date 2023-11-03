@@ -22,7 +22,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
-//@CrossOrigin(origins = "http://127.0.0.1:5173/")
 public class UserController {
     private final UserService userService;
 
@@ -62,8 +61,8 @@ public class UserController {
 
     @GetMapping("/search")
     public ResponseEntity<List<UserDto>> searchAllUsers(@RequestParam String nickname,
-                                                        @RequestParam int page,
-                                                        @RequestParam int size) {
+                                                        @RequestParam(defaultValue = "1") int page,
+                                                        @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         return ResponseEntity.ok(userService.searchUsers(nickname, pageable));
     }

@@ -3,6 +3,7 @@ package com.example.automotiveapp.service;
 import com.example.automotiveapp.domain.File;
 import com.example.automotiveapp.domain.Post;
 import com.example.automotiveapp.domain.User;
+import com.example.automotiveapp.domain.request.PostSaveRequest;
 import com.example.automotiveapp.dto.PostDto;
 import com.example.automotiveapp.exception.BadRequestException;
 import com.example.automotiveapp.exception.ResourceNotFoundException;
@@ -16,6 +17,9 @@ import com.example.automotiveapp.storage.FileStorageService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -34,16 +38,17 @@ public class PostService {
     private final LikeRepository likeRepository;
 
     @Transactional
-    public PostDto savePost(PostDto postDto) {
-        Post post = postDtoMapper.map(postDto);
+    public PostDto savePost(PostSaveRequest postToSave) {
+        Post post = new Post();
+        post.setContent(postToSave.getContent());
         post.setUser(userRepository.findByEmail(SecurityUtils.getCurrentUserEmail()).get());
         post.setPostedAt(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         post.setLiked(false);
         post.setLikesNumber(0);
         post.setCommentsNumber(0);
         Set<File> files = new HashSet<>();
-        if (postDto.getFile() != null) {
-            List<String> savedImageNames = fileStorageService.saveImage(postDto.getFile());
+        if (postToSave.getFiles() != null) {
+            List<String> savedImageNames = fileStorageService.saveImage(postToSave.getFiles());
             for (String imageName : savedImageNames) {
                 File file = new File();
                 file.setFileUrl(imageName);
@@ -84,7 +89,7 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public List<PostDto> getFriendsPosts() {
+    public Page<PostDto> getFriendsPosts(Pageable pageable) {
         List<User> friends = userRepository.findUserFriends(SecurityUtils.getCurrentUserEmail());
 
         List<PostDto> friendsPosts = new ArrayList<>();
@@ -93,23 +98,31 @@ public class PostService {
             List<Post> friendPosts = postRepository.findByUser(friend);
             setPostLikes(friendPosts, friendsPosts);
         }
+
         List<User> publicProfiles = userRepository.findPublicProfiles();
         for (User publicProfile : publicProfiles) {
             List<Post> publicProfilePosts = postRepository.findByUser(publicProfile);
             setPostLikes(publicProfilePosts, friendsPosts);
         }
-        return friendsPosts;
+        return getPostDtos(pageable, friendsPosts);
     }
 
-    public List<PostDto> getUserPosts(Long userId) {
+    public Page<PostDto> getUserPosts(Long userId, Pageable pageable) {
         if (userRepository.findById(userId).get().isPublicProfile()) {
             List<PostDto> friendsPosts = new ArrayList<>();
             List<Post> posts = postRepository.findAllByUserId(userId);
             setPostLikes(posts, friendsPosts);
-            return friendsPosts;
+            return getPostDtos(pageable, friendsPosts);
         } else {
             throw new BadRequestException("Użytkownik ma prywatny profil");
         }
+    }
+
+    private static Page<PostDto> getPostDtos(Pageable pageable, List<PostDto> friendsPosts) {
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), friendsPosts.size());
+        Page<PostDto> page = new PageImpl<>(friendsPosts.subList(start, end), pageable, friendsPosts.size());
+        return page;
     }
 
     private void setPostLikes(List<Post> posts, List<PostDto> friendsPosts) {

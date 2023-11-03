@@ -28,7 +28,6 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final RoleRepository roleRepository;
     private final FileRepository fileRepository;
-
     public AuthenticationResponse register(RegisterRequest registerRequest) {
         File file = new File();
         file.setFileUrl("default_profile_picture.jpg");

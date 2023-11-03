@@ -1,5 +1,6 @@
 package com.example.automotiveapp.dto;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,6 +12,7 @@ import java.util.List;
 @Setter
 public class PostDto {
     private Long id;
+    @NotEmpty
     private String content;
     private LocalDateTime postedAt;
     private boolean isLiked;

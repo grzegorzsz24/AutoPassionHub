@@ -7,6 +7,7 @@ import com.example.automotiveapp.dto.CommentDto;
 import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.mapper.CommentDtoMapper;
 import com.example.automotiveapp.repository.CommentRepository;
+import com.example.automotiveapp.repository.ForumRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final CommentDtoMapper commentDtoMapper;
     private final PostService postService;
+    private final ForumRepository forumRepository;
 
     public CommentDto saveComment(CommentDto commentDto) {
         Comment comment = commentDtoMapper.map(commentDto);
@@ -72,6 +74,15 @@ public class CommentService {
             throw new ResourceNotFoundException("Nie znaleziono posta");
         }
         return commentRepository.findAllByPostId(postId).stream()
+                .map(CommentDtoMapper::map)
+                .toList();
+    }
+
+    public List<CommentDto> findCommentsByForumId(Long forumId) {
+        if (forumRepository.findById(forumId).isEmpty()) {
+            throw new ResourceNotFoundException("Nie znaleziono forum");
+        }
+        return commentRepository.findAllByForum_Id(forumId).stream()
                 .map(CommentDtoMapper::map)
                 .toList();
     }

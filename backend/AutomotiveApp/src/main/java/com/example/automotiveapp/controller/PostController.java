@@ -1,5 +1,6 @@
 package com.example.automotiveapp.controller;
 
+import com.example.automotiveapp.domain.request.PostSaveRequest;
 import com.example.automotiveapp.dto.PostDto;
 import com.example.automotiveapp.service.PostService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -7,7 +8,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -24,7 +29,7 @@ public class PostController {
     private final ObjectMapper objectMapper;
 
     @PostMapping
-    public ResponseEntity<PostDto> addPost(@ModelAttribute PostDto post) {
+    public ResponseEntity<PostDto> addPost(@Valid @ModelAttribute PostSaveRequest post) {
         PostDto savedPost = postService.savePost(post);
         URI savedPostURI = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -61,12 +66,24 @@ public class PostController {
     }
 
     @GetMapping("/friends")
-    public ResponseEntity<List<PostDto>> getFriendsPosts() {
-        return ResponseEntity.ok(postService.getFriendsPosts());
+    public ResponseEntity<List<PostDto>> getFriendsPosts(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<PostDto> paginatedFriendsPosts = postService.getFriendsPosts(pageable);
+        return ResponseEntity.ok(paginatedFriendsPosts.getContent());
     }
 
+
     @GetMapping("/user")
-    public ResponseEntity<List<PostDto>> getUserPosts(@RequestParam Long userId) {
-        return ResponseEntity.ok(postService.getUserPosts(userId));
+    public ResponseEntity<List<PostDto>> getUserPosts(
+            @RequestParam Long userId,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<PostDto> paginatedUserPosts = postService.getUserPosts(userId, pageable);
+        return ResponseEntity.ok(paginatedUserPosts.getContent());
     }
 }

@@ -64,4 +64,9 @@ public class CommentController {
         JsonNode commentPatchedNode = patch.apply(commentNode);
         return objectMapper.treeToValue(commentPatchedNode, CommentDto.class);
     }
+
+    @GetMapping
+    public ResponseEntity<List<CommentDto>> getForumComments(@RequestParam Long forumId) {
+        return ResponseEntity.ok(commentService.findCommentsByForumId(forumId));
+    }
 }
