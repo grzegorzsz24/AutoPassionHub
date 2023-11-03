@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/cars")
@@ -18,8 +19,9 @@ public class CarController {
     private final CarService carService;
 
     @GetMapping
-    public ResponseEntity<List<CarDto>> getAllCars() {
-        return ResponseEntity.ok(carService.getCars());
+    public ResponseEntity<Map<String, List<String>>> getAllCars() {
+
+        return ResponseEntity.ok(carService.getBrandsWithModels());
     }
 
     @GetMapping("/brands")
