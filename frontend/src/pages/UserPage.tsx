@@ -155,27 +155,29 @@ const UserPage = () => {
   }, [user]);
 
   return (
-    <div className=" px-6 py-8 overflow-y-auto h-full flex-grow max-w-2xl mx-auto">
-      <UserHeader user={user} />
-      <div className="py-4">
-        {nickname === userNickname && (
-          <OutlineButton size="sm" fullWidth onClick={navigateToSettingsPage}>
-            Ustawienia
-          </OutlineButton>
-        )}
-      </div>
-      <div className="flex flex-col gap-4 items-center my-6">
-        {user && userNickname === nickname && (
-          <AddPost addPostToList={addPostToList} />
-        )}
-        {posts.map((post) => (
-          <Post
-            key={post.id}
-            {...post}
-            deletePostHandler={deletePostHandler}
-            editPostHandler={editPostHandler}
-          />
-        ))}
+    <div className=" px-6 py-8 overflow-y-auto h-full flex-grow  mx-auto flex justify-center">
+      <div className="max-w-2xl w-full mb-16 h-full">
+        <UserHeader user={user} />
+        <div className="py-4">
+          {nickname === userNickname && (
+            <OutlineButton size="sm" fullWidth onClick={navigateToSettingsPage}>
+              Ustawienia
+            </OutlineButton>
+          )}
+        </div>
+        <div className="flex flex-col gap-4 items-center my-6">
+          {user && userNickname === nickname && (
+            <AddPost addPostToList={addPostToList} />
+          )}
+          {posts.map((post) => (
+            <Post
+              key={post.id}
+              {...post}
+              deletePostHandler={deletePostHandler}
+              editPostHandler={editPostHandler}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

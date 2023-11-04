@@ -1,5 +1,3 @@
-import { useReducer } from "react";
-
 interface FilterState {
   page: number;
   size: number;
@@ -12,16 +10,6 @@ interface FilterAction {
   type: string;
   payload?: string | number;
 }
-
-type UseForumFilterReturn = [FilterState, React.Dispatch<FilterAction>];
-
-const initialState: FilterState = {
-  page: 1,
-  size: 10,
-  title: "",
-  carBrand: "",
-  carModel: "",
-};
 
 const forumFilterReducer = (
   state: FilterState,
@@ -96,7 +84,4 @@ const forumFilterReducer = (
   }
 };
 
-export const useForumFilter = (): UseForumFilterReturn => {
-  const [state, dispatch] = useReducer(forumFilterReducer, initialState);
-  return [state, dispatch];
-};
+export default forumFilterReducer;

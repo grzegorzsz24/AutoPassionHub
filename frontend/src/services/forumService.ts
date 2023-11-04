@@ -47,10 +47,10 @@ const getForums = async (
   if (title) {
     queryString += `title=${title}`;
   } else {
-    if (page !== undefined) {
+    if (page) {
       queryString += `page=${page}&`;
     }
-    if (size !== undefined) {
+    if (size) {
       queryString += `size=${size}&`;
     }
     if (carBrand) {
@@ -67,11 +67,8 @@ const getForums = async (
 
   try {
     const response = await fetch(`${API_URL}/user/forums/all${queryString}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ title, page, size, carBrand, carModel }),
+      method: "GET",
+      credentials: "include",
     });
 
     const data = await response.json();
@@ -83,7 +80,8 @@ const getForums = async (
     return {
       status: "ok",
       message: "Pobrano fora.",
-      data,
+      data: data.forumDtoList,
+      totalNumberOfForums: data.forumsNumber,
     };
   } catch (error) {
     return {
@@ -118,4 +116,31 @@ const getUserForums = async (nickname: string) => {
   }
 };
 
-export { createForum, getForums, getUserForums };
+const getForumById = async (id: number) => {
+  try {
+    const response = await fetch(`${API_URL}/user/forums/${id}`, {
+      method: "GET",
+      credentials: "include",
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message);
+    }
+
+    return {
+      status: "ok",
+      message: "Pobrano forum.",
+      data,
+    };
+  } catch (error) {
+    return {
+      status: "error",
+      message:
+        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
+    };
+  }
+};
+
+export { createForum, getForums, getUserForums, getForumById };

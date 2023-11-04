@@ -1,11 +1,14 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
+import AddForumPage from "./pages/Forums/AddForumPage";
 import AppLayout from "./pages/AppLayout";
+import ForumPage from "./pages/Forums/ForumPage";
 import ForumPageLayout from "./pages/Forums/ForumPageLayout";
 import ForumsPage from "./pages/Forums/ForumsPage";
 import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
 import MainPageLayout from "./pages/MainPageLayout";
+import MyForumsPage from "./pages/Forums/MyForumsPage";
 import Notification from "./ui/Notification";
 import OutletLayout from "./pages/OutletLayout";
 import ProtectedRoute from "./ProtectedRoute";
@@ -79,11 +82,15 @@ const router = createBrowserRouter([
               },
               {
                 path: ":forum",
-                element: <p>Forum</p>,
+                element: <ForumPage />,
               },
               {
                 path: "add",
-                element: <p>Dodaj forum</p>,
+                element: <AddForumPage />,
+              },
+              {
+                path: "my",
+                element: <MyForumsPage />,
               },
             ],
           },

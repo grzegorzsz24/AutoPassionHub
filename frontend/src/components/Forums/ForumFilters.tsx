@@ -1,7 +1,14 @@
 import { Dispatch, FC, useEffect, useState } from "react";
+import {
+  NotificationStatus,
+  addNotification,
+} from "../../store/features/notificationSlice";
 
+import LoadingSpinner from "../../ui/LoadingSpinner";
 import PrimaryButton from "../../ui/PrimaryButton";
 import { getAllCarsWithModels } from "../../services/carService";
+import handleError from "../../services/errorHandler";
+import { useAppDispatch } from "../../store/store";
 
 interface FilterAction {
   type: string;
@@ -13,6 +20,8 @@ interface ForumFiltersProps {
   carModel: string;
   title: string;
   dispatch: Dispatch<FilterAction>;
+  isLoading: boolean;
+  setIsLoading: (isLoading: boolean) => void;
 }
 
 type CarsData = {
@@ -24,17 +33,29 @@ const ForumFilters: FC<ForumFiltersProps> = ({
   carModel,
   title,
   dispatch,
+  isLoading,
+  setIsLoading,
 }) => {
+  const reduxDispatch = useAppDispatch();
   const [cars, setCars] = useState<CarsData>({});
   const [typedTitle, setTypedTitle] = useState(title);
 
   const getCars = async () => {
     try {
-      const response = await getAllCarsWithModels();
-      console.log(response.cars);
-      setCars(response.cars);
+      setIsLoading(true);
+      const data = await getAllCarsWithModels();
+      if (data.status !== "ok") throw new Error(data.message);
+      setCars(data.cars);
     } catch (error) {
-      console.log(error);
+      const newError = handleError(error);
+      reduxDispatch(
+        addNotification({
+          type: NotificationStatus.ERROR,
+          message: newError.message,
+        })
+      );
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -64,6 +85,8 @@ const ForumFilters: FC<ForumFiltersProps> = ({
   useEffect(() => {
     getCars();
   }, []);
+
+  if (isLoading) return <LoadingSpinner small />;
 
   return (
     <div className="flex gap-4 items-center">

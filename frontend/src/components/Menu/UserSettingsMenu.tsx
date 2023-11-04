@@ -35,8 +35,8 @@ const UserSettingsMenu = () => {
           to={link}
           className={({ isActive }) =>
             isActive
-              ? "bg-blue-600 text-blue-50 px-24 py-2  flex flex-col md:flex-row items-center gap-2"
-              : "px-24 py-2 flex flex-col md:flex-row items-center gap-2 hover:bg-blue-900 hover:text-white transition-all"
+              ? "bg-blue-600 text-blue-50 px-12 py-2  flex flex-col md:flex-row items-center gap-2"
+              : "px-12 py-2 flex flex-col md:flex-row items-center gap-2 hover:bg-blue-900 hover:text-white transition-all"
           }
           end={true}
         >
