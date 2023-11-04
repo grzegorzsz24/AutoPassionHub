@@ -2,6 +2,7 @@ package com.example.automotiveapp.controller;
 
 import com.example.automotiveapp.dto.ForumDto;
 import com.example.automotiveapp.exception.ResourceNotFoundException;
+import com.example.automotiveapp.reponse.ForumResponse;
 import com.example.automotiveapp.service.ForumService;
 import com.example.automotiveapp.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,7 @@ public class ForumController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<ForumDto>> getAllByFilters(
+    public ResponseEntity<ForumResponse> getAllByFilters(
             @RequestParam(defaultValue = "") String title,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -45,5 +46,10 @@ public class ForumController {
             @RequestParam(required = false) String carModel
     ) {
         return ResponseEntity.ok(forumService.findAllByFilters(title, carBrand, carModel, page, size));
+    }
+
+    @GetMapping("/{forumId}")
+    public ResponseEntity<ForumDto> getForum(@PathVariable Long forumId) {
+        return ResponseEntity.ok(forumService.findForumById(forumId));
     }
 }

@@ -4,6 +4,7 @@ import com.example.automotiveapp.domain.Forum;
 import com.example.automotiveapp.dto.ForumDto;
 import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.mapper.ForumDtoMapper;
+import com.example.automotiveapp.reponse.ForumResponse;
 import com.example.automotiveapp.repository.ForumRepository;
 import com.example.automotiveapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,10 +36,17 @@ public class ForumService {
                 .toList();
     }
 
-    public List<ForumDto> findAllByFilters(String title, String carBrand, String carModel, int page, int size) {
+    public ForumResponse findAllByFilters(String title, String carBrand, String carModel, int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
-        return forumRepository.findAllByTitleAndCarBrandAndCarModel(title, carBrand, carModel, pageable).stream()
+        List<ForumDto> forumList = forumRepository.findAllByTitleAndCarBrandAndCarModel(title, carBrand, carModel, pageable).stream()
                 .map(ForumDtoMapper::map)
                 .toList();
+        return new ForumResponse(forumList, forumList.size());
+    }
+
+    public ForumDto findForumById(Long forumId) {
+        return forumRepository.findById(forumId)
+                .map(ForumDtoMapper::map)
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono forum"));
     }
 }

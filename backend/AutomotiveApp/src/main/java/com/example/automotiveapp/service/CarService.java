@@ -15,6 +15,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CarService {
     private final CarRepository carRepository;
+
     public List<CarDto> getCars() {
         return carRepository.findAll().stream()
                 .map(CarDtoMapper::map)
