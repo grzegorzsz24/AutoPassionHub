@@ -65,8 +65,8 @@ public class CommentController {
         return objectMapper.treeToValue(commentPatchedNode, CommentDto.class);
     }
 
-    @GetMapping
-    public ResponseEntity<List<CommentDto>> getForumComments(@RequestParam Long forumId) {
+    @GetMapping("/forum/{forumId}")
+    public ResponseEntity<List<CommentDto>> getForumComments(@PathVariable Long forumId) {
         return ResponseEntity.ok(commentService.findCommentsByForumId(forumId));
     }
 }

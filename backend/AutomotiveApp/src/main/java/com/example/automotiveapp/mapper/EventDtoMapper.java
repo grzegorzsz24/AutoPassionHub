@@ -10,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class EventDtoMapper {
@@ -29,7 +27,7 @@ public class EventDtoMapper {
         Event event = new Event();
         BeanUtils.copyProperties(eventDto, event);
         User user = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail())
-                        .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika"));
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika"));
         event.setUser(user);
         return event;
     }

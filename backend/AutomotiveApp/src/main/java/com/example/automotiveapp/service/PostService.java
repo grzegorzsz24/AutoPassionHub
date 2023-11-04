@@ -93,18 +93,18 @@ public class PostService {
 
     public Page<PostDto> getFriendsPosts(Pageable pageable) {
         List<User> friends = userRepository.findUserFriends(SecurityUtils.getCurrentUserEmail());
-
         List<PostDto> friendsPosts = new ArrayList<>();
 
         for (User friend : friends) {
             List<Post> friendPosts = postRepository.findByUser(friend);
             setPostLikes(friendPosts, friendsPosts);
         }
-
         List<User> publicProfiles = userRepository.findPublicProfiles();
         for (User publicProfile : publicProfiles) {
-            List<Post> publicProfilePosts = postRepository.findByUser(publicProfile);
-            setPostLikes(publicProfilePosts, friendsPosts);
+            if (!friends.contains(publicProfile)) {
+                List<Post> publicProfilePosts = postRepository.findByUser(publicProfile);
+                setPostLikes(publicProfilePosts, friendsPosts);
+            }
         }
         return getPostDtos(pageable, friendsPosts);
     }
