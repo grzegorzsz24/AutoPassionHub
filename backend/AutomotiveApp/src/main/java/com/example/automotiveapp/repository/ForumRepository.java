@@ -19,4 +19,11 @@ public interface ForumRepository extends JpaRepository<Forum, Long> {
             String title, String carBrand, String carModel, Pageable pageable);
 
     Optional<Forum> findByTitleIgnoreCase(String title);
+
+    @Query("SELECT COUNT(f) FROM Forum f JOIN f.car s " +
+            "WHERE f.title LIKE %:title% " +
+            "AND (s.brand = :carBrand OR :carBrand IS NULL) " +
+            "AND (s.model = :carModel OR :carModel IS NULL)")
+    Long countByTitleAndCarBrandAndCarModel(
+            String title, String carBrand, String carModel);
 }

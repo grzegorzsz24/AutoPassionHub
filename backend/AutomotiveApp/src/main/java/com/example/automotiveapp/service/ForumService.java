@@ -38,10 +38,11 @@ public class ForumService {
 
     public ForumResponse findAllByFilters(String title, String carBrand, String carModel, int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
+        Long totalResults = forumRepository.countByTitleAndCarBrandAndCarModel(title, carBrand, carModel);
         List<ForumDto> forumList = forumRepository.findAllByTitleAndCarBrandAndCarModel(title, carBrand, carModel, pageable).stream()
                 .map(ForumDtoMapper::map)
                 .toList();
-        return new ForumResponse(forumList, forumList.size());
+        return new ForumResponse(forumList, totalResults);
     }
 
     public ForumDto findForumById(Long forumId) {

@@ -10,6 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 public class ForumResponse {
     private List<ForumDto> forumDtoList;
-    private int forumsNumber;
+    private Long forumsNumber;
 }
 
