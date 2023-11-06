@@ -30,7 +30,7 @@ public class ForumController {
         return ResponseEntity.created(savedForumURI).body(savedForum);
     }
 
-    @GetMapping("/{nickname}")
+    @GetMapping("/user/{nickname}")
     public ResponseEntity<List<ForumDto>> getAllUserForums(@PathVariable String nickname) {
         userService.findUserByNickname(nickname)
                 .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika o podanym nickname"));
