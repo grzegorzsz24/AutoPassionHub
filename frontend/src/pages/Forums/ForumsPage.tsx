@@ -24,7 +24,7 @@ const ForumsPage = () => {
   const setFiltersFromParams = () => {
     return {
       page: getPageFromParams(),
-      size: 1,
+      size: 2,
       title: params.get("title") || "",
       carBrand: params.get("carBrand") || "",
       carModel: params.get("carModel") || "",

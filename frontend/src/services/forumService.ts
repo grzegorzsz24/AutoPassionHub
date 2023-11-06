@@ -94,7 +94,7 @@ const getForums = async (
 
 const getUserForums = async (nickname: string) => {
   try {
-    const response = await fetch(`${API_URL}/user/forums/${nickname}`, {
+    const response = await fetch(`${API_URL}/user/forums/user/${nickname}`, {
       method: "GET",
       credentials: "include",
     });
@@ -143,4 +143,124 @@ const getForumById = async (id: number) => {
   }
 };
 
-export { createForum, getForums, getUserForums, getForumById };
+const addCommentToForum = async (forumId: number, content: string) => {
+  try {
+    const response = await fetch(`${API_URL}/user/comments`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content, forum: forumId }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message);
+    }
+
+    return {
+      status: "ok",
+      message: "Dodano komentarz.",
+      data,
+    };
+  } catch (error) {
+    return {
+      status: "error",
+      message:
+        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
+    };
+  }
+};
+
+const getForumComments = async (forumId: number) => {
+  try {
+    const response = await fetch(`${API_URL}/user/comments/forum/${forumId}`, {
+      method: "GET",
+      credentials: "include",
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message);
+    }
+
+    return {
+      status: "ok",
+      message: "Pobrano komentarze.",
+      data,
+    };
+  } catch (error) {
+    return {
+      status: "error",
+      message:
+        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
+    };
+  }
+};
+
+const deleteForumComment = async (commentId: number) => {
+  try {
+    const response = await fetch(`${API_URL}/user/comments/${commentId}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+
+    if (response.ok) {
+      return {
+        status: "ok",
+        message: "Usunięto komentarz.",
+      };
+    }
+    const data = await response.json();
+    throw new Error(data.message);
+  } catch (error) {
+    return {
+      status: "error",
+      message:
+        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
+    };
+  }
+};
+
+const updateForumComment = async (commentId: number, content: string) => {
+  try {
+    const response = await fetch(`${API_URL}/user/comments/${commentId}`, {
+      method: "PATCH",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content }),
+    });
+
+    if (response.ok) {
+      return {
+        status: "ok",
+        message: "Edytowano komentarz.",
+      };
+    }
+
+    const data = await response.json();
+    throw new Error(data.message);
+  } catch (error) {
+    return {
+      status: "error",
+      message:
+        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
+    };
+  }
+};
+
+export {
+  createForum,
+  getForums,
+  getUserForums,
+  getForumById,
+  addCommentToForum,
+  getForumComments,
+  deleteForumComment,
+  updateForumComment,
+};

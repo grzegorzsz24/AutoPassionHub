@@ -19,7 +19,7 @@ const Pagination: FC<PaginationProps> = ({
     pageButtons.push(
       <button
         key={i}
-        className={`px-4 py-2 rounded-md text-center bg-transparent text-primaryDark2 dark:text-blue-50 hover:bg-blue-600 transition-all cursor-pointe 
+        className={`px-4 py-2 rounded-md text-center bg-transparent text-primaryDark2 dark:text-blue-50 hover:bg-blue-600 hover:text-blue-50  transition-all cursor-pointe outline-none 
         ${currentPage === i ? "border-2 border-blue-600 cursor-default" : ""}
         `}
         onClick={() => goToPage(i)}
