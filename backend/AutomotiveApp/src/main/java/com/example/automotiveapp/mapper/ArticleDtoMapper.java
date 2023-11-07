@@ -4,6 +4,7 @@ import com.example.automotiveapp.domain.Article;
 import com.example.automotiveapp.domain.User;
 import com.example.automotiveapp.dto.ArticleDto;
 import com.example.automotiveapp.repository.UserRepository;
+import com.example.automotiveapp.service.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class ArticleDtoMapper {
     public Article map(ArticleDto articleDto) {
         Article article = new Article();
         BeanUtils.copyProperties(articleDto, article);
-        Optional<User> user = userRepository.findByNicknameIgnoreCase(articleDto.getUser());
+        Optional<User> user = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail());
         user.ifPresent(article::setUser);
         return article;
     }

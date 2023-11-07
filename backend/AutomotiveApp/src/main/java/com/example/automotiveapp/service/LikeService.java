@@ -56,8 +56,7 @@ public class LikeService {
     }
 
     private void updateArticleLike(Like like) {
-        ArticleDto likedArticle = articleService.findArticleById(like.getArticle().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono artykułu"));
+        ArticleDto likedArticle = articleService.findArticleById(like.getArticle().getId());
 
         Optional<Like> userLike = likeRepository.getLikeByUser_EmailAndArticleId(SecurityUtils.getCurrentUserEmail(), like.getArticle().getId());
         if (userLike.isPresent()) {

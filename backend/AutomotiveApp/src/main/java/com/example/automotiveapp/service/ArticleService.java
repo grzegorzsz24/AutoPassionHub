@@ -7,11 +7,13 @@ import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.mapper.ArticleDtoMapper;
 import com.example.automotiveapp.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Optional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,9 +26,6 @@ public class ArticleService {
         if (articleRepository.findByTitle(articleDto.getTitle()).isPresent()) {
             throw new BadRequestException("Artykuł o podanym tytule już istnieje!");
         }
-        if (userService.findUserByNickname(articleDto.getUser()).isEmpty()) {
-            throw new ResourceNotFoundException("Podany użytkownik nie istnieje!");
-        }
         Article article = articleDtoMapper.map(articleDto);
         article.setPublishedAt(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         Article savedArticle = articleRepository.save(article);
@@ -38,7 +37,15 @@ public class ArticleService {
         articleRepository.save(article);
     }
 
-    Optional<ArticleDto> findArticleById(Long id) {
-        return articleRepository.findById(id).map((ArticleDtoMapper::map));
+    public ArticleDto findArticleById(Long id) {
+        return articleRepository.findById(id).map((ArticleDtoMapper::map))
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono artykułu"));
+    }
+
+    public List<ArticleDto> getAllArticles(int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return articleRepository.findAll(pageable).stream()
+                .map(ArticleDtoMapper::map)
+                .toList();
     }
 }
