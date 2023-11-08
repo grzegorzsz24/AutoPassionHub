@@ -20,6 +20,9 @@ public class ArticleDtoMapper {
         ArticleDto articleDto = new ArticleDto();
         BeanUtils.copyProperties(article, articleDto);
         articleDto.setUser(article.getUser().getNickname());
+        articleDto.setFirstName(article.getUser().getFirstName());
+        articleDto.setLastName(article.getUser().getLastName());
+        articleDto.setUserImageUrl("http://localhost:8080/images/" + article.getUser().getFile().getFileUrl());
         return articleDto;
     }
 

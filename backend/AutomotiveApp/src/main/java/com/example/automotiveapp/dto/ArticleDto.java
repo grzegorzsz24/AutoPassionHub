@@ -15,4 +15,7 @@ public class ArticleDto {
     private String user;
     private boolean isLiked;
     private int likesNumber;
+    private String firstName;
+    private String lastName;
+    private String userImageUrl;
 }
