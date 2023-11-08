@@ -4,32 +4,34 @@ import {
 } from "../../store/features/notificationSlice";
 import { useEffect, useReducer, useState } from "react";
 
-import ForumFilters from "../../components/Forums/ForumFilters";
-import ForumModel from "../../models/ForumModel";
-import ForumsLits from "../../components/Forums/ForumsLits";
+import ArticleFilters from "../../components/Articles/ArticleFilters";
+import ArticleList from "../../components/Articles/ArticleList";
+import ArticleModel from "../../models/ArticleModel";
+import LoadingSpinner from "../../ui/LoadingSpinner";
 import Pagination from "../../components/Pagination";
-import forumFilterReducer from "../../reducers/ForumFilterReducer";
-import { getForums } from "../../services/forumService";
+import articleFilterReducer from "../../reducers/ArticlePaginationReducer";
+import { getArticles } from "../../services/articleService";
 import handleError from "../../services/errorHandler";
 import { useAppDispatch } from "../../store/store";
 import { useSearchParams } from "react-router-dom";
 
-const ForumsPage = () => {
+const ARTICLES_PER_PAGE = import.meta.env.VITE_ARTICLES_PER_PAGE as number;
+
+const ArticlesPage = () => {
   const reduxDispatch = useAppDispatch();
   const [params, setParams] = useSearchParams();
-  const [forums, setForums] = useState<ForumModel[]>([]);
-  const [isFetchingCars, setIsFetchingCars] = useState(true);
-  const [totalNumberOfForums, setTotalNumberOfForums] = useState(0);
+  const [articles, setArticles] = useState<ArticleModel[]>([]);
+  const [totalNumberOfArticles, setTotalNumberOfArticles] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   const setFiltersFromParams = () => {
     return {
       page: getPageFromParams(),
-      size: 2,
+      size: ARTICLES_PER_PAGE,
       title: params.get("title") || "",
-      carBrand: params.get("carBrand") || "",
-      carModel: params.get("carModel") || "",
     };
   };
+
   const getPageFromParams = () => {
     let page = Number(params.get("page")) || 1;
     if (page < 1) page = 1;
@@ -37,30 +39,26 @@ const ForumsPage = () => {
   };
 
   const [filterState, filterDispatch] = useReducer(
-    forumFilterReducer,
+    articleFilterReducer,
     setFiltersFromParams()
   );
-  const { page, size, title, carBrand, carModel } = filterState;
+  const { page, size, title } = filterState;
 
   const buildQueryParams = () => {
     let queryParams = "";
     queryParams += `page=${page}`;
     if (title.length > 0) queryParams += `&title=${title}`;
-    if (carBrand.length > 0) queryParams += `&carBrand=${carBrand}`;
-    if (carModel.length > 0) queryParams += `&carModel=${carModel}`;
     return queryParams;
   };
 
-  const fetchForums = async () => {
+  const fetchArticles = async () => {
     try {
+      setIsLoading(true);
       setParams(buildQueryParams());
-      const data = await getForums(page, size, title, carBrand, carModel);
-
+      const data = await getArticles(title, page, size);
       if (data.status !== "ok") throw new Error(data.message);
-
-      setForums(data.data);
-      setTotalNumberOfForums(data.totalNumberOfForums);
-      console.log(data.totalNumberOfForums);
+      setArticles(data.data);
+      setTotalNumberOfArticles(data.totalNumberOfArticles);
     } catch (error) {
       const newError = handleError(error);
       reduxDispatch(
@@ -69,34 +67,29 @@ const ForumsPage = () => {
           message: newError.message,
         })
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchForums();
+    fetchArticles();
   }, [filterState]);
+
+  if (isLoading) return <LoadingSpinner small />;
 
   return (
     <div className="max-w-4xl h-full flex flex-col justify-between">
       <div className="flex flex-col  gap-12">
-        <ForumFilters
-          title={title}
-          carBrand={carBrand}
-          carModel={carModel}
-          dispatch={filterDispatch}
-          isLoading={isFetchingCars}
-          setIsLoading={setIsFetchingCars}
-        />
-        {!isFetchingCars && forums.length === 0 && (
-          <p className="text-center text-lg">Nie znaleiono forów</p>
-        )}
-        {forums.length > 0 && <ForumsLits forums={forums} />}
+        <ArticleFilters title={title} dispatch={filterDispatch} />
+        {!isLoading && articles.length === 0 && <p>Brak artykułów</p>}
+        <ArticleList articles={articles} />
       </div>
-      {forums.length > 0 && !isFetchingCars && (
+      {!isLoading && articles.length > 0 && (
         <div className=" flex items-center justify-center my-4">
           <Pagination
             currentPage={page}
-            totalPages={Math.ceil(totalNumberOfForums / size)}
+            totalPages={Math.ceil(totalNumberOfArticles / size)}
             goToPage={(page: number) =>
               filterDispatch({ type: "SET_PAGE", payload: page })
             }
@@ -107,4 +100,4 @@ const ForumsPage = () => {
   );
 };
 
-export default ForumsPage;
+export default ArticlesPage;

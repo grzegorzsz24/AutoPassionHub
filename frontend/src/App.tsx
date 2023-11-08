@@ -1,13 +1,18 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
+import AddArticlePage from "./pages/Articles/AddArticlePage";
 import AddForumPage from "./pages/Forums/AddForumPage";
 import AppLayout from "./pages/AppLayout";
+import ArticlePage from "./pages/Articles/ArticlePage";
+import ArticlePageLayout from "./pages/Articles/ArticlePageLayout";
+import ArticlesPage from "./pages/Articles/ArticlesPage";
 import ForumPage from "./pages/Forums/ForumPage";
 import ForumPageLayout from "./pages/Forums/ForumPageLayout";
 import ForumsPage from "./pages/Forums/ForumsPage";
 import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
 import MainPageLayout from "./pages/MainPageLayout";
+import MyArticlesPage from "./pages/Articles/MyArticlesPage";
 import MyForumsPage from "./pages/Forums/MyForumsPage";
 import Notification from "./ui/Notification";
 import OutletLayout from "./pages/OutletLayout";
@@ -40,7 +45,25 @@ const router = createBrowserRouter([
           },
           {
             path: "/articles",
-            element: <p>Artykuły</p>,
+            element: <ArticlePageLayout />,
+            children: [
+              {
+                path: "",
+                element: <ArticlesPage />,
+              },
+              {
+                path: "add",
+                element: <AddArticlePage />,
+              },
+              {
+                path: "my",
+                element: <MyArticlesPage />,
+              },
+              {
+                path: ":article",
+                element: <ArticlePage />,
+              },
+            ],
           },
           {
             path: "/events",

@@ -5,6 +5,9 @@ const createArticle = async (title: string, content: string) => {
     const response = await fetch(`${API_URL}/user/articles`, {
       method: "POST",
       credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         title,
         content,
@@ -28,10 +31,20 @@ const createArticle = async (title: string, content: string) => {
   }
 };
 
-const getArticles = async (page: number = 1, size: number = 10) => {
+const getArticles = async (
+  title: string,
+  page: number = 1,
+  size: number = 10
+) => {
+  let queryString = "";
+
+  if (title) {
+    queryString += `&title=${title}`;
+  }
+
   try {
     const response = await fetch(
-      `${API_URL}/user/articles?page=${page}&size=${size}`,
+      `${API_URL}/user/articles?page=${page}&size=${size}${queryString}`,
       {
         method: "GET",
         credentials: "include",
@@ -44,7 +57,8 @@ const getArticles = async (page: number = 1, size: number = 10) => {
     return {
       status: "ok",
       message: "Pobrano artykuły",
-      data,
+      data: data.articles,
+      totalNumberOfArticles: data.articlesNumber,
     };
   } catch (error) {
     return {
@@ -71,9 +85,11 @@ const getArticleById = async (id: number) => {
       data,
     };
   } catch (error) {
-    return (
-      (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później."
-    );
+    return {
+      status: "error",
+      message:
+        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
+    };
   }
 };
 
@@ -82,6 +98,9 @@ const toggleLike = async (id: number) => {
     const response = await fetch(`${API_URL}/user/likes`, {
       method: "POST",
       credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         article: id,
       }),
@@ -97,10 +116,46 @@ const toggleLike = async (id: number) => {
       like: data,
     };
   } catch (error) {
-    return (
-      (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później."
-    );
+    return {
+      status: "error",
+      message:
+        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
+    };
   }
 };
 
-export { createArticle, getArticles, getArticleById, toggleLike };
+const getMyArticles = async (page: number = 1, size: number = 10) => {
+  try {
+    const response = await fetch(
+      `${API_URL}/user/articles/own?page=${page}&size=${size}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message);
+    }
+    return {
+      status: "ok",
+      message: "Pobrano moje artykuły",
+      data: data.articles,
+      totalNumberOfArticles: data.articlesNumber,
+    };
+  } catch (error) {
+    return {
+      status: "error",
+      message:
+        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
+    };
+  }
+};
+
+export {
+  createArticle,
+  getArticles,
+  getArticleById,
+  toggleLike,
+  getMyArticles,
+};

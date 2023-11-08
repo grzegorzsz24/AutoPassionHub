@@ -29,6 +29,8 @@ const Pagination: FC<PaginationProps> = ({
       </button>
     );
   }
+  if (totalPages <= 1) return <></>;
+
   return (
     <div className="flex items-center gap-4">
       <button
