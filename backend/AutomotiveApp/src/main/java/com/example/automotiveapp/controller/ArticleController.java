@@ -1,6 +1,7 @@
 package com.example.automotiveapp.controller;
 
 import com.example.automotiveapp.dto.ArticleDto;
+import com.example.automotiveapp.reponse.ArticleResponse;
 import com.example.automotiveapp.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,9 +28,10 @@ public class ArticleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ArticleDto>> getAllArticles(@RequestParam(defaultValue = "1") int page,
-                                                           @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(articleService.getAllArticles(page, size));
+    public ResponseEntity<ArticleResponse> getAllArticles(@RequestParam(defaultValue = "") String title,
+                                                          @RequestParam(defaultValue = "1") int page,
+                                                          @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(articleService.getAllArticles(title, page, size));
     }
 
     @GetMapping("/{articleId}")
