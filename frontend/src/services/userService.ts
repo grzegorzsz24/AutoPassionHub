@@ -1,3 +1,5 @@
+import { createErrorResponse, createSuccessResponse } from "./utils";
+
 interface User {
   firstName: string;
   lastName: string;
@@ -36,17 +38,11 @@ const registerUser = async ({
     if (!response.ok) {
       throw new Error(data.message);
     }
-
-    return {
-      status: "ok",
-      message: "Rejestracja przebiegła pomyślnie. Możesz się teraz zalogować.",
-    };
+    return createSuccessResponse(
+      "Rejestracja przebiegła pomyślnie. Możesz się teraz zalogować."
+    );
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -73,11 +69,7 @@ const loginUser = async (email: string, password: string) => {
       ...data,
     };
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -107,17 +99,9 @@ const updateUserData = async (
     if (!response.ok) {
       throw new Error(data.message);
     }
-
-    return {
-      status: "ok",
-      message: "Dane osobowe zostały zmienione.",
-    };
+    return createSuccessResponse("Dane osobowe zostały zmienione.");
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -142,16 +126,9 @@ const updateUserPassword = async (
     if (!response.ok) {
       throw new Error(data.message);
     }
-    return {
-      status: "ok",
-      message: "Hasło zostało zmienione.",
-    };
+    return createSuccessResponse("Hasło zostało zmienione.");
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -175,11 +152,7 @@ const updateUserPhoto = async (photo: File) => {
       imageUrl: data.imageUrl,
     };
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -198,17 +171,9 @@ const updateUserPrivacy = async (publicProfile: boolean) => {
     if (!response.ok) {
       throw new Error(data.message);
     }
-
-    return {
-      status: "ok",
-      message: "Ustawienia prywatności zostały zmienione.",
-    };
+    return createSuccessResponse("Ustawienia prywatności zostały zmienione.");
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -223,16 +188,9 @@ const deleteUserAccount = async () => {
     if (!response.ok) {
       throw new Error(data.message);
     }
-    return {
-      status: "ok",
-      message: "Konto zostało usunięte.",
-    };
+    return createSuccessResponse("Konto zostało usunięte.");
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -253,11 +211,7 @@ const getUserById = async (userId: number) => {
       user: data,
     };
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -287,11 +241,7 @@ const findUserBySearchQuery = async (
       users: data,
     };
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -312,11 +262,7 @@ const getUserByNickname = async (nickname: string) => {
       user: data,
     };
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 

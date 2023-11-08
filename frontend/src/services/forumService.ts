@@ -1,5 +1,7 @@
 const API_URL = import.meta.env.VITE_API_URL as string;
 
+import { createErrorResponse, createSuccessResponse } from "./utils";
+
 const createForum = async (
   title: string,
   content: string,
@@ -21,17 +23,9 @@ const createForum = async (
     if (!response.ok) {
       throw new Error(data.message);
     }
-
-    return {
-      status: "ok",
-      message: "Utworzono forum.",
-    };
+    return createSuccessResponse("Forum zostało stworzone.");
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -84,11 +78,7 @@ const getForums = async (
       totalNumberOfForums: data.forumsNumber,
     };
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -108,11 +98,7 @@ const getUserForums = async (nickname: string) => {
       data,
     };
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -135,11 +121,7 @@ const getForumById = async (id: number) => {
       data,
     };
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -166,11 +148,7 @@ const addCommentToForum = async (forumId: number, content: string) => {
       data,
     };
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -193,11 +171,7 @@ const getForumComments = async (forumId: number) => {
       data,
     };
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -209,19 +183,12 @@ const deleteForumComment = async (commentId: number) => {
     });
 
     if (response.ok) {
-      return {
-        status: "ok",
-        message: "Usunięto komentarz.",
-      };
+      return createSuccessResponse("Usunięto komentarz.");
     }
     const data = await response.json();
     throw new Error(data.message);
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -237,20 +204,13 @@ const updateForumComment = async (commentId: number, content: string) => {
     });
 
     if (response.ok) {
-      return {
-        status: "ok",
-        message: "Edytowano komentarz.",
-      };
+      return createSuccessResponse("Edytowano komentarz.");
     }
 
     const data = await response.json();
     throw new Error(data.message);
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 

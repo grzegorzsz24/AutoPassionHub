@@ -1,5 +1,7 @@
 const API_URL = import.meta.env.VITE_API_URL as string;
 
+import { createErrorResponse, createSuccessResponse } from "./utils";
+
 const addComment = async (postId: number, content: string) => {
   try {
     const response = await fetch(`${API_URL}/user/comments`, {
@@ -20,11 +22,7 @@ const addComment = async (postId: number, content: string) => {
       comment: data,
     };
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -35,19 +33,12 @@ const deleteComment = async (id: number) => {
       credentials: "include",
     });
     if (response.ok) {
-      return {
-        status: "ok",
-        message: "Usunięto komentarz.",
-      };
+      return createSuccessResponse("Usunięto komentarz.");
     }
     const data = await response.json();
     throw new Error(data.message);
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -62,19 +53,12 @@ const editComment = async (id: number, content: string) => {
       body: JSON.stringify({ content }),
     });
     if (response.ok) {
-      return {
-        status: "ok",
-        message: "Edytowano komentarz.",
-      };
+      return createSuccessResponse("Edytowano komentarz.");
     }
     const data = await response.json();
     throw new Error(data.message);
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -97,11 +81,7 @@ const getPostComments = async (postId: number) => {
       comments: data,
     };
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 

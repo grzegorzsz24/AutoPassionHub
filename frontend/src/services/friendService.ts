@@ -1,5 +1,7 @@
 const API_URL = import.meta.env.VITE_API_URL as string;
 
+import { createErrorResponse, createSuccessResponse } from "./utils";
+
 const getUserFriends = async (userId: string) => {
   try {
     const response = await fetch(
@@ -24,11 +26,7 @@ const getUserFriends = async (userId: string) => {
       friends: data,
     };
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -53,11 +51,7 @@ const getUserNonFriends = async () => {
       nonFriends: data,
     };
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 const getReceivedInvitations = async () => {
@@ -79,11 +73,7 @@ const getReceivedInvitations = async () => {
       invitations: data,
     };
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -106,11 +96,7 @@ const getSentInvitations = async () => {
       invitations: data,
     };
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -131,17 +117,9 @@ const sendFriendRequest = async (userId: number) => {
     if (!response.ok) {
       throw new Error(data.message);
     }
-
-    return {
-      status: "ok",
-      message: "Wysłano zaproszenie do znajomych.",
-    };
+    return createSuccessResponse("Wysłano zaproszenie.");
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -161,17 +139,9 @@ const acceptFriendRequest = async (invitationId: number) => {
     if (!response.ok) {
       throw new Error(data.message);
     }
-
-    return {
-      status: "ok",
-      message: "Zaakceptowano zaproszenie do znajomych.",
-    };
+    return createSuccessResponse("Zaakceptowano zaproszenie do znajomych.");
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -191,17 +161,9 @@ const rejectFriendRequest = async (invitationId: number) => {
     if (!response.ok) {
       throw new Error(data.message);
     }
-
-    return {
-      status: "ok",
-      message: "Odrzucono zaproszenie do znajomych.",
-    };
+    return createSuccessResponse("Odrzucono zaproszenie do znajomych.");
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -221,16 +183,9 @@ const deleteFriend = async (friendId: number) => {
     if (!response.ok) {
       throw new Error(data.message);
     }
-    return {
-      status: "ok",
-      message: "Usunięto znajomego.",
-    };
+    return createSuccessResponse("Usunięto znajomego.");
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 

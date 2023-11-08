@@ -1,5 +1,7 @@
 const API_URL = import.meta.env.VITE_API_URL as string;
 
+import { createErrorResponse, createSuccessResponse } from "./utils";
+
 const createArticle = async (title: string, content: string) => {
   try {
     const response = await fetch(`${API_URL}/user/articles`, {
@@ -17,17 +19,11 @@ const createArticle = async (title: string, content: string) => {
     if (!response.ok) {
       throw new Error(data.message);
     }
-    return {
-      status: "ok",
-      message:
-        "Artykuł został stworzony i oczekuje na zaakceptowanie przez administratora.",
-    };
+    return createSuccessResponse(
+      "Artykuł został stworzony i oczekuje na zaakceptowanie przez administratora."
+    );
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -61,11 +57,7 @@ const getArticles = async (
       totalNumberOfArticles: data.articlesNumber,
     };
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -85,11 +77,7 @@ const getArticleById = async (id: number) => {
       data,
     };
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -116,11 +104,7 @@ const toggleLike = async (id: number) => {
       like: data,
     };
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -144,11 +128,7 @@ const getMyArticles = async (page: number = 1, size: number = 10) => {
       totalNumberOfArticles: data.articlesNumber,
     };
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 

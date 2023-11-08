@@ -1,5 +1,7 @@
 const API_URL = import.meta.env.VITE_API_URL as string;
 
+import { createErrorResponse, createSuccessResponse } from "./utils";
+
 const createPost = async (content: string, files: File[]) => {
   const formData = new FormData();
   formData.append("content", content);
@@ -23,11 +25,7 @@ const createPost = async (content: string, files: File[]) => {
       post: data,
     };
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -48,11 +46,7 @@ const getPosts = async () => {
       posts: data,
     };
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -75,11 +69,7 @@ const getUserPosts = async (id: number) => {
       posts: data,
     };
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -90,19 +80,12 @@ const deletePost = async (id: number) => {
       credentials: "include",
     });
     if (response.ok) {
-      return {
-        status: "ok",
-        message: "Usunięto post.",
-      };
+      return createSuccessResponse("Usunięto post.");
     }
     const data = await response.json();
     throw new Error(data.message);
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
@@ -117,19 +100,12 @@ const editPost = async (id: number, content: string) => {
       body: JSON.stringify({ content }),
     });
     if (response.ok) {
-      return {
-        status: "ok",
-        message: "Edytowano post.",
-      };
+      return createSuccessResponse("Edytowano post.");
     }
     const data = await response.json();
     throw new Error(data.message);
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 
