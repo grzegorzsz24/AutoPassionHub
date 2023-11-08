@@ -5,6 +5,7 @@ import com.example.automotiveapp.dto.ArticleDto;
 import com.example.automotiveapp.exception.BadRequestException;
 import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.mapper.ArticleDtoMapper;
+import com.example.automotiveapp.reponse.ArticleResponse;
 import com.example.automotiveapp.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -42,10 +43,11 @@ public class ArticleService {
                 .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono artykułu"));
     }
 
-    public List<ArticleDto> getAllArticles(int page, int size) {
+    public ArticleResponse getAllArticles(String title, int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
-        return articleRepository.findAll(pageable).stream()
+        List<ArticleDto> articles =  articleRepository.findByTitleContainsIgnoreCase(title, pageable).stream()
                 .map(ArticleDtoMapper::map)
                 .toList();
+        return new ArticleResponse(articles, (long) articles.size());
     }
 }
