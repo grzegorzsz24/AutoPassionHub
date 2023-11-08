@@ -9,6 +9,8 @@ import com.example.automotiveapp.repository.EventRepository;
 import com.example.automotiveapp.repository.FileRepository;
 import com.example.automotiveapp.storage.FileStorageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -24,8 +26,9 @@ public class EventService {
     private final FileStorageService fileStorageService;
     private final FileRepository fileRepository;
 
-    public List<EventDto> getAllEvents() {
-        return eventRepository.findAll()
+    public List<EventDto> getAllEvents(int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return eventRepository.findAll(pageable)
                 .stream()
                 .map(EventDtoMapper::map)
                 .toList();

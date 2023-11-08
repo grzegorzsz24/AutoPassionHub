@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/user/articles")
@@ -37,5 +36,11 @@ public class ArticleController {
     @GetMapping("/{articleId}")
     public ResponseEntity<ArticleDto> getArticle(@PathVariable Long articleId) {
         return ResponseEntity.ok(articleService.findArticleById(articleId));
+    }
+
+    @GetMapping("/own")
+    public ResponseEntity<ArticleResponse> getMyArticles(@RequestParam(defaultValue = "1") int page,
+                                                         @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(articleService.findMyArticles(page, size));
     }
 }

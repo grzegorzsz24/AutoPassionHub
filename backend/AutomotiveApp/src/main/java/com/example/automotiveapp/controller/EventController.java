@@ -29,8 +29,9 @@ public class EventController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<EventDto>> getAllEvents() {
-        return ResponseEntity.ok(eventService.getAllEvents());
+    public ResponseEntity<List<EventDto>> getAllEvents(@RequestParam(defaultValue = "1") int page,
+                                                       @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(eventService.getAllEvents(page, size));
     }
 
     @GetMapping
