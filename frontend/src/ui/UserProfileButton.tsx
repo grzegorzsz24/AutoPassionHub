@@ -47,7 +47,7 @@ const UserProfileButton = () => {
         <FaChevronDown className="text-md xl:text-xl" />
       </button>
       {isHovering && (
-        <ul className="absolute top-full bg-grayLight dark:bg-grayDark w-full rounded-md px-2 py-4 flex flex-col gap-2 shadow-md text-sm xl:text-md  items-center">
+        <ul className="absolute top-full bg-grayLight dark:bg-grayDark w-full rounded-md px-2 py-4 flex flex-col gap-2 shadow-md   items-center">
           <li className="hover:underline transition">
             <Link to="/me">Mój profil</Link>
           </li>

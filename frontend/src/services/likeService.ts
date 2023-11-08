@@ -16,7 +16,7 @@ const toggleLike = async (postId: number) => {
     }
     return {
       status: "ok",
-      message: "Dodano like.",
+      message: "Dodano/zabrano like'a",
       like: data,
     };
   } catch (error) {

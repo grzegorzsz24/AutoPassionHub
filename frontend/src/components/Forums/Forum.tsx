@@ -17,12 +17,14 @@ import DateFormatter from "../../utils/formatDate";
 import ForumModel from "../../models/ForumModel";
 import handleError from "../../services/errorHandler";
 import { useAppDispatch } from "../../store/store";
+import { useNavigate } from "react-router-dom";
 
 interface ForumProps {
   forum: ForumModel;
 }
 
 const Forum: FC<ForumProps> = ({ forum }) => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [comments, setComments] = useState<CommentModel[]>([]);
   const [isLoadingAddComment, setIsLoadingAddComment] =
@@ -121,28 +123,40 @@ const Forum: FC<ForumProps> = ({ forum }) => {
     }
   };
 
+  const goToUserPage = () => {
+    navigate(`/user/${forum.user}`);
+  };
+
   useEffect(() => {
     getComments();
   }, []);
 
   return (
     <div className="bg-white dark:bg-primaryDark2 p-6 rounded-md shadow-md ">
-      <div className="flex items-center justify-between gap-8">
-        <div className="my-6">
+      <div className="flex items-center justify-between gap-8  my-6">
+        <div className="">
           <h1 className="font-bold text-2xl text-wrap">{forum.title}</h1>
           <p className="text-xs text-gray-500 dark:text-gray-300">
             {DateFormatter.formatDate(forum.createdAt)}
           </p>
         </div>
-        <div className="flex items-center gap-2 ">
+        <div
+          className="flex items-center gap-2 cursor-pointer group "
+          onClick={goToUserPage}
+        >
           <img
             src={forum.userImageUrl}
             alt={`${forum.firstName} ${forum.lastName} komentarz`}
             className="w-8 h-8 rounded-full"
           />
           <div className="flex flex-col text-sm">
-            <p>{forum.firstName}</p>
-            <p>{forum.lastName}</p>
+            <div className="flex ">
+              <p>{forum.firstName}</p>
+              <p>{forum.lastName}</p>
+            </div>
+            <p className="text-blue-600 text-xs group-hover:font-bold transition-all">
+              {forum.user}
+            </p>
           </div>
         </div>
       </div>

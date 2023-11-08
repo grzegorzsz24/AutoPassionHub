@@ -19,8 +19,11 @@ const PostFooter: FC<PostFooterProps> = ({
 }) => {
   return (
     <div className="px-4 py-4 flex gap-8 text-blue-700 dark:text-blue-200">
-      <div className="flex items-center gap-2">
-        <button onClick={toogleLikeHandler}>
+      <div className="flex items-center gap-2 ">
+        <button
+          onClick={toogleLikeHandler}
+          className="active:animate-ping transition-all"
+        >
           {" "}
           {liked ? <FaHeart /> : <FaRegHeart />}
         </button>
