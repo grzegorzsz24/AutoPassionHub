@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ForumRepository extends JpaRepository<Forum, Long> {
     List<Forum> findAllByUser_NicknameIgnoreCase(String nickname);
@@ -17,6 +16,7 @@ public interface ForumRepository extends JpaRepository<Forum, Long> {
             "AND (s.model = :carModel OR :carModel IS NULL)")
     List<Forum> findAllByTitleAndCarBrandAndCarModel(
             String title, String carBrand, String carModel, Pageable pageable);
+
     @Query("SELECT COUNT(f) FROM Forum f JOIN f.car s " +
             "WHERE f.title LIKE %:title% " +
             "AND (s.brand = :carBrand OR :carBrand IS NULL) " +

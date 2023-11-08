@@ -7,6 +7,7 @@ import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.mapper.ArticleDtoMapper;
 import com.example.automotiveapp.reponse.ArticleResponse;
 import com.example.automotiveapp.repository.ArticleRepository;
+import com.example.automotiveapp.service.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -45,7 +46,15 @@ public class ArticleService {
 
     public ArticleResponse getAllArticles(String title, int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
-        List<ArticleDto> articles =  articleRepository.findByTitleContainsIgnoreCase(title, pageable).stream()
+        List<ArticleDto> articles = articleRepository.findByTitleContainsIgnoreCase(title, pageable).stream()
+                .map(ArticleDtoMapper::map)
+                .toList();
+        return new ArticleResponse(articles, (long) articles.size());
+    }
+
+    public ArticleResponse findMyArticles(int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        List<ArticleDto> articles = articleRepository.findAllByUserEmail(SecurityUtils.getCurrentUserEmail(), pageable).stream()
                 .map(ArticleDtoMapper::map)
                 .toList();
         return new ArticleResponse(articles, (long) articles.size());

@@ -11,5 +11,8 @@ import java.util.Optional;
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, Long> {
     Optional<Article> findByTitle(String title);
+
     List<Article> findByTitleContainsIgnoreCase(String keyword, Pageable pageable);
+
+    List<Article> findAllByUserEmail(String userEmail, Pageable pageable);
 }
