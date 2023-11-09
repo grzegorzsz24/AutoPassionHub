@@ -71,10 +71,10 @@ public class ArticleService {
 
     public ArticleResponse findMyArticles(int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
-        List<ArticleDto> articles = articleRepository.findAllByUserEmail(SecurityUtils.getCurrentUserEmail(), pageable).stream()
-                .map(ArticleDtoMapper::map)
-                .toList();
-        return new ArticleResponse(articles, (long) articles.size());
+        List<Article> articles = articleRepository.findAllByUserEmail(SecurityUtils.getCurrentUserEmail(), pageable);
+        List<ArticleDto> articleDtos = new ArrayList<>();
+        setArticlesLikesAndSavedStatus(articles, articleDtos);
+        return new ArticleResponse(articleDtos, (long) articles.size());
     }
 
 }
