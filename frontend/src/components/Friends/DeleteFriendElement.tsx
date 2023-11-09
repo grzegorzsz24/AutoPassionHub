@@ -7,10 +7,10 @@ import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 import { FC } from "react";
 import PrimaryButton from "../../ui/PrimaryButton";
 import UserModel from "../../models/UserModel";
+import UserProfile from "../../ui/UserProfile";
 import { deleteFriend } from "../../services/friendService";
 import handleError from "../../services/errorHandler";
 import { useAppDispatch } from "../../store/store";
-import { useNavigate } from "react-router-dom";
 
 interface DeleteFriendElementProps {
   user: UserModel;
@@ -22,7 +22,7 @@ const DeleteFriendElement: FC<DeleteFriendElementProps> = ({
   deleteUserFromList,
 }) => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+
   const addFriend = async () => {
     try {
       dispatch(startLoading());
@@ -50,28 +50,15 @@ const DeleteFriendElement: FC<DeleteFriendElementProps> = ({
     }
   };
 
-  const goToFriedProfile = () => {
-    navigate(`/user/${user.nickname}`);
-  };
-
   return (
-    <div className="flex items-center justify-between gap-4 w-full 2xl:w-1/2 overflow-y-auto py-4 px-6  rounded-md bg-white dark:bg-primaryDark2 shadow-md">
-      <div
-        className="flex items-center gap-6 cursor-pointer"
-        onClick={goToFriedProfile}
-      >
-        <img
-          className="w-12 h-12 rounded-full"
-          src={user.imageUrl}
-          alt={user.firstName + " " + user.lastName}
-        />
-        <div className="flex flex-col gap-1">
-          <span className="text-xl font-bold">
-            {user.firstName} {user.lastName}
-          </span>
-          <span className="text-sm text-gray-500">{user.nickname}</span>
-        </div>
-      </div>
+    <div className="flex items-center justify-between gap-4 w-full 2xl:w-2/3 overflow-y-auto py-4 px-6  rounded-md bg-white dark:bg-primaryDark2 shadow-md">
+      <UserProfile
+        size="large"
+        imageUrl={user.imageUrl}
+        firstName={user.firstName}
+        lastName={user.lastName}
+        nickname={user.nickname}
+      />
       <PrimaryButton
         size="md"
         onClick={() => {

@@ -9,17 +9,18 @@ const SwitchThemeButton = () => {
   const dispatch = useAppDispatch();
 
   const toggleTheme = () => {
-    if (theme === "light") {
-      dispatch(setTheme("dark"));
-    } else {
-      dispatch(setTheme("light"));
-    }
+    theme === "light"
+      ? dispatch(setTheme("dark"))
+      : dispatch(setTheme("light"));
   };
+
+  const buttonClasses =
+    "btn btn-outline-secondary text-blue-950 dark:text-blue-100  justify-self-end hover:scale-125 transition-all text-xl xl:text-2xl";
 
   return (
     <button
-      aria-label="Toogle Theme Button"
-      className="btn btn-outline-secondary text-blue-950 dark:text-blue-100  justify-self-end hover:scale-125 transition-all text-xl xl:text-2xl"
+      aria-label="Przycisk zmiany motywu"
+      className={buttonClasses}
       onClick={toggleTheme}
     >
       {theme === "dark" ? <FaSun /> : <FaMoon />}

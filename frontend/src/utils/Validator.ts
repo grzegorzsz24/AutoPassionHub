@@ -1,19 +1,24 @@
 class Validator {
+  private static readonly emailRegex = /\S+@\S+\.\S+/;
+  private static readonly nickRegex = /^[a-z0-9]{5,25}$/;
+  private static readonly passwordRegex = /.{8,}/;
+  private static readonly nameRegex =
+    /^[A-ZŁŚ][a-złóśćąęń]{1,20}(\s[A-ZŁŚ][a-złóśćąęń]{1,20})?$/;
+  private static readonly surnameRegex =
+    /^[A-ZŁŚ][a-złóśćąęń]{1,20}(-[A-ZŁŚ][a-złóśćąęń]{1,20})?$/;
+
   static isEmpty = (value: string): boolean => value.trim() === "";
 
   static isEmail = (value: string): boolean => {
-    const regex = /\S+@\S+\.\S+/;
-    return regex.test(value);
+    return this.emailRegex.test(value);
   };
 
   static isNick = (value: string): boolean => {
-    const regex = /^[a-z0-9]{5,25}$/;
-    return regex.test(value);
+    return this.nickRegex.test(value);
   };
 
   static isPassword = (value: string): boolean => {
-    const regex = /.{8,}/;
-    return regex.test(value);
+    return this.passwordRegex.test(value);
   };
 
   static isPasswordConfirm = (value: string, password: string): boolean => {
@@ -21,13 +26,11 @@ class Validator {
   };
 
   static isName = (value: string): boolean => {
-    const regex = /^[A-ZŁŚ][a-złóśćąęń]{1,20}(\s[A-ZŁŚ][a-złóśćąęń]{1,20})?$/;
-    return regex.test(value);
+    return this.nameRegex.test(value);
   };
 
   static isSurname = (value: string): boolean => {
-    const regex = /^[A-ZŁŚ][a-złóśćąęń]{1,20}(-[A-ZŁŚ][a-złóśćąęń]{1,20})?$/;
-    return regex.test(value);
+    return this.surnameRegex.test(value);
   };
 }
 

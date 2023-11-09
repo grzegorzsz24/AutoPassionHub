@@ -6,10 +6,10 @@ import {
 
 import PendingInvitationModel from "../../models/PendingInvitationModel";
 import UserModel from "../../models/UserModel";
+import UserProfile from "../../ui/UserProfile";
 import { getUserById } from "../../services/userService";
 import handleError from "../../services/errorHandler";
 import { useAppDispatch } from "../../store/store";
-import { useNavigate } from "react-router-dom";
 
 interface PendingInvitationProps {
   invitation: PendingInvitationModel;
@@ -17,7 +17,6 @@ interface PendingInvitationProps {
 
 const PendingInvitation: FC<PendingInvitationProps> = ({ invitation }) => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const [user, setUser] = useState<UserModel>();
 
   const getUser = async () => {
@@ -38,10 +37,6 @@ const PendingInvitation: FC<PendingInvitationProps> = ({ invitation }) => {
     }
   };
 
-  const goToFriedProfile = () => {
-    navigate(`/user/${user!.nickname}`);
-  };
-
   useEffect(() => {
     getUser();
   }, []);
@@ -50,25 +45,16 @@ const PendingInvitation: FC<PendingInvitationProps> = ({ invitation }) => {
     <div className="text-darkPrimary dark:text-blue-50">
       {user && (
         <div
-          className="flex items-center justify-between gap-4 w-full 2xl:w-1/2 overflow-y-auto py-4 px-6  rounded-md bg-white dark:bg-primaryDark2 shadow-md"
+          className="flex items-center justify-between gap-4 w-full 2xl:w-2/3 overflow-y-auto py-4 px-6  rounded-md bg-white dark:bg-primaryDark2 shadow-md"
           key={user.id}
         >
-          <div
-            className="flex items-center gap-6 cursor-pointer"
-            onClick={goToFriedProfile}
-          >
-            <img
-              className="w-12 h-12 rounded-full"
-              src={user.imageUrl}
-              alt={user.firstName + " " + user.lastName}
-            />
-            <div className="flex flex-col gap-1">
-              <span className="text-xl font-bold">
-                {user.firstName} {user.lastName}
-              </span>
-              <span className="text-sm text-gray-500">{user.nickname}</span>
-            </div>
-          </div>
+          <UserProfile
+            size="large"
+            imageUrl={user.imageUrl}
+            firstName={user.firstName}
+            lastName={user.lastName}
+            nickname={user.nickname}
+          />
         </div>
       )}
     </div>

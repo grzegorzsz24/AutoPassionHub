@@ -19,44 +19,41 @@ const PrimaryButton: FC<PrimaryButtonProps> = ({
   type = "button",
   color = "blue",
 }) => {
-  let sizeClasses: string;
+  let buttonClasses =
+    "rounded-md text-blue-50 font-semibold shadow-md hover:bg-blue-700 transition-all ${sizeClasses} disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2";
 
   switch (size) {
     case "xs":
-      sizeClasses = "py-1 px-2 text-xs";
+      buttonClasses += " py-1 px-2 text-xs";
       break;
     case "sm":
-      sizeClasses = "py-1 px-2 text-sm";
+      buttonClasses += " py-1 px-2 text-sm";
       break;
     case "lg":
-      sizeClasses = "py-2 px-8 text-xl";
+      buttonClasses += " py-2 px-8 text-xl";
       break;
     default:
-      sizeClasses = "py-2 px-4 text-md";
+      buttonClasses += " py-2 px-4 text-md";
   }
 
   switch (color) {
     case "red":
-      sizeClasses += " bg-red-600 hover:bg-red-700 ";
+      buttonClasses += " bg-red-600 hover:bg-red-700 ";
       break;
     case "green":
-      sizeClasses += " bg-green-600 hover:bg-green-700 ";
+      buttonClasses += " bg-green-600 hover:bg-green-700 ";
       break;
     default:
-      sizeClasses += " bg-blue-600 hover:bg-blue-700 ";
+      buttonClasses += " bg-blue-600 hover:bg-blue-700 ";
   }
 
   if (fullWidth) {
-    sizeClasses += " w-full";
+    buttonClasses += " w-full";
   }
 
   if (type === "submit") {
     return (
-      <button
-        className={` rounded-md text-blue-50 font-semibold shadow-md hover:bg-blue-700 transition-all ${sizeClasses} disabled:opacity-50 disabled:cursor-not-allowed`}
-        disabled={disabled}
-        type={type}
-      >
+      <button className={buttonClasses} disabled={disabled} type={type}>
         {children}
       </button>
     );
@@ -65,7 +62,7 @@ const PrimaryButton: FC<PrimaryButtonProps> = ({
   return (
     <button
       onClick={onClickMethod}
-      className={` rounded-md text-blue-50 font-semibold shadow-md hover:bg-blue-700 transition-all ${sizeClasses} disabled:opacity-50 disabled:cursor-not-allowed`}
+      className={buttonClasses}
       disabled={disabled}
     >
       {children}

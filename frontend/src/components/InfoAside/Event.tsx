@@ -1,4 +1,4 @@
-import DateFormatter from "../../utils/formatDate";
+import DateFormatter from "../../utils/DateFormatter";
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 

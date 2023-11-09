@@ -6,7 +6,7 @@ import {
 } from "../../store/features/notificationSlice";
 
 import ArticleModel from "../../models/ArticleModel";
-import DateFormatter from "../../utils/formatDate";
+import DateFormatter from "../../utils/DateFormatter";
 import { debounce } from "lodash";
 import handleError from "../../services/errorHandler";
 import { toggleLike } from "../../services/articleService";

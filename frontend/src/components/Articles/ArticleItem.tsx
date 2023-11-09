@@ -1,5 +1,5 @@
 import ArticleModel from "../../models/ArticleModel";
-import DateFormatter from "../../utils/formatDate";
+import DateFormatter from "../../utils/DateFormatter";
 import { FC } from "react";
 import { FaHeart } from "react-icons/fa";
 import { RiArrowRightDoubleFill } from "react-icons/ri";

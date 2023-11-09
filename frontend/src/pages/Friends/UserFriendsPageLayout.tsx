@@ -1,14 +1,10 @@
 import { Outlet } from "react-router-dom";
+import PageWithAsideMenuLayout from "../PageWithAsideMenuLayout";
 import UserFriendsMenu from "../../components/Menu/UserFriendsMenu";
 
 const UserFriendsPageLayout = () => {
   return (
-    <div className="px-6 py-12 flex items-start gap-8 xl:gap-32 h-full overflow-y-auto">
-      <UserFriendsMenu />
-      <div className="flex-grow">
-        <Outlet />
-      </div>
-    </div>
+    <PageWithAsideMenuLayout menu={<UserFriendsMenu />} content={<Outlet />} />
   );
 };
 

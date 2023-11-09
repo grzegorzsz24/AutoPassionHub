@@ -1,10 +1,9 @@
 import { FC, useState } from "react";
 
 import { BiDotsHorizontalRounded } from "react-icons/bi";
-import DateFormatter from "../../utils/formatDate";
 import OutlineButton from "../../ui/OutlineButton";
+import UserProfile from "../../ui/UserProfile";
 import { useAppSelector } from "../../store/store";
-import { useNavigate } from "react-router-dom";
 
 interface PostHeaderProps {
   id: number;
@@ -27,7 +26,6 @@ const PostHeader: FC<PostHeaderProps> = ({
   deletePostHandler,
   setEditMode,
 }) => {
-  const navigate = useNavigate();
   const { nickname: userNickname } = useAppSelector((state) => state.user);
   const [optionsAreShown, setOptionsAreShown] = useState(false);
 
@@ -41,31 +39,14 @@ const PostHeader: FC<PostHeaderProps> = ({
 
   return (
     <div className=" py-4 px-4 flex items-center justify-between">
-      <div className="flex gap-4">
-        <img
-          src={avatar}
-          alt={`${firstName} ${lastName} picture`}
-          className="w-12 h-12 rounded-full"
-        />
-        <div
-          className="flex flex-col gap-1"
-          onClick={() => {
-            navigate(`/user/${nickname}`);
-          }}
-        >
-          <div className="flex gap-2 items-center cursor-pointer">
-            <p className="text-md font-bold">
-              {firstName} {lastName}
-            </p>
-            <p className="text-sm text-blue-600">@{nickname}</p>
-          </div>
-          <div className="flex gap-2 items-center">
-            <p className="text-[0.6rem] ">
-              {DateFormatter.formatDate(createdAt)}
-            </p>
-          </div>
-        </div>
-      </div>
+      <UserProfile
+        size="medium"
+        imageUrl={avatar}
+        firstName={firstName}
+        lastName={lastName}
+        nickname={nickname}
+        createdAt={createdAt}
+      />
       <div
         className="relative cursor-pointer"
         onMouseOver={onMouseOverHandler}
