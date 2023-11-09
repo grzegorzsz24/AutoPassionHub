@@ -9,6 +9,7 @@ interface ArticleModel {
   userImageUrl: string;
   likesNumber: number;
   liked: boolean;
+  saved: boolean;
 }
 
 export default ArticleModel;

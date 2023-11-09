@@ -15,8 +15,8 @@ import AddComment from "./AddComment";
 import Comment from "./Comment";
 import CommentModel from "../../models/CommentModel";
 import DateFormatter from "../../utils/DateFormatter";
-import { FaBookmark } from "react-icons/fa";
 import ForumModel from "../../models/ForumModel";
+import ToogleBookmarkButton from "../../ui/ToogleBookmarkButton";
 import UserProfile from "../../ui/UserProfile";
 import handleError from "../../services/errorHandler";
 import { useAppDispatch } from "../../store/store";
@@ -30,6 +30,7 @@ const Forum: FC<ForumProps> = ({ forum }) => {
   const [comments, setComments] = useState<CommentModel[]>([]);
   const [isLoadingAddComment, setIsLoadingAddComment] =
     useState<boolean>(false);
+  const [isBookmarked, setIsBookmarked] = useState<boolean>(forum.saved);
 
   const addCommentHandler = async (content: string) => {
     try {
@@ -124,18 +125,28 @@ const Forum: FC<ForumProps> = ({ forum }) => {
     }
   };
 
-  const addForumToSavedHandler = async () => {
+  const toogleBookmarkHandler = async () => {
     try {
       const data = await addForumToSaved(forum.id);
       if (data.status !== "ok") {
         throw new Error(data.message);
       }
-      dispatch(
-        addNotification({
-          type: NotificationStatus.SUCCESS,
-          message: data.message,
-        })
-      );
+      if (isBookmarked) {
+        dispatch(
+          addNotification({
+            type: NotificationStatus.INFO,
+            message: "Usunięto z zapisanych",
+          })
+        );
+      } else {
+        dispatch(
+          addNotification({
+            type: NotificationStatus.SUCCESS,
+            message: data.message,
+          })
+        );
+      }
+      setIsBookmarked((prev) => !prev);
     } catch (error) {
       const newError = handleError(error);
       dispatch(
@@ -153,15 +164,17 @@ const Forum: FC<ForumProps> = ({ forum }) => {
 
   return (
     <div className="bg-white dark:bg-primaryDark2 p-6 rounded-md shadow-md ">
-      <div className="flex items-center justify-between gap-8  my-6">
+      <div className="flex items-start justify-between gap-8  my-6">
         <div className="">
           <h1 className="font-bold text-2xl text-wrap">{forum.title}</h1>
-          <p className="text-xs text-gray-500 dark:text-gray-300">
+          <p className="text-xs text-gray-500 dark:text-gray-300 mb-4">
             {DateFormatter.formatDate(forum.createdAt)}
           </p>
-          <button onClick={addForumToSavedHandler}>
-            <FaBookmark />
-          </button>
+          <ToogleBookmarkButton
+            isBookmarked={isBookmarked}
+            onClick={toogleBookmarkHandler}
+            size="large"
+          />
         </div>
         <UserProfile
           size="small"

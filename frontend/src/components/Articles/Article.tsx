@@ -7,9 +7,11 @@ import {
 
 import ArticleModel from "../../models/ArticleModel";
 import DateFormatter from "../../utils/DateFormatter";
+import ToogleBookmarkButton from "../../ui/ToogleBookmarkButton";
 import { debounce } from "lodash";
 import handleError from "../../services/errorHandler";
 import { toggleLike } from "../../services/articleService";
+import { toogleArticleBookmark } from "../../services/articleService";
 import { useAppDispatch } from "../../store/store";
 import { useNavigate } from "react-router-dom";
 
@@ -23,7 +25,7 @@ const Article: FC<ArticleProps> = ({ article }) => {
   const [numberOfLikes, setNumberOfLikes] = useState<number>(
     article.likesNumber
   );
-  console.log(article);
+  const [isBookmarked, setIsBookmarked] = useState<boolean>(article.saved);
   const [isLiked, setIsLiked] = useState<boolean>(article.liked);
 
   const debouncedToggleLike = debounce(async () => {
@@ -51,6 +53,39 @@ const Article: FC<ArticleProps> = ({ article }) => {
     debouncedToggleLike();
   };
 
+  const toogleBookmarkHandler = async () => {
+    try {
+      const data = await toogleArticleBookmark(article.id);
+      if (data.status !== "ok") {
+        throw new Error(data.message);
+      }
+      if (isBookmarked) {
+        dispatch(
+          addNotification({
+            type: NotificationStatus.INFO,
+            message: "Usunięto z zapisanych",
+          })
+        );
+      } else {
+        dispatch(
+          addNotification({
+            type: NotificationStatus.SUCCESS,
+            message: "Dodano do zapisanych",
+          })
+        );
+      }
+      setIsBookmarked((prev) => !prev);
+    } catch (error) {
+      const newError = handleError(error);
+      dispatch(
+        addNotification({
+          type: NotificationStatus.ERROR,
+          message: newError.message,
+        })
+      );
+    }
+  };
+
   const goToUserPage = () => {
     navigate(`/user/${article.user}`);
   };
@@ -60,9 +95,14 @@ const Article: FC<ArticleProps> = ({ article }) => {
       <div className="flex items-center justify-between gap-8  my-6">
         <div className="">
           <h1 className="font-bold text-2xl text-wrap">{article.title}</h1>
-          <p className="text-xs text-gray-500 dark:text-gray-300">
+          <p className="text-xs text-gray-500 dark:text-gray-300 mb-4">
             {DateFormatter.formatDate(article.publishedAt)}
           </p>
+          <ToogleBookmarkButton
+            isBookmarked={isBookmarked}
+            onClick={toogleBookmarkHandler}
+            size="large"
+          />
         </div>
         <div
           className="flex items-center gap-2 cursor-pointer group "
@@ -89,7 +129,7 @@ const Article: FC<ArticleProps> = ({ article }) => {
       <div className="flex items-center gap-2 ">
         <button
           onClick={toggleLikeHandler}
-          className="active:animate-ping transition-all"
+          className="active:animate-ping transition-all hover:text-blue-600"
         >
           {isLiked ? <FaHeart /> : <FaRegHeart />}
         </button>

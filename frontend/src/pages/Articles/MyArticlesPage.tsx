@@ -59,6 +59,7 @@ const MyArticlesPage = () => {
       if (data.status !== "ok") throw new Error(data.message);
       setArticles(data.data);
       setTotalNumberOfArticles(data.totalNumberOfArticles);
+      console.log(data.data);
     } catch (error) {
       const newError = handleError(error);
       reduxDispatch(

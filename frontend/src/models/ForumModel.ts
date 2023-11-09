@@ -10,6 +10,7 @@ interface ForumModel {
   userImageUrl: string;
   carBrand: string;
   carModel: string;
+  saved: boolean;
 }
 
 export default ForumModel;
