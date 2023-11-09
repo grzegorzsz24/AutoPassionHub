@@ -7,6 +7,7 @@ import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.mapper.ArticleDtoMapper;
 import com.example.automotiveapp.reponse.ArticleResponse;
 import com.example.automotiveapp.repository.ArticleRepository;
+import com.example.automotiveapp.repository.LikeRepository;
 import com.example.automotiveapp.service.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,7 +24,7 @@ import java.util.List;
 public class ArticleService {
     private final ArticleRepository articleRepository;
     private final ArticleDtoMapper articleDtoMapper;
-    private final UserService userService;
+    private final LikeRepository likeRepository;
 
     public ArticleDto saveArticle(ArticleDto articleDto) {
         if (articleRepository.findByTitle(articleDto.getTitle()).isPresent()) {
@@ -40,16 +42,29 @@ public class ArticleService {
     }
 
     public ArticleDto findArticleById(Long id) {
-        return articleRepository.findById(id).map((ArticleDtoMapper::map))
+        Article article = articleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono artykułu"));
+        ArticleDto articleDto = ArticleDtoMapper.map(article);
+        if (likeRepository.getLikeByUser_EmailAndArticleId(SecurityUtils.getCurrentUserEmail(), article.getId()).isPresent()) {
+            articleDto.setLiked(true);
+        }
+        return articleDto;
     }
 
     public ArticleResponse getAllArticles(String title, int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
-        List<ArticleDto> articles = articleRepository.findByTitleContainsIgnoreCase(title, pageable).stream()
-                .map(ArticleDtoMapper::map)
-                .toList();
-        return new ArticleResponse(articles, (long) articles.size());
+        List<Article> articles = articleRepository.findByTitleContainsIgnoreCase(title, pageable);
+        List<ArticleDto> articleDtos = new ArrayList<>();
+        setArticlesLikes(articles, articleDtos);
+        return new ArticleResponse(articleDtos, (long) articles.size());
+    }
+
+    private void setArticlesLikes(List<Article> articles, List<ArticleDto> articleDtos) {
+        for (Article article : articles) {
+            ArticleDto articleDto = ArticleDtoMapper.map(article);
+            articleDto.setLiked(likeRepository.getLikeByUser_EmailAndArticleId(SecurityUtils.getCurrentUserEmail(), article.getId()).isPresent());
+            articleDtos.add(articleDto);
+        }
     }
 
     public ArticleResponse findMyArticles(int page, int size) {
@@ -59,4 +74,5 @@ public class ArticleService {
                 .toList();
         return new ArticleResponse(articles, (long) articles.size());
     }
+
 }

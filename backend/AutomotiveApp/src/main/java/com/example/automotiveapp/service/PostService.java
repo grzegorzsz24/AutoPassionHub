@@ -133,13 +133,7 @@ public class PostService {
     private void setPostLikes(List<Post> posts, List<PostDto> friendsPosts) {
         for (Post post : posts) {
             PostDto postDto = PostDtoMapper.map(post);
-            if (likeRepository.getLikeByUser_EmailAndPostId(SecurityUtils.getCurrentUserEmail(), post.getId()).isPresent()) {
-                postDto.setLiked(true);
-                log.info("Ustawiono na true");
-            } else {
-                postDto.setLiked(false);
-                log.info("Ustawiono na true");
-            }
+            postDto.setLiked(likeRepository.getLikeByUser_EmailAndPostId(SecurityUtils.getCurrentUserEmail(), post.getId()).isPresent());
             friendsPosts.add(postDto);
         }
     }
