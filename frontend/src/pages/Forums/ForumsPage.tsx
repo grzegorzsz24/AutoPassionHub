@@ -7,6 +7,7 @@ import { useEffect, useReducer, useState } from "react";
 import ForumFilters from "../../components/Forums/ForumFilters";
 import ForumModel from "../../models/ForumModel";
 import ForumsLits from "../../components/Forums/ForumsLits";
+import NoContent from "../../ui/NoContent";
 import Pagination from "../../components/Pagination";
 import forumFilterReducer from "../../reducers/ForumFilterReducer";
 import { getForums } from "../../services/forumService";
@@ -79,8 +80,8 @@ const ForumsPage = () => {
   }, [filterState]);
 
   return (
-    <div className="max-w-4xl h-full flex flex-col justify-between">
-      <div className="flex flex-col  gap-12">
+    <div className="max-w-4xl h-full flex flex-col justify-between ">
+      <div className="flex flex-col gap-12">
         <ForumFilters
           title={title}
           carBrand={carBrand}
@@ -90,7 +91,7 @@ const ForumsPage = () => {
           setIsLoading={setIsFetchingCars}
         />
         {!isFetchingCars && forums.length === 0 && (
-          <p className="text-center text-lg">Nie znaleiono forów</p>
+          <NoContent>Brak forów</NoContent>
         )}
         {forums.length > 0 && <ForumsLits forums={forums} />}
       </div>

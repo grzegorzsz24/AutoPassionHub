@@ -1,18 +1,3 @@
-// import {
-//   NotificationStatus,
-//   addNotification,
-// } from "../../store/features/notificationSlice";
-// import { startLoading, stopLoading } from "../../store/features/loadingSlice";
-// import { useEffect, useState } from "react";
-
-// import PendingInvitationModel from "../../models/PendingInvitationModel";
-// import UserModel from "../../models/UserModel";
-// import { getPendingInvitations } from "../../services/friendsService";
-// import handleError from "../../services/errorHandler";
-// import { useAppDispatch } from "../../store/store";
-
-// import { getPendingFriends } from "../../services/friendsService";
-
 import {
   NotificationStatus,
   addNotification,
@@ -20,6 +5,7 @@ import {
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 import { useEffect, useState } from "react";
 
+import NoContent from "../../ui/NoContent";
 import PendingInvitation from "../../components/Friends/PendingInvitation";
 import PendingInvitationModel from "../../models/PendingInvitationModel";
 import { getSentInvitations } from "../../services/friendService";
@@ -57,14 +43,14 @@ const SentInvitationsPage = () => {
     getInvitations();
   }, []);
   return (
-    <div className="text-primaryDark dark:text-blue-50 w-full py-4 flex flex-col gap-6 ">
+    <div className="text-primaryDark dark:text-blue-50 w-full flex flex-col gap-6 ">
       {pendingInvitations.map((invitation) => {
         return (
           <PendingInvitation key={invitation.id} invitation={invitation} />
         );
       })}
       {pendingInvitations.length === 0 && (
-        <h2 className="text-xl">Brak wysłanych zaproszeń</h2>
+        <NoContent>Brak wysłanych zaproszeń</NoContent>
       )}
     </div>
   );

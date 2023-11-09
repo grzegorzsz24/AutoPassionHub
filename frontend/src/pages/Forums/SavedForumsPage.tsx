@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import ForumModel from "../../models/ForumModel";
 import ForumsLits from "../../components/Forums/ForumsLits";
 import LoadingSpinner from "../../ui/LoadingSpinner";
+import NoContent from "../../ui/NoContent";
 import { getSavedForums } from "../../services/forumService";
 import handleError from "../../services/errorHandler";
 import { useAppDispatch } from "../../store/store";
@@ -48,7 +49,9 @@ const SavedForumsPage = () => {
 
   return (
     <div className="max-w-4xl h-full flex flex-col justify-between">
-      {!isLoading && forums.length === 0 && <p>Brak zapisanych forow</p>}
+      {!isLoading && forums.length === 0 && (
+        <NoContent>Brak zapisanych forów</NoContent>
+      )}
       {!isLoading && forums.length > 0 && <ForumsLits forums={forums} />}
     </div>
   );

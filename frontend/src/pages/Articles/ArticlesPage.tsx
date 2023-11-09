@@ -8,6 +8,7 @@ import ArticleFilters from "../../components/Articles/ArticleFilters";
 import ArticleList from "../../components/Articles/ArticleList";
 import ArticleModel from "../../models/ArticleModel";
 import LoadingSpinner from "../../ui/LoadingSpinner";
+import NoContent from "../../ui/NoContent";
 import Pagination from "../../components/Pagination";
 import articleFilterReducer from "../../reducers/ArticlePaginationReducer";
 import { getArticles } from "../../services/articleService";
@@ -82,7 +83,9 @@ const ArticlesPage = () => {
     <div className="max-w-4xl h-full flex flex-col justify-between">
       <div className="flex flex-col  gap-12">
         <ArticleFilters title={title} dispatch={filterDispatch} />
-        {!isLoading && articles.length === 0 && <p>Brak artykułów</p>}
+        {!isLoading && articles.length === 0 && (
+          <NoContent>Brak artykułów</NoContent>
+        )}
         <ArticleList articles={articles} />
       </div>
       {!isLoading && articles.length > 0 && (

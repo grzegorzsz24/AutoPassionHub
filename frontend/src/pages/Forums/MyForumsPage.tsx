@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import ForumModel from "../../models/ForumModel";
 import ForumsLits from "../../components/Forums/ForumsLits";
 import LoadingSpinner from "../../ui/LoadingSpinner";
+import NoContent from "../../ui/NoContent";
 import { getUserForums } from "../../services/forumService";
 import handleError from "../../services/errorHandler";
 
@@ -44,10 +45,8 @@ const MyForumsPage = () => {
 
   return (
     <div>
+      {!isLoading && forums.length === 0 && <NoContent>Brak forów</NoContent>}
       <ForumsLits forums={forums} />
-      {!isLoading && forums.length === 0 && (
-        <p className="text-lg">Brak forów</p>
-      )}
     </div>
   );
 };

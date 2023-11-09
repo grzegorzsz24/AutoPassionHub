@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import ArticleList from "../../components/Articles/ArticleList";
 import ArticleModel from "../../models/ArticleModel";
 import LoadingSpinner from "../../ui/LoadingSpinner";
+import NoContent from "../../ui/NoContent";
 import { getSavedArticles } from "../../services/articleService";
 import handleError from "../../services/errorHandler";
 import { useAppDispatch } from "../../store/store";
@@ -49,7 +50,9 @@ const SavedArticlesPage = () => {
 
   return (
     <div className="max-w-4xl h-full flex flex-col justify-between">
-      {!isLoading && articles.length === 0 && <p>Brak zapisanych forow</p>}
+      {!isLoading && articles.length === 0 && (
+        <NoContent>Brak zapisanych artykułów</NoContent>
+      )}
       {!isLoading && articles.length > 0 && <ArticleList articles={articles} />}
     </div>
   );

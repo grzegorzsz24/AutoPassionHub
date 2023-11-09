@@ -6,6 +6,7 @@ import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 import { useEffect, useState } from "react";
 
 import FriendInvitation from "../../components/Friends/FriendInvitation";
+import NoContent from "../../ui/NoContent";
 import PendingInvitationModel from "../../models/PendingInvitationModel";
 import { getReceivedInvitations } from "../../services/friendService";
 import handleError from "../../services/errorHandler";
@@ -49,7 +50,7 @@ const ReceivedInvitationsPage = () => {
   }, []);
 
   return (
-    <div className="text-primaryDark dark:text-blue-50 w-full py-4 flex flex-col gap-6 ">
+    <div className="text-primaryDark dark:text-blue-50 w-full  flex flex-col gap-6 ">
       {pendingInvitations.map((invitation) => {
         return (
           <FriendInvitation
@@ -60,7 +61,7 @@ const ReceivedInvitationsPage = () => {
         );
       })}
       {pendingInvitations.length === 0 && (
-        <h2 className="text-xl">Brak zaproszeń od innych użytkowników</h2>
+        <NoContent>Brak otrzymanych zaproszeń</NoContent>
       )}
     </div>
   );

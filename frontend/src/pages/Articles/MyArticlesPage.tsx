@@ -7,6 +7,7 @@ import { useEffect, useReducer, useState } from "react";
 import ArticleList from "../../components/Articles/ArticleList";
 import ArticleModel from "../../models/ArticleModel";
 import LoadingSpinner from "../../ui/LoadingSpinner";
+import NoContent from "../../ui/NoContent";
 import Pagination from "../../components/Pagination";
 import articleFilterReducer from "../../reducers/ArticlePaginationReducer";
 import { getMyArticles } from "../../services/articleService";
@@ -80,7 +81,9 @@ const MyArticlesPage = () => {
   return (
     <div className="max-w-4xl h-full flex flex-col justify-between">
       <div className="flex flex-col  gap-12">
-        {!isLoading && articles.length === 0 && <p>Brak artykułów</p>}
+        {!isLoading && articles.length === 0 && (
+          <NoContent>Brak artykułów</NoContent>
+        )}
         <ArticleList articles={articles} />
       </div>
       {!isLoading && articles.length > 0 && (

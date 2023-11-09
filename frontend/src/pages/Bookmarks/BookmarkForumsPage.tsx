@@ -4,35 +4,32 @@ import {
 } from "../../store/features/notificationSlice";
 import { useEffect, useState } from "react";
 
-import Forum from "../../components/Forums/Forum";
 import ForumModel from "../../models/ForumModel";
+import ForumsLits from "../../components/Forums/ForumsLits";
 import LoadingSpinner from "../../ui/LoadingSpinner";
-import NoContent from "../../ui/NoContent";
-import { getForumById } from "../../services/forumService";
+import { getSavedForums } from "../../services/forumService";
 import handleError from "../../services/errorHandler";
 import { useAppDispatch } from "../../store/store";
-import { useParams } from "react-router-dom";
 
-const ForumPage = () => {
+const BookmarkForumsPage = () => {
   const dispatch = useAppDispatch();
-  const { forum: forumID } = useParams<{ forum: string }>();
-  const [forum, setForum] = useState<ForumModel | null>(null);
+  const [forums, setForums] = useState<ForumModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const getForum = async () => {
+  const fetchForums = async () => {
     try {
       setIsLoading(true);
-      const data = await getForumById(Number(forumID));
+      const data = await getSavedForums(1, 100);
       if (data.status !== "ok") {
         throw new Error(data.message);
       }
-      setForum(data.data);
+      setForums(data.data);
     } catch (error) {
       const newError = handleError(error);
       dispatch(
         addNotification({
-          type: NotificationStatus.ERROR,
           message: newError.message,
+          type: NotificationStatus.ERROR,
         })
       );
     } finally {
@@ -41,19 +38,17 @@ const ForumPage = () => {
   };
 
   useEffect(() => {
-    getForum();
+    fetchForums();
   }, []);
 
   if (isLoading) return <LoadingSpinner small />;
 
   return (
-    <div className=" max-w-4xl pb-12">
-      {!isLoading && !forum && (
-        <NoContent>Forum o podanym Id nie istnieje</NoContent>
-      )}
-      {forum && <Forum forum={forum} />}
+    <div>
+      {!isLoading && forums.length === 0 && <p>Brak zapisanych forów</p>}
+      {!isLoading && forums.length > 0 && <ForumsLits forums={forums} />}
     </div>
   );
 };
 
-export default ForumPage;
+export default BookmarkForumsPage;

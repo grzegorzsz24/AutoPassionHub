@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import Article from "../../components/Articles/Article";
 import ArticleModel from "../../models/ArticleModel";
 import LoadingSpinner from "../../ui/LoadingSpinner";
+import NoContent from "../../ui/NoContent";
 import { getArticleById } from "../../services/articleService";
 import handleError from "../../services/errorHandler";
 import { useAppDispatch } from "../../store/store";
@@ -48,6 +49,9 @@ const ArticlePage = () => {
 
   return (
     <div className=" max-w-4xl pb-12">
+      {!isLoading && !article && (
+        <NoContent>Artykuł o podanym ID nie istnieje</NoContent>
+      )}
       {article && <Article article={article} />}
     </div>
   );
