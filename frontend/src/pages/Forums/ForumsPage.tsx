@@ -14,6 +14,8 @@ import handleError from "../../services/errorHandler";
 import { useAppDispatch } from "../../store/store";
 import { useSearchParams } from "react-router-dom";
 
+const FORUMS_PER_PAGE = import.meta.env.VITE_FORUMS_PER_PAGE as number;
+
 const ForumsPage = () => {
   const reduxDispatch = useAppDispatch();
   const [params, setParams] = useSearchParams();
@@ -24,7 +26,7 @@ const ForumsPage = () => {
   const setFiltersFromParams = () => {
     return {
       page: getPageFromParams(),
-      size: 2,
+      size: FORUMS_PER_PAGE,
       title: params.get("title") || "",
       carBrand: params.get("carBrand") || "",
       carModel: params.get("carModel") || "",

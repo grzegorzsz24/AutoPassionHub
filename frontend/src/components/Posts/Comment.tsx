@@ -2,9 +2,9 @@ import { FC, useState } from "react";
 
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import CommentModel from "../../models/CommentModel";
-import DateFormatter from "../../utils/formatDate";
 import EditComment from "./EditComment";
 import OutlineButton from "../../ui/OutlineButton";
+import UserProfile from "../../ui/UserProfile";
 import { useAppSelector } from "../../store/store";
 
 interface CommentProps {
@@ -33,27 +33,15 @@ const Comment: FC<CommentProps> = ({
   return (
     <div className="flex flex-col gap-4 bg-grayLight dark:bg-primaryDark rounded-md p-4">
       <div className="flex justify-between">
-        <div className="flex gap-4">
-          <div>
-            <img
-              src={comment.userImageUrl}
-              alt={`${comment.firstName} ${comment.lastName} komentarz`}
-              className="w-8 h-8 rounded-full"
-            />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <p className="text-md font-bold">
-                {comment.firstName} {comment.lastName}
-              </p>
-              <p className="text-sm text-blue-600">{comment.user}</p>
-            </div>
+        <UserProfile
+          size="small"
+          imageUrl={comment.userImageUrl}
+          firstName={comment.firstName}
+          lastName={comment.lastName}
+          nickname={comment.user}
+          createdAt={comment.commentedAt}
+        />
 
-            <p className="text-[0.6rem]">
-              {DateFormatter.formatDate(comment.commentedAt)}
-            </p>
-          </div>
-        </div>
         {comment.user === userNickname && (
           <div
             className="relative cursor-pointer"

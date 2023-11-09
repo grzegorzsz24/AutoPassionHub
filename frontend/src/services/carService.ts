@@ -1,5 +1,7 @@
 const API_URL = import.meta.env.VITE_API_URL as string;
 
+import { createErrorResponse } from "./utils";
+
 const getAllCarsWithModels = async () => {
   try {
     const response = await fetch(`${API_URL}/cars`, {
@@ -18,11 +20,7 @@ const getAllCarsWithModels = async () => {
       cars: data,
     };
   } catch (error) {
-    return {
-      status: "error",
-      message:
-        (error as Error).message || "Wystąpił błąd. Spróbuj ponownie później.",
-    };
+    return createErrorResponse(error);
   }
 };
 

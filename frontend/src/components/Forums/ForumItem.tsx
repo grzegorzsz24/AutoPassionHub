@@ -1,4 +1,4 @@
-import DateFormatter from "../../utils/formatDate";
+import DateFormatter from "../../utils/DateFormatter";
 import { FC } from "react";
 import ForumModel from "../../models/ForumModel";
 import { MdQuestionAnswer } from "react-icons/md";

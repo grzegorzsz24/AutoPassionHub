@@ -13,18 +13,17 @@ import {
 import AddComment from "./AddComment";
 import Comment from "./Comment";
 import CommentModel from "../../models/CommentModel";
-import DateFormatter from "../../utils/formatDate";
+import DateFormatter from "../../utils/DateFormatter";
 import ForumModel from "../../models/ForumModel";
+import UserProfile from "../../ui/UserProfile";
 import handleError from "../../services/errorHandler";
 import { useAppDispatch } from "../../store/store";
-import { useNavigate } from "react-router-dom";
 
 interface ForumProps {
   forum: ForumModel;
 }
 
 const Forum: FC<ForumProps> = ({ forum }) => {
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [comments, setComments] = useState<CommentModel[]>([]);
   const [isLoadingAddComment, setIsLoadingAddComment] =
@@ -123,10 +122,6 @@ const Forum: FC<ForumProps> = ({ forum }) => {
     }
   };
 
-  const goToUserPage = () => {
-    navigate(`/user/${forum.user}`);
-  };
-
   useEffect(() => {
     getComments();
   }, []);
@@ -140,25 +135,13 @@ const Forum: FC<ForumProps> = ({ forum }) => {
             {DateFormatter.formatDate(forum.createdAt)}
           </p>
         </div>
-        <div
-          className="flex items-center gap-2 cursor-pointer group "
-          onClick={goToUserPage}
-        >
-          <img
-            src={forum.userImageUrl}
-            alt={`${forum.firstName} ${forum.lastName} komentarz`}
-            className="w-8 h-8 rounded-full"
-          />
-          <div className="flex flex-col text-sm">
-            <div className="flex ">
-              <p>{forum.firstName}</p>
-              <p>{forum.lastName}</p>
-            </div>
-            <p className="text-blue-600 text-xs group-hover:font-bold transition-all">
-              {forum.user}
-            </p>
-          </div>
-        </div>
+        <UserProfile
+          size="small"
+          imageUrl={forum.userImageUrl}
+          firstName={forum.firstName}
+          lastName={forum.lastName}
+          nickname={forum.user}
+        />
       </div>
       <p className="leading-10 mb-12 text-justify">{forum.content}</p>
       <div className="w-full mx-auto p-6 flex flex-col gap-6">

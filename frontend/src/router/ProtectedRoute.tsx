@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import { useAppSelector } from "./store/store";
+import { useAppSelector } from "../store/store";
 
 interface ProtectedRouteProps {
   element: JSX.Element;
