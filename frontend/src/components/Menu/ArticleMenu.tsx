@@ -1,6 +1,6 @@
+import { FaBookReader, FaBookmark } from "react-icons/fa";
 import { MdCreate, MdOutlineTextFields } from "react-icons/md";
 
-import { FaBookReader } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 
 const links = [
@@ -18,6 +18,11 @@ const links = [
     link: "/articles/my",
     text: "Moje artykuły",
     icon: <MdOutlineTextFields className="text-md lg:text-xl" />,
+  },
+  {
+    link: "/articles/bookmarks",
+    text: "Zapisane artykuły",
+    icon: <FaBookmark className="text-md lg:text-xl" />,
   },
 ];
 

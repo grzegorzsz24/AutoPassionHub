@@ -214,6 +214,54 @@ const updateForumComment = async (commentId: number, content: string) => {
   }
 };
 
+const getSavedForums = async (page: number = 1, size: number = 10) => {
+  try {
+    const response = await fetch(
+      `${API_URL}/user/forums/saved?page=${page}&size=${size}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message);
+    }
+
+    return {
+      status: "ok",
+      message: "Pobrano zapisane fora.",
+      data,
+    };
+  } catch (error) {
+    return createErrorResponse(error);
+  }
+};
+
+const addForumToSaved = async (forumId: number) => {
+  try {
+    const response = await fetch(
+      `${API_URL}/user/forums/saved?forumId=${forumId}`,
+      {
+        method: "POST",
+        credentials: "include",
+      }
+    );
+
+    console.log(response);
+    if (response.ok) {
+      return createSuccessResponse("Dodano do zapisanych.");
+    }
+
+    const data = await response.json();
+    throw new Error(data.message);
+  } catch (error) {
+    return createErrorResponse(error);
+  }
+};
+
 export {
   createForum,
   getForums,
@@ -223,4 +271,6 @@ export {
   getForumComments,
   deleteForumComment,
   updateForumComment,
+  getSavedForums,
+  addForumToSaved,
 };

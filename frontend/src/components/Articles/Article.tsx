@@ -23,6 +23,7 @@ const Article: FC<ArticleProps> = ({ article }) => {
   const [numberOfLikes, setNumberOfLikes] = useState<number>(
     article.likesNumber
   );
+  console.log(article);
   const [isLiked, setIsLiked] = useState<boolean>(article.liked);
 
   const debouncedToggleLike = debounce(async () => {

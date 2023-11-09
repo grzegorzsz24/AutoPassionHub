@@ -132,10 +132,58 @@ const getMyArticles = async (page: number = 1, size: number = 10) => {
   }
 };
 
+const getSavedArticles = async (page: number = 1, size: number = 10) => {
+  try {
+    const response = await fetch(
+      `${API_URL}/user/articles/saved?page=${page}&size=${size}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message);
+    }
+    return {
+      status: "ok",
+      message: "Pobrano zapisane artykuły",
+      data: data,
+    };
+  } catch (error) {
+    return createErrorResponse(error);
+  }
+};
+
+const toogleArticleBookmark = async (id: number) => {
+  try {
+    const response = await fetch(
+      `${API_URL}/user/articles/saved?articleId=${id}`,
+      {
+        method: "POST",
+        credentials: "include",
+      }
+    );
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message);
+    }
+    return {
+      status: "ok",
+      message: "Zapisano/odznaczono artykuł",
+      data: data,
+    };
+  } catch (error) {
+    return createErrorResponse(error);
+  }
+};
+
 export {
   createArticle,
   getArticles,
   getArticleById,
   toggleLike,
   getMyArticles,
+  getSavedArticles,
+  toogleArticleBookmark,
 };

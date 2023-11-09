@@ -4,6 +4,8 @@ import AppLayout from "../pages/AppLayout";
 import ArticlePage from "../pages/Articles/ArticlePage";
 import ArticlePageLayout from "../pages/Articles/ArticlePageLayout";
 import ArticlesPage from "../pages/Articles/ArticlesPage";
+import BookmarksPageLayout from "../pages/Bookmarks/BookmarksPageLayout";
+import EventsPageLayout from "../pages/Events/EventsPageLayout";
 import ForumPage from "../pages/Forums/ForumPage";
 import ForumPageLayout from "../pages/Forums/ForumPageLayout";
 import ForumsPage from "../pages/Forums/ForumsPage";
@@ -15,7 +17,10 @@ import MyForumsPage from "../pages/Forums/MyForumsPage";
 import OutletLayout from "../pages/OutletLayout";
 import ProtectedRoute from "./ProtectedRoute";
 import ReceivedInvitationsPage from "../pages/Friends/ReceivedInvitationsPage";
+import Redirect from "./Redirect";
 import RegisterPage from "../pages/RegisterPage";
+import SavedArticlesPage from "../pages/Articles/SavedArticlesPage";
+import SavedForumsPage from "../pages/Forums/SavedForumsPage";
 import SentInvitationsPage from "../pages/Friends/SentInvitationsPage";
 import UserCloseAccountPage from "../pages/UserSettings/UserCloseAccountPage";
 import UserFriendsPage from "../pages/Friends/UserFriendsPage";
@@ -61,11 +66,25 @@ const router = createBrowserRouter([
                 path: ":article",
                 element: <ArticlePage />,
               },
+              {
+                path: "bookmarks",
+                element: <SavedArticlesPage />,
+              },
             ],
           },
           {
             path: "/events",
-            element: <p>Wydarzenia</p>,
+            element: <EventsPageLayout />,
+            children: [
+              {
+                path: "",
+                element: <p>Wydarzenia</p>,
+              },
+              {
+                path: "add",
+                element: <p>Dodaj wydarzenie</p>,
+              },
+            ],
           },
           {
             path: "/friends",
@@ -91,7 +110,21 @@ const router = createBrowserRouter([
           },
           {
             path: "/bookmarks",
-            element: <p>Zapisane</p>,
+            element: <BookmarksPageLayout />,
+            children: [
+              {
+                path: "",
+                element: <Redirect to="/bookmarks/forums" />,
+              },
+              {
+                path: "forums",
+                element: <SavedForumsPage />,
+              },
+              {
+                path: "articles",
+                element: <SavedArticlesPage />,
+              },
+            ],
           },
           {
             path: "/forums",
@@ -112,6 +145,10 @@ const router = createBrowserRouter([
               {
                 path: "my",
                 element: <MyForumsPage />,
+              },
+              {
+                path: "bookmarks",
+                element: <SavedForumsPage />,
               },
             ],
           },

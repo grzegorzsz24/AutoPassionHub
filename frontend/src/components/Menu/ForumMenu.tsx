@@ -1,5 +1,6 @@
 import { MdCreate, MdForum, MdOutlineTextFields } from "react-icons/md";
 
+import { FaBookmark } from "react-icons/fa";
 import Menu from "./Menu";
 
 const links = [
@@ -17,6 +18,11 @@ const links = [
     link: "/forums/my",
     text: "Moje tematy",
     icon: <MdOutlineTextFields className="text-md lg:text-xl" />,
+  },
+  {
+    link: "/forums/bookmarks",
+    text: "Zapisane fora",
+    icon: <FaBookmark className="text-md lg:text-xl" />,
   },
 ];
 

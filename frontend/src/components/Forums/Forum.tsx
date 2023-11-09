@@ -5,6 +5,7 @@ import {
 } from "../../store/features/notificationSlice";
 import {
   addCommentToForum,
+  addForumToSaved,
   deleteForumComment,
   getForumComments,
   updateForumComment,
@@ -14,6 +15,7 @@ import AddComment from "./AddComment";
 import Comment from "./Comment";
 import CommentModel from "../../models/CommentModel";
 import DateFormatter from "../../utils/DateFormatter";
+import { FaBookmark } from "react-icons/fa";
 import ForumModel from "../../models/ForumModel";
 import UserProfile from "../../ui/UserProfile";
 import handleError from "../../services/errorHandler";
@@ -122,6 +124,29 @@ const Forum: FC<ForumProps> = ({ forum }) => {
     }
   };
 
+  const addForumToSavedHandler = async () => {
+    try {
+      const data = await addForumToSaved(forum.id);
+      if (data.status !== "ok") {
+        throw new Error(data.message);
+      }
+      dispatch(
+        addNotification({
+          type: NotificationStatus.SUCCESS,
+          message: data.message,
+        })
+      );
+    } catch (error) {
+      const newError = handleError(error);
+      dispatch(
+        addNotification({
+          type: NotificationStatus.ERROR,
+          message: newError.message,
+        })
+      );
+    }
+  };
+
   useEffect(() => {
     getComments();
   }, []);
@@ -134,6 +159,9 @@ const Forum: FC<ForumProps> = ({ forum }) => {
           <p className="text-xs text-gray-500 dark:text-gray-300">
             {DateFormatter.formatDate(forum.createdAt)}
           </p>
+          <button onClick={addForumToSavedHandler}>
+            <FaBookmark />
+          </button>
         </div>
         <UserProfile
           size="small"
