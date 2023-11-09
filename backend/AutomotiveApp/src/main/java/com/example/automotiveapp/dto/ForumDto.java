@@ -19,4 +19,5 @@ public class ForumDto {
     private String userImageUrl;
     private String carBrand;
     private String carModel;
+    private boolean isSaved;
 }

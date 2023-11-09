@@ -8,6 +8,7 @@ import com.example.automotiveapp.mapper.ArticleDtoMapper;
 import com.example.automotiveapp.reponse.ArticleResponse;
 import com.example.automotiveapp.repository.ArticleRepository;
 import com.example.automotiveapp.repository.LikeRepository;
+import com.example.automotiveapp.repository.SavedArticleRepository;
 import com.example.automotiveapp.service.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +26,7 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final ArticleDtoMapper articleDtoMapper;
     private final LikeRepository likeRepository;
+    private final SavedArticleRepository savedArticleRepository;
 
     public ArticleDto saveArticle(ArticleDto articleDto) {
         if (articleRepository.findByTitle(articleDto.getTitle()).isPresent()) {
@@ -45,9 +47,8 @@ public class ArticleService {
         Article article = articleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono artykułu"));
         ArticleDto articleDto = ArticleDtoMapper.map(article);
-        if (likeRepository.getLikeByUser_EmailAndArticleId(SecurityUtils.getCurrentUserEmail(), article.getId()).isPresent()) {
-            articleDto.setLiked(true);
-        }
+        articleDto.setLiked(likeRepository.getLikeByUser_EmailAndArticleId(SecurityUtils.getCurrentUserEmail(), article.getId()).isPresent());
+        articleDto.setSaved(savedArticleRepository.findByUserEmailAndArticle_Id(SecurityUtils.getCurrentUserEmail(), article.getId()).isPresent());
         return articleDto;
     }
 
@@ -55,14 +56,15 @@ public class ArticleService {
         Pageable pageable = PageRequest.of(page - 1, size);
         List<Article> articles = articleRepository.findByTitleContainsIgnoreCase(title, pageable);
         List<ArticleDto> articleDtos = new ArrayList<>();
-        setArticlesLikes(articles, articleDtos);
+        setArticlesLikesAndSavedStatus(articles, articleDtos);
         return new ArticleResponse(articleDtos, (long) articles.size());
     }
 
-    private void setArticlesLikes(List<Article> articles, List<ArticleDto> articleDtos) {
+    private void setArticlesLikesAndSavedStatus(List<Article> articles, List<ArticleDto> articleDtos) {
         for (Article article : articles) {
             ArticleDto articleDto = ArticleDtoMapper.map(article);
             articleDto.setLiked(likeRepository.getLikeByUser_EmailAndArticleId(SecurityUtils.getCurrentUserEmail(), article.getId()).isPresent());
+            articleDto.setSaved(savedArticleRepository.findByUserEmailAndArticle_Id(SecurityUtils.getCurrentUserEmail(), article.getId()).isPresent());
             articleDtos.add(articleDto);
         }
     }

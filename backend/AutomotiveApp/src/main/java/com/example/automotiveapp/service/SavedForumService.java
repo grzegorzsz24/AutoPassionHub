@@ -9,6 +9,7 @@ import com.example.automotiveapp.repository.ForumRepository;
 import com.example.automotiveapp.repository.SavedForumRepository;
 import com.example.automotiveapp.repository.UserRepository;
 import com.example.automotiveapp.service.utils.SecurityUtils;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,13 +26,19 @@ public class SavedForumService {
     private final UserRepository userRepository;
     private final ForumRepository forumRepository;
 
+    @Transactional
     public void saveForum(Long forumId) {
-        SavedForum savedForum = new SavedForum();
-        savedForum.setForum(forumRepository.findById(forumId)
-                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono forum")));
-        savedForum.setUser(userRepository.findByEmail(SecurityUtils.getCurrentUserEmail())
-                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika")));
-        savedForumRepository.save(savedForum);
+        Optional<SavedForum> alreadySavedForum = savedForumRepository.findByUserEmailAndForum_Id(SecurityUtils.getCurrentUserEmail(), forumId);
+        if (alreadySavedForum.isPresent()) {
+            savedForumRepository.deleteByForum_IdAndUserEmail(forumId, SecurityUtils.getCurrentUserEmail());
+        } else {
+            SavedForum savedForum = new SavedForum();
+            savedForum.setForum(forumRepository.findById(forumId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono forum")));
+            savedForum.setUser(userRepository.findByEmail(SecurityUtils.getCurrentUserEmail())
+                    .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika")));
+            savedForumRepository.save(savedForum);
+        }
     }
 
     public List<ForumDto> findSavedForums(int page, int size) {
@@ -40,10 +48,14 @@ public class SavedForumService {
         Pageable pageable = PageRequest.of(page - 1, size);
         List<SavedForum> savedForums = savedForumRepository.findAllByUserId(userId, pageable);
         List<Forum> forums = new ArrayList<>();
+        List<ForumDto> forumDtos = new ArrayList<>();
         savedForums.forEach(val -> forums.add(val.getForum()));
-        return forums.stream()
-                .map(ForumDtoMapper::map)
-                .toList();
+        for (Forum forum : forums) {
+            ForumDto forumDto = ForumDtoMapper.map(forum);
+            forumDto.setSaved(savedForumRepository.findByUserEmailAndForum_Id(SecurityUtils.getCurrentUserEmail(), forum.getId()).isPresent());
+            forumDtos.add(forumDto);
+        }
+        return forumDtos;
     }
 
 }
