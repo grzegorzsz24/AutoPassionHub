@@ -21,8 +21,10 @@
 
     <include file="../testdata/0001_user_and_role.sql" relativeToChangelogFile="true" context="dev"/>
     <include file="../testdata/0004_post.sql" relativeToChangelogFile="true" context="dev"/>
+    <include file="../testdata/0007_event.sql" relativeToChangelogFile="true" context="dev"/>
     <include file="../testdata/0002_file.sql" relativeToChangelogFile="true" context="dev"/>
     <include file="../testdata/0003_car.sql" relativeToChangelogFile="true" context="dev"/>
     <include file="../testdata/0005_forum.sql" relativeToChangelogFile="true" context="dev"/>
+    <include file="../testdata/0006_article.sql" relativeToChangelogFile="true" context="dev"/>
 
 </databaseChangeLog>

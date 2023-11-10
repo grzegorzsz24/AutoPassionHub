@@ -39,15 +39,17 @@ public class EventService {
     public EventDto saveEvent(EventDto eventDto) {
         Event event = eventDtoMapper.map(eventDto);
         Set<File> files = new HashSet<>();
-        List<String> savedImageNames = fileStorageService.saveImage(List.of(eventDto.getImage()));
-        for (String imageName : savedImageNames) {
-            File file = new File();
-            file.setFileUrl(imageName);
-            file.setEvent(event);
-            files.add(file);
+        if (eventDto.getImage() != null) {
+            List<String> savedImageNames = fileStorageService.saveImage(List.of(eventDto.getImage()));
+            for (String imageName : savedImageNames) {
+                File file = new File();
+                file.setFileUrl(imageName);
+                file.setEvent(event);
+                files.add(file);
+            }
+            event.setImage(files.stream().findFirst()
+                    .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono zdjęcia")));
         }
-        event.setImage(files.stream().findFirst()
-                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono zdjęcia")));
         Event savedEvent = eventRepository.save(event);
         fileRepository.saveAll(files);
         return EventDtoMapper.map(savedEvent);

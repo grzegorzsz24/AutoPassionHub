@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -15,8 +17,8 @@ public class Event {
     private Long id;
     private String title;
     private String city;
-    @Column(name = "event_date", columnDefinition = "DATE")
-    private Date eventDate;
+    @Column(name = "event_date", columnDefinition = "DATETIME")
+    private LocalDateTime eventDate;
     private String description;
 
     @OneToOne(mappedBy = "event", cascade = CascadeType.ALL)
