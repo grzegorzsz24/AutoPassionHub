@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store/store";
 
@@ -5,6 +6,27 @@ import { FaChevronDown } from "react-icons/fa";
 import PrimaryButton from "./PrimaryButton";
 import { clearUser } from "../store/features/userSlice";
 import { useState } from "react";
+
+const menuVariants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.75,
+    y: -20,
+    transition: {
+      duration: 0.2,
+      ease: "easeInOut",
+    },
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: {
+      duration: 0.2,
+      ease: "easeInOut",
+    },
+  },
+};
 
 const UserProfileButton = () => {
   const navigate = useNavigate();
@@ -46,21 +68,29 @@ const UserProfileButton = () => {
         </span>
         <FaChevronDown className="text-md xl:text-xl" />
       </button>
-      {isHovering && (
-        <ul className="absolute top-full bg-grayLight dark:bg-grayDark w-full rounded-md px-2 py-4 flex flex-col gap-2 shadow-md   items-center">
-          <li className="hover:underline transition">
-            <Link to="/me">Mój profil</Link>
-          </li>
-          <li className="hover:underline transition">
-            <Link to="/me/settings/data">Ustawienia</Link>
-          </li>
-          <li className="hover:underline transition mt-2">
-            <PrimaryButton size="sm" onClick={logout}>
-              Wyloguj
-            </PrimaryButton>
-          </li>
-        </ul>
-      )}
+      <AnimatePresence>
+        {isHovering && (
+          <motion.ul
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            variants={menuVariants}
+            className="absolute top-full bg-grayLight dark:bg-grayDark w-full rounded-md px-2 py-4 flex flex-col gap-2 shadow-md items-center"
+          >
+            <li className="hover:underline transition">
+              <Link to="/me">Mój profil</Link>
+            </li>
+            <li className="hover:underline transition">
+              <Link to="/me/settings/data">Ustawienia</Link>
+            </li>
+            <li className=" transition mt-2">
+              <PrimaryButton size="sm" onClick={logout}>
+                Wyloguj
+              </PrimaryButton>
+            </li>
+          </motion.ul>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

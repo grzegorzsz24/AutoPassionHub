@@ -5,7 +5,6 @@ import { createErrorResponse, createSuccessResponse } from "./utils";
 const createPost = async (content: string, files: File[]) => {
   const formData = new FormData();
   formData.append("content", content);
-  formData.append("user", "kacper123");
   files.forEach((file) => formData.append("files", file));
 
   try {
@@ -15,7 +14,6 @@ const createPost = async (content: string, files: File[]) => {
       body: formData,
     });
     const data = await response.json();
-    console.log(data);
     if (!response.ok) {
       throw new Error(data.message);
     }

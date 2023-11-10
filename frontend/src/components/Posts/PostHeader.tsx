@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { FC, useState } from "react";
 
 import { BiDotsHorizontalRounded } from "react-icons/bi";
@@ -15,6 +16,27 @@ interface PostHeaderProps {
   deletePostHandler: (id: number) => void;
   setEditMode: (value: boolean) => void;
 }
+
+const dropdownVariants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.75,
+    y: -20,
+    transition: {
+      duration: 0.2,
+      ease: "easeInOut",
+    },
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: {
+      duration: 0.2,
+      ease: "easeInOut",
+    },
+  },
+};
 
 const PostHeader: FC<PostHeaderProps> = ({
   id,
@@ -55,36 +77,46 @@ const PostHeader: FC<PostHeaderProps> = ({
         <p className="text-primaryDark dark:text-blue-100">
           <BiDotsHorizontalRounded className="text-2xl" />
         </p>
-        {optionsAreShown && (
-          <div className="absolute z-40 right-0 bg-grayLight text-primaryDark dark:bg-grayDark dark:text-blue-50  py-2 px-4 flex flex-col gap-2 text-sm rounded-md shadow-md">
-            {nickname === userNickname && (
-              <>
-                <OutlineButton
-                  size="xs"
-                  fullWidth={true}
-                  onClick={() => setEditMode(true)}
-                >
-                  Edytuj post
-                </OutlineButton>
-                <OutlineButton
-                  size="xs"
-                  fullWidth={true}
-                  onClick={() => {
-                    deletePostHandler(id);
-                  }}
-                >
-                  Usuń post
-                </OutlineButton>
-              </>
-            )}
-            <OutlineButton size="xs" fullWidth={true} onClick={() => {}}>
-              Dodaj do ulubionych
-            </OutlineButton>
-            <OutlineButton size="xs" fullWidth={true} onClick={() => {}}>
-              Zgłoś post
-            </OutlineButton>
-          </div>
-        )}
+        <AnimatePresence>
+          {optionsAreShown && (
+            <motion.div
+              className="absolute z-40 right-0 bg-white text-primaryDark dark:bg-primaryDark2 dark:text-blue-50  py-4 px-8 flex flex-col gap-2 text-md rounded-md shadow-md"
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={dropdownVariants}
+            >
+              {nickname === userNickname && (
+                <>
+                  <OutlineButton
+                    size="sm"
+                    fullWidth={true}
+                    onClick={() => setEditMode(true)}
+                  >
+                    Edytuj post
+                  </OutlineButton>
+                  <OutlineButton
+                    size="sm"
+                    color="red"
+                    fullWidth={true}
+                    onClick={() => {
+                      deletePostHandler(id);
+                    }}
+                  >
+                    Usuń post
+                  </OutlineButton>
+                </>
+              )}
+
+              <OutlineButton size="sm" fullWidth={true} onClick={() => {}}>
+                Dodaj do ulubionych
+              </OutlineButton>
+              <OutlineButton size="sm" fullWidth={true} onClick={() => {}}>
+                Zgłoś post
+              </OutlineButton>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import { FC, ReactNode } from "react";
 
 import { NavLink } from "react-router-dom";
+import { motion } from "framer-motion";
 
 interface Link {
   link: string;
@@ -12,9 +13,20 @@ interface MenuProps {
   links: Link[];
 }
 
+const menuVariants = {
+  hidden: { opacity: 0, y: -200 },
+  visible: { opacity: 1, y: 0 },
+};
+
 const Menu: FC<MenuProps> = ({ links }) => {
   return (
-    <nav className="bg-white rounded-md py-6 text-primaryDark2 dark:bg-primaryDark2 dark:text-white sticky top-0">
+    <motion.nav
+      className="bg-white rounded-md py-6 text-primaryDark2 dark:bg-primaryDark2 dark:text-white sticky top-0"
+      initial="hidden"
+      animate="visible"
+      variants={menuVariants}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+    >
       {links.map(({ link, text, icon }) => (
         <NavLink
           key={link}
@@ -30,7 +42,7 @@ const Menu: FC<MenuProps> = ({ links }) => {
           <span className="block text text-sm lg:text-xl">{text}</span>
         </NavLink>
       ))}
-    </nav>
+    </motion.nav>
   );
 };
 

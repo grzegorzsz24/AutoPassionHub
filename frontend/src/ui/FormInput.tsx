@@ -30,6 +30,7 @@ const FormInput: FC<FormInputProps> = ({
         }}`}
         onChange={onChange}
         onBlur={onBlur}
+        autoComplete="on"
       />
       {hasError && (
         <span className="text-red-600 font-semibold text-sm ml-2 mt-2 block">

@@ -7,7 +7,7 @@ interface PrimaryButtonProps {
   children: ReactNode;
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
-  color?: "blue" | "red" | "green";
+  color?: "blue" | "red" | "green" | "yellow";
 }
 
 const PrimaryButton: FC<PrimaryButtonProps> = ({
@@ -42,6 +42,9 @@ const PrimaryButton: FC<PrimaryButtonProps> = ({
       break;
     case "green":
       buttonClasses += " bg-green-600 hover:bg-green-700 ";
+      break;
+    case "yellow":
+      buttonClasses += " bg-yellow-500 hover:bg-yellow-600 ";
       break;
     default:
       buttonClasses += " bg-blue-600 hover:bg-blue-700 ";
