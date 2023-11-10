@@ -5,6 +5,7 @@ import com.example.automotiveapp.domain.File;
 import com.example.automotiveapp.dto.EventDto;
 import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.mapper.EventDtoMapper;
+import com.example.automotiveapp.reponse.EventResponse;
 import com.example.automotiveapp.repository.EventRepository;
 import com.example.automotiveapp.repository.FileRepository;
 import com.example.automotiveapp.storage.FileStorageService;
@@ -26,12 +27,13 @@ public class EventService {
     private final FileStorageService fileStorageService;
     private final FileRepository fileRepository;
 
-    public List<EventDto> getAllEvents(int page, int size) {
+    public EventResponse getAllEvents(int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
-        return eventRepository.findAll(pageable)
+        List<EventDto> eventDtos = eventRepository.findAll(pageable)
                 .stream()
                 .map(EventDtoMapper::map)
                 .toList();
+        return new EventResponse(eventDtos, (long) eventDtos.size());
     }
 
     public EventDto saveEvent(EventDto eventDto) {
