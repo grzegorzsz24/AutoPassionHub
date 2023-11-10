@@ -1,40 +1,64 @@
-import Event from "./Event";
+import {
+  NotificationStatus,
+  addNotification,
+} from "../../store/features/notificationSlice";
+import { useEffect, useState } from "react";
 
-const events = [
-  {
-    id: "1",
-    date: "2023-10-26T03:24:00",
-    title: "Zlot w Krakowie",
-    city: "Kraków",
-  },
-  {
-    id: "2",
-    date: "2023-11-04T03:24:00",
-    title: "51. Rajd Świdnicki",
-    city: "Świdnica",
-  },
-  {
-    id: "3",
-    date: "2023-12-15T03:24:00",
-    title: "Zlot BMW",
-    city: "Warszawa",
-  },
-];
+import Event from "./Event";
+import EventModel from "../../models/EventModel";
+import LoadingSpinner from "../../ui/LoadingSpinner";
+import OutlineButton from "../../ui/OutlineButton";
+import { getUpcomingEvents } from "../../services/eventService";
+import handleError from "../../services/errorHandler";
+import { useAppDispatch } from "../../store/store";
+import { useNavigate } from "react-router-dom";
 
 const Events = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const [events, setEvents] = useState<EventModel[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const fetchEvents = async () => {
+    try {
+      setLoading(true);
+      const data = await getUpcomingEvents();
+      if (data.status !== "ok") throw new Error(data.message);
+      setEvents(data.events);
+    } catch (error) {
+      const newError = handleError(error);
+      dispatch(
+        addNotification({
+          type: NotificationStatus.ERROR,
+          message: newError.message,
+        })
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const goToEventsPage = () => {
+    navigate("/events");
+  };
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
   return (
     <div className="border-b border-blue-600 dark:border-blue-100 px-4 py-4">
       <h2 className="font-bold ml-4">Nadchodzące wydarzenia</h2>
       <div className="flex flex-col gap-4 py-4">
+        {loading && <LoadingSpinner small />}
         {events.map((event) => (
-          <Event
-            key={event.id}
-            id={event.id}
-            date={event.date}
-            title={event.title}
-            city={event.city}
-          />
+          <Event event={event} key={event.id} />
         ))}
+        {!loading && (
+          <OutlineButton onClick={goToEventsPage} size="sm">
+            Wszystkie wydarzenia
+          </OutlineButton>
+        )}
       </div>
     </div>
   );

@@ -19,16 +19,16 @@ const EventItem: FC<EventItemProps> = ({ event }) => {
       className="bg-white dark:bg-primaryDark2 shadow-md rounded-md p-4 flex items-center gap-6 hover:cursor-pointer group"
       onClick={goToEventPage}
     >
-      <div className="bg-blue-600 text-blue-50 rounded-md p-2 flex flex-col items-center group-hover:bg-blue-700 transition-all w-24 h-24">
-        <p className="font-bold text-2xl">
+      <div className="bg-blue-600 text-blue-50 rounded-md p-1 flex flex-col items-center group-hover:bg-blue-700 transition-all w-24 h-22">
+        <p className="font-bold text-xl">
           {DateFormatter.getDayNumber(event.eventDate)}
         </p>
-        <p>{DateFormatter.getMonthName(event.eventDate)}</p>
+        <p className="text-sm">{DateFormatter.getMonthName(event.eventDate)}</p>
         <p className="text-xs">{DateFormatter.getYear(event.eventDate)}</p>
       </div>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-1">
         <h3 className="text-xl font-bold">{event.title}</h3>
-        <p className="text-lg">{event.city}</p>
+        <p className="text-md">{event.city}</p>
       </div>
     </div>
   );

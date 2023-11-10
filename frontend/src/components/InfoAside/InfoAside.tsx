@@ -16,7 +16,7 @@ const infoAsideVariants = {
 const InfoAside = () => {
   return (
     <motion.aside
-      className="bg-white dark:bg-primaryDark2 dark:text-blue-50 my-4 rounded-md flex flex-col gap-4"
+      className="max-w-md bg-white dark:bg-primaryDark2 dark:text-blue-50 my-4 rounded-md flex flex-col gap-4"
       initial="hidden"
       animate="visible"
       variants={infoAsideVariants}

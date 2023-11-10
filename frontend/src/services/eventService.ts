@@ -26,6 +26,27 @@ const getEvents = async (page: number = 1, size: number = 10) => {
   }
 };
 
+const getUpcomingEvents = async () => {
+  try {
+    const response = await fetch(`${API_URL}/user/events/all?page=1&size=3`, {
+      method: "GET",
+      credentials: "include",
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message);
+    }
+    return {
+      status: "ok",
+      message: "Pobrano wydarzenia.",
+      events: data.events,
+      eventsNumber: data.eventsNumber,
+    };
+  } catch (error) {
+    return createErrorResponse(error);
+  }
+};
+
 const getEventById = async (id: number) => {
   try {
     const response = await fetch(`${API_URL}/user/events?eventId=${id}`, {
@@ -95,4 +116,4 @@ const deleteEvent = async (id: number) => {
   }
 };
 
-export { getEvents, getEventById, createEvent, deleteEvent };
+export { getEvents, getEventById, createEvent, deleteEvent, getUpcomingEvents };
