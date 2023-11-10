@@ -18,7 +18,8 @@ const getEvents = async (page: number = 1, size: number = 10) => {
     return {
       status: "ok",
       message: "Pobrano wydarzenia.",
-      events: data,
+      events: data.events,
+      eventsNumber: data.eventsNumber,
     };
   } catch (error) {
     return createErrorResponse(error);
@@ -27,7 +28,7 @@ const getEvents = async (page: number = 1, size: number = 10) => {
 
 const getEventById = async (id: number) => {
   try {
-    const response = await fetch(`${API_URL}/user/events/${id}`, {
+    const response = await fetch(`${API_URL}/user/events?eventId=${id}`, {
       method: "GET",
       credentials: "include",
     });

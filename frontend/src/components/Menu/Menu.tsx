@@ -21,7 +21,7 @@ const menuVariants = {
 const Menu: FC<MenuProps> = ({ links }) => {
   return (
     <motion.nav
-      className="bg-white rounded-md py-6 text-primaryDark2 dark:bg-primaryDark2 dark:text-white sticky top-0"
+      className="bg-white rounded-md py-6 text-primaryDark2 dark:bg-primaryDark2 dark:text-white sticky top-0 w-96"
       initial="hidden"
       animate="visible"
       variants={menuVariants}

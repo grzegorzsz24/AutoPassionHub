@@ -5,6 +5,8 @@ import ArticlePage from "../pages/Articles/ArticlePage";
 import ArticlePageLayout from "../pages/Articles/ArticlePageLayout";
 import ArticlesPage from "../pages/Articles/ArticlesPage";
 import BookmarksPageLayout from "../pages/Bookmarks/BookmarksPageLayout";
+import EventPage from "../pages/Events/EventPage";
+import EventsPage from "../pages/Events/EventsPage";
 import EventsPageLayout from "../pages/Events/EventsPageLayout";
 import ForumPage from "../pages/Forums/ForumPage";
 import ForumPageLayout from "../pages/Forums/ForumPageLayout";
@@ -78,7 +80,11 @@ const router = createBrowserRouter([
             children: [
               {
                 path: "",
-                element: <p>Wydarzenia</p>,
+                element: <EventsPage />,
+              },
+              {
+                path: ":id",
+                element: <EventPage />,
               },
               {
                 path: "add",

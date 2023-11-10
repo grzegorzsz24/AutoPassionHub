@@ -43,6 +43,10 @@ class DateFormatter {
   static getMonthName(date: string): string {
     return `${DateFormatter.months[new Date(date).getMonth()]}`;
   }
+
+  static getYear(date: string): string {
+    return `${new Date(date).getFullYear()}`;
+  }
 }
 
 export default DateFormatter;
