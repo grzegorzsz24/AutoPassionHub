@@ -15,10 +15,10 @@
             <column name="city" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="event_date" type="DATE">
+            <column name="event_date" type="DATETIME">
                 <constraints nullable="false"/>
             </column>
-            <column name="description" type="VARCHAR(200)">
+            <column name="description" type="VARCHAR(1000)">
                 <constraints nullable="false"/>
             </column>
             <column name="user_id" type="BIGINT">

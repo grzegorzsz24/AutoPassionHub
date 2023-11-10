@@ -2,6 +2,7 @@ package com.example.automotiveapp.controller;
 
 import com.example.automotiveapp.dto.EventDto;
 import com.example.automotiveapp.reponse.ApiResponse;
+import com.example.automotiveapp.reponse.EventResponse;
 import com.example.automotiveapp.service.EventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/user/events")
@@ -29,8 +29,8 @@ public class EventController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<EventDto>> getAllEvents(@RequestParam(defaultValue = "1") int page,
-                                                       @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<EventResponse> getAllEvents(@RequestParam(defaultValue = "1") int page,
+                                                      @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(eventService.getAllEvents(page, size));
     }
 
