@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 import Event from "./Event";
 import EventModel from "../../models/EventModel";
-import LoadingSpinner from "../../ui/LoadingSpinner";
+import EventSkeleton from "./EventSkeleton";
 import OutlineButton from "../../ui/OutlineButton";
 import { getUpcomingEvents } from "../../services/eventService";
 import handleError from "../../services/errorHandler";
@@ -50,10 +50,15 @@ const Events = () => {
     <div className="border-b border-blue-600 dark:border-blue-100 px-4 py-4">
       <h2 className="font-bold ml-4">Nadchodzące wydarzenia</h2>
       <div className="flex flex-col gap-4 py-4">
-        {loading && <LoadingSpinner small />}
-        {events.map((event) => (
-          <Event event={event} key={event.id} />
-        ))}
+        {loading && (
+          <>
+            <EventSkeleton />
+            <EventSkeleton />
+            <EventSkeleton />
+          </>
+        )}
+        {!loading &&
+          events.map((event) => <Event event={event} key={event.id} />)}
         {!loading && (
           <OutlineButton onClick={goToEventsPage} size="sm">
             Wszystkie wydarzenia
