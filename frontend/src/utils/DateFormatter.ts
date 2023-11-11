@@ -47,6 +47,13 @@ class DateFormatter {
   static getYear(date: string): string {
     return `${new Date(date).getFullYear()}`;
   }
+
+  static toISOStringWithTimezoneOffset(date: Date) {
+    const offsetMs = date.getTimezoneOffset() * 60000;
+    const withOffset = new Date(date.getTime() - offsetMs);
+
+    return withOffset.toISOString().slice(0, -1);
+  }
 }
 
 export default DateFormatter;

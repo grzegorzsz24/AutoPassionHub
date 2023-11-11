@@ -115,7 +115,6 @@ const RegiserForm = () => {
 
   const submitFormHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("submit");
     if (!formIsValid) {
       setInputsAsTouched();
       dispatch(

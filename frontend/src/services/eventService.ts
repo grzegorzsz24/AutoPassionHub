@@ -2,6 +2,8 @@ const API_URL = import.meta.env.VITE_API_URL as string;
 
 import { createErrorResponse, createSuccessResponse } from "./utils";
 
+import DateFormatter from "../utils/DateFormatter";
+
 const getEvents = async (page: number = 1, size: number = 10) => {
   try {
     const response = await fetch(
@@ -70,14 +72,18 @@ const getEventById = async (id: number) => {
 const createEvent = async (
   title: string,
   city: string,
-  eventDate: string,
+  date: Date | null | [Date | null, Date | null],
   description: string,
   image: File
 ) => {
+  const formatDate = DateFormatter.toISOStringWithTimezoneOffset(
+    new Date(date as Date)
+  );
+
   const formData = new FormData();
   formData.append("title", title);
   formData.append("city", city);
-  formData.append("eventDate", eventDate);
+  formData.append("eventDate", formatDate);
   formData.append("description", description);
   formData.append("image", image);
   try {
@@ -102,7 +108,7 @@ const createEvent = async (
 
 const deleteEvent = async (id: number) => {
   try {
-    const response = await fetch(`${API_URL}/user/events/${id}`, {
+    const response = await fetch(`${API_URL}/user/events?eventId=${id}`, {
       method: "DELETE",
       credentials: "include",
     });

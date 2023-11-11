@@ -1,4 +1,5 @@
 import AddArticlePage from "../pages/Articles/AddArticlePage";
+import AddEventPage from "../pages/Events/AddEventPage";
 import AddForumPage from "../pages/Forums/AddForumPage";
 import AppLayout from "../pages/AppLayout";
 import ArticlePage from "../pages/Articles/ArticlePage";
@@ -88,7 +89,7 @@ const router = createBrowserRouter([
               },
               {
                 path: "add",
-                element: <p>Dodaj wydarzenie</p>,
+                element: <AddEventPage />,
               },
             ],
           },
