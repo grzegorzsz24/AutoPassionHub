@@ -7,6 +7,7 @@ import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 import { useEffect, useState } from "react";
 
 import AddPost from "./AddPost";
+import LoadingPost from "./LoadingPost";
 import Post from "./Post";
 import PostModel from "../../models/PostModel";
 import { getPosts } from "../../services/postService";
@@ -16,9 +17,11 @@ import { useAppDispatch } from "../../store/store";
 const Posts = () => {
   const dispatch = useAppDispatch();
   const [posts, setPosts] = useState<PostModel[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const downloadPosts = async () => {
     try {
+      setIsLoading(true);
       const data = await getPosts();
       if (data.status !== "ok") {
         throw new Error(data.message);
@@ -33,6 +36,8 @@ const Posts = () => {
           message: newError.message,
         })
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -108,7 +113,14 @@ const Posts = () => {
   return (
     <div className="bg-gears-light dark:bg-gears-dark bg-no-repeat bg-contain bg-center gap-8 items-center overflow-y-auto h-full flex-grow">
       <div className="flex flex-col items-center gap-12 py-12">
-        <AddPost addPostToList={addPostToList} />
+        {!isLoading && <AddPost addPostToList={addPostToList} />}
+        {isLoading && (
+          <>
+            <LoadingPost />
+            <LoadingPost />
+            <LoadingPost />
+          </>
+        )}
         {posts.map((post) => (
           <Post
             key={post.id}
