@@ -2,9 +2,9 @@ import {
   NotificationStatus,
   addNotification,
 } from "../../store/features/notificationSlice";
-import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 import { useEffect, useState } from "react";
 
+import FriendSkeleton from "../../components/Friends/FriendSkeleton";
 import NoContent from "../../ui/NoContent";
 import PendingInvitation from "../../components/Friends/PendingInvitation";
 import PendingInvitationModel from "../../models/PendingInvitationModel";
@@ -17,10 +17,11 @@ const SentInvitationsPage = () => {
   const [pendingInvitations, setPendingInvitations] = useState<
     PendingInvitationModel[]
   >([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const getInvitations = async () => {
     try {
-      dispatch(startLoading());
+      setIsLoading(true);
       const data = await getSentInvitations();
       if (data.status !== "ok") {
         throw new Error(data.message);
@@ -35,21 +36,30 @@ const SentInvitationsPage = () => {
         })
       );
     } finally {
-      dispatch(stopLoading());
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     getInvitations();
   }, []);
+
   return (
     <div className="text-primaryDark dark:text-blue-50 w-full flex flex-col gap-6 ">
-      {pendingInvitations.map((invitation) => {
-        return (
-          <PendingInvitation key={invitation.id} invitation={invitation} />
-        );
-      })}
-      {pendingInvitations.length === 0 && (
+      {isLoading && (
+        <>
+          <FriendSkeleton />
+          <FriendSkeleton />
+          <FriendSkeleton />
+        </>
+      )}
+      {!isLoading &&
+        pendingInvitations.map((invitation) => {
+          return (
+            <PendingInvitation key={invitation.id} invitation={invitation} />
+          );
+        })}
+      {!isLoading && pendingInvitations.length === 0 && (
         <NoContent>Brak wysłanych zaproszeń</NoContent>
       )}
     </div>
