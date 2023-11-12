@@ -5,8 +5,8 @@ import {
 import { useEffect, useState } from "react";
 
 import ForumModel from "../../models/ForumModel";
+import ForumSkeleton from "../../components/Forums/ForumSkeleton";
 import ForumsLits from "../../components/Forums/ForumsLits";
-import LoadingSpinner from "../../ui/LoadingSpinner";
 import NoContent from "../../ui/NoContent";
 import { getSavedForums } from "../../services/forumService";
 import handleError from "../../services/errorHandler";
@@ -43,12 +43,15 @@ const SavedForumsPage = () => {
     fetchForums();
   }, []);
 
-  if (isLoading) {
-    return <LoadingSpinner small />;
-  }
-
   return (
     <div className="max-w-4xl h-full flex flex-col justify-between">
+      {isLoading && (
+        <div className="flex flex-col gap-4 max-w-4xl">
+          <ForumSkeleton />
+          <ForumSkeleton />
+          <ForumSkeleton />
+        </div>
+      )}
       {!isLoading && forums.length === 0 && (
         <NoContent>Brak zapisanych forów</NoContent>
       )}

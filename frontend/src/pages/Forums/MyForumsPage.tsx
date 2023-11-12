@@ -6,8 +6,8 @@ import { useAppDispatch, useAppSelector } from "../../store/store";
 import { useEffect, useState } from "react";
 
 import ForumModel from "../../models/ForumModel";
+import ForumSkeleton from "../../components/Forums/ForumSkeleton";
 import ForumsLits from "../../components/Forums/ForumsLits";
-import LoadingSpinner from "../../ui/LoadingSpinner";
 import NoContent from "../../ui/NoContent";
 import { getUserForums } from "../../services/forumService";
 import handleError from "../../services/errorHandler";
@@ -41,11 +41,16 @@ const MyForumsPage = () => {
     getMyForums();
   }, []);
 
-  if (isLoading) return <LoadingSpinner small />;
-
   return (
     <div>
       {!isLoading && forums.length === 0 && <NoContent>Brak forów</NoContent>}
+      {isLoading && (
+        <div className="flex flex-col gap-4 w-full max-w-4xl">
+          <ForumSkeleton />
+          <ForumSkeleton />
+          <ForumSkeleton />
+        </div>
+      )}
       <ForumsLits forums={forums} />
     </div>
   );

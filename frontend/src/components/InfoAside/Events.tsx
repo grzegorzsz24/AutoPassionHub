@@ -39,7 +39,7 @@ const Events = () => {
   };
 
   const goToEventsPage = () => {
-    navigate("/events");
+    navigate("/events?page=1");
   };
 
   useEffect(() => {

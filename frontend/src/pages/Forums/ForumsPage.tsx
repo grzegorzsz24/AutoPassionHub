@@ -6,6 +6,7 @@ import { useEffect, useReducer, useState } from "react";
 
 import ForumFilters from "../../components/Forums/ForumFilters";
 import ForumModel from "../../models/ForumModel";
+import ForumSkeleton from "../../components/Forums/ForumSkeleton";
 import ForumsLits from "../../components/Forums/ForumsLits";
 import NoContent from "../../ui/NoContent";
 import Pagination from "../../components/Pagination";
@@ -22,6 +23,7 @@ const ForumsPage = () => {
   const [params, setParams] = useSearchParams();
   const [forums, setForums] = useState<ForumModel[]>([]);
   const [isFetchingCars, setIsFetchingCars] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [totalNumberOfForums, setTotalNumberOfForums] = useState(0);
 
   const setFiltersFromParams = () => {
@@ -33,6 +35,7 @@ const ForumsPage = () => {
       carModel: params.get("carModel") || "",
     };
   };
+
   const getPageFromParams = () => {
     let page = Number(params.get("page")) || 1;
     if (page < 1) page = 1;
@@ -56,6 +59,7 @@ const ForumsPage = () => {
 
   const fetchForums = async () => {
     try {
+      setIsLoading(true);
       setParams(buildQueryParams());
       const data = await getForums(page, size, title, carBrand, carModel);
 
@@ -72,6 +76,8 @@ const ForumsPage = () => {
           message: newError.message,
         })
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -90,12 +96,21 @@ const ForumsPage = () => {
           isLoading={isFetchingCars}
           setIsLoading={setIsFetchingCars}
         />
-        {!isFetchingCars && forums.length === 0 && (
+        {!isFetchingCars && !isLoading && forums.length === 0 && (
           <NoContent>Brak forów</NoContent>
         )}
-        {forums.length > 0 && <ForumsLits forums={forums} />}
+        {(isLoading || isFetchingCars) && (
+          <>
+            <ForumSkeleton />
+            <ForumSkeleton />
+            <ForumSkeleton />
+          </>
+        )}
+        {!isLoading && !isFetchingCars && forums.length > 0 && (
+          <ForumsLits forums={forums} />
+        )}
       </div>
-      {forums.length > 0 && !isFetchingCars && (
+      {forums.length > 0 && !isFetchingCars && !isLoading && (
         <div className=" flex items-center justify-center my-4">
           <Pagination
             currentPage={page}

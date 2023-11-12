@@ -4,7 +4,7 @@ import {
   addNotification,
 } from "../../store/features/notificationSlice";
 
-import LoadingSpinner from "../../ui/LoadingSpinner";
+import ForumFiltersSkeleton from "./ForumFiltersSkeleton";
 import PrimaryButton from "../../ui/PrimaryButton";
 import { getAllCarsWithModels } from "../../services/carService";
 import handleError from "../../services/errorHandler";
@@ -86,7 +86,7 @@ const ForumFilters: FC<ForumFiltersProps> = ({
     getCars();
   }, []);
 
-  if (isLoading) return <LoadingSpinner small />;
+  if (isLoading) return <ForumFiltersSkeleton />;
 
   return (
     <div className="flex gap-4 items-center">
