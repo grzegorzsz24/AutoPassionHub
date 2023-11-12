@@ -4,9 +4,9 @@ import {
   FaHome,
   FaUserFriends,
 } from "react-icons/fa";
+import { MdChat, MdForum } from "react-icons/md";
 
 import { BsFillCalendarEventFill } from "react-icons/bs";
-import { MdForum } from "react-icons/md";
 import NavigationLink from "../../ui/NavigationLink";
 
 const links = [
@@ -19,6 +19,11 @@ const links = [
     to: "/friends",
     icon: <FaUserFriends className="text-md lg:text-2xl" />,
     text: "Znajomi",
+  },
+  {
+    to: "/chats",
+    icon: <MdChat className="text-md lg:text-2xl" />,
+    text: "Wiadomości",
   },
   {
     to: "/forums",

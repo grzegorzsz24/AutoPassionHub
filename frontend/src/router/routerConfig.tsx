@@ -116,6 +116,10 @@ const router = createBrowserRouter([
             ],
           },
           {
+            path: "/chats",
+            element: "Czat",
+          },
+          {
             path: "/bookmarks",
             element: <BookmarksPageLayout />,
             children: [
