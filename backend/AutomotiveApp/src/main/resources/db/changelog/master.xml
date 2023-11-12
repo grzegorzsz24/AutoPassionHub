@@ -17,6 +17,8 @@
     <include file="0008_create_table_friendship.xml" relativeToChangelogFile="true"/>
     <include file="0011_create_table_saved_article.xml" relativeToChangelogFile="true"/>
     <include file="0012_create_table_saved_forum.xml" relativeToChangelogFile="true"/>
+    <include file="0013_create_table_message.xml" relativeToChangelogFile="true"/>
+    <include file="0014_create_table_channel.xml" relativeToChangelogFile="true"/>
 
 
     <include file="../testdata/0001_user_and_role.sql" relativeToChangelogFile="true" context="dev"/>
