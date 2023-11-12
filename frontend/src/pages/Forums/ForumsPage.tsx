@@ -100,11 +100,11 @@ const ForumsPage = () => {
           <NoContent>Brak forów</NoContent>
         )}
         {(isLoading || isFetchingCars) && (
-          <>
+          <div className="flex flex-col gap-4 max-w-4xl">
             <ForumSkeleton />
             <ForumSkeleton />
             <ForumSkeleton />
-          </>
+          </div>
         )}
         {!isLoading && !isFetchingCars && forums.length > 0 && (
           <ForumsLits forums={forums} />

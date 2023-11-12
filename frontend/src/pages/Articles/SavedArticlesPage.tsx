@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 import ArticleList from "../../components/Articles/ArticleList";
 import ArticleModel from "../../models/ArticleModel";
-import LoadingSpinner from "../../ui/LoadingSpinner";
+import ArticleSkeleton from "../../components/Articles/ArticleSkeleton";
 import NoContent from "../../ui/NoContent";
 import { getSavedArticles } from "../../services/articleService";
 import handleError from "../../services/errorHandler";
@@ -44,16 +44,20 @@ const SavedArticlesPage = () => {
     fetchArticles();
   }, []);
 
-  if (isLoading) {
-    return <LoadingSpinner small />;
-  }
-
   return (
     <div className="max-w-4xl h-full flex flex-col justify-between">
       {!isLoading && articles.length === 0 && (
         <NoContent>Brak zapisanych artykułów</NoContent>
       )}
-      {!isLoading && articles.length > 0 && <ArticleList articles={articles} />}
+      {isLoading ? (
+        <div className="flex flex-col gap-4 max-w-4xl">
+          <ArticleSkeleton />
+          <ArticleSkeleton />
+          <ArticleSkeleton />
+        </div>
+      ) : (
+        <ArticleList articles={articles} />
+      )}
     </div>
   );
 };

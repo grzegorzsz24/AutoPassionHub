@@ -4,10 +4,11 @@ import {
 } from "../../store/features/notificationSlice";
 import { useEffect, useReducer, useState } from "react";
 
+import ArticleFilterSkeleton from "../../components/Articles/ArticleFilterSkeleton";
 import ArticleFilters from "../../components/Articles/ArticleFilters";
 import ArticleList from "../../components/Articles/ArticleList";
 import ArticleModel from "../../models/ArticleModel";
-import LoadingSpinner from "../../ui/LoadingSpinner";
+import ArticleSkeleton from "../../components/Articles/ArticleSkeleton";
 import NoContent from "../../ui/NoContent";
 import Pagination from "../../components/Pagination";
 import articleFilterReducer from "../../reducers/ArticlePaginationReducer";
@@ -77,16 +78,27 @@ const ArticlesPage = () => {
     fetchArticles();
   }, [filterState]);
 
-  if (isLoading) return <LoadingSpinner small />;
-
   return (
     <div className="max-w-4xl h-full flex flex-col justify-between">
       <div className="flex flex-col  gap-12">
-        <ArticleFilters title={title} dispatch={filterDispatch} />
+        {isLoading ? (
+          <>
+            <ArticleFilterSkeleton />
+            <div className="flex flex-col gap-4 max-w-4xl">
+              <ArticleSkeleton />
+              <ArticleSkeleton />
+              <ArticleSkeleton />
+            </div>
+          </>
+        ) : (
+          <>
+            <ArticleFilters title={title} dispatch={filterDispatch} />
+            <ArticleList articles={articles} />
+          </>
+        )}
         {!isLoading && articles.length === 0 && (
           <NoContent>Brak artykułów</NoContent>
         )}
-        <ArticleList articles={articles} />
       </div>
       {!isLoading && articles.length > 0 && (
         <div className=" flex items-center justify-center my-4">
