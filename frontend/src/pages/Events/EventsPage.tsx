@@ -6,7 +6,7 @@ import { useEffect, useReducer, useState } from "react";
 
 import EventItem from "../../components/Events/EventItem";
 import EventModel from "../../models/EventModel";
-import LoadingSpinner from "../../ui/LoadingSpinner";
+import EventSkeleton from "../../components/Events/EventSkeleton";
 import Pagination from "../../components/Pagination";
 import articleFilterReducer from "../../reducers/ArticlePaginationReducer";
 import { getEvents } from "../../services/eventService";
@@ -76,14 +76,18 @@ const EventsPage = () => {
     fetchEvents();
   }, [filterState]);
 
-  if (loading) return <LoadingSpinner small />;
-
   return (
     <div className="max-w-4xl">
       <div className="flex flex-col gap-4">
-        {events.map((event) => (
-          <EventItem event={event} key={event.id} />
-        ))}
+        {loading ? (
+          <>
+            <EventSkeleton />
+            <EventSkeleton />
+            <EventSkeleton />
+          </>
+        ) : (
+          events.map((event) => <EventItem event={event} key={event.id} />)
+        )}
       </div>
       {!loading && events.length > 0 && (
         <div className=" flex items-center justify-center my-4">
