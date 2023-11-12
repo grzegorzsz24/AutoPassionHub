@@ -6,6 +6,7 @@ import ArticlePage from "../pages/Articles/ArticlePage";
 import ArticlePageLayout from "../pages/Articles/ArticlePageLayout";
 import ArticlesPage from "../pages/Articles/ArticlesPage";
 import BookmarksPageLayout from "../pages/Bookmarks/BookmarksPageLayout";
+import ChatPage from "../pages/Chat/ChatPage";
 import EventPage from "../pages/Events/EventPage";
 import EventsPage from "../pages/Events/EventsPage";
 import EventsPageLayout from "../pages/Events/EventsPageLayout";
@@ -117,7 +118,7 @@ const router = createBrowserRouter([
           },
           {
             path: "/chats",
-            element: "Czat",
+            element: <ChatPage />,
           },
           {
             path: "/bookmarks",

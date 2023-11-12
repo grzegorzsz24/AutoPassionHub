@@ -4,12 +4,12 @@ import { Outlet } from "react-router-dom";
 
 const MainPageLayout = () => {
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-full flex flex-col ">
       <div>
         <Navbar />
         <Navigation />
       </div>
-      <div className="flex-grow overflow-hidden">
+      <div className="overflow-hidden h-full ">
         <Outlet />
       </div>
     </div>
