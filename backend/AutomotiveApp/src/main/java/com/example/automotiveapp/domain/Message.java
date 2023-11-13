@@ -19,6 +19,9 @@ public class Message {
     @ManyToOne
     @JoinColumn(name = "receiver_id")
     private User receiver;
+    @ManyToOne
+    @JoinColumn(name = "channel_id")
+    private Channel channel;
     private String message;
     private LocalDateTime createdAt;
 }

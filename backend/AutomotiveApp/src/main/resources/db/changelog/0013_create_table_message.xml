@@ -21,6 +21,12 @@
                              referencedTableName="users"
                              referencedColumnNames="id"/>
             </column>
+            <column name="channel_id" type="BIGINT">
+                <constraints nullable="false"
+                             foreignKeyName="fk_message_channel"
+                             referencedTableName="channel"
+                             referencedColumnNames="id"/>
+            </column>
             <column name="message" type="VARCHAR(500)">
                 <constraints nullable="false"/>
             </column>
