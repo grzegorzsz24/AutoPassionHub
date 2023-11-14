@@ -42,7 +42,8 @@ public class SecurityConfiguration {
                                     antMatcher("/v3/**"),
                                     antMatcher("/api/v1/auth/**"))
                             .permitAll();
-                    requests.requestMatchers(new AntPathRequestMatcher("/user/**"), antMatcher("/uploads/**"))
+                    requests.requestMatchers(new AntPathRequestMatcher("/user/**"), antMatcher("/uploads/**"),
+                                    antMatcher("/ws/**"), antMatcher("/chat"))
                             .hasAnyAuthority("USER", "USERTEST")
                             .anyRequest()
                             .authenticated();
