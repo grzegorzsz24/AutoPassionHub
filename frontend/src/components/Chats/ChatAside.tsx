@@ -17,11 +17,12 @@ const chats = [
     active: true,
   },
   {
-    firstName: "Anna",
-    lastName: "Nowak",
-    nickname: "ania88",
+    firstName: "Piotr",
+    lastName: "Kowalski",
+    nickname: "piotrek@77",
     imageUrl: "http://localhost:8080/images/default_profile_picture.jpg",
     active: false,
+    selected: true,
   },
   {
     firstName: "Piotr",
@@ -113,7 +114,7 @@ const ChatAside = () => {
   const [isLoading, setIsLoading] = useState(false);
   return (
     <motion.div
-      className="bg-white flex flex-col dark:bg-primaryDark2 shadow-md rounded-md overflow-hidden "
+      className="bg-white flex flex-col dark:bg-primaryDark2 shadow-md rounded-md overflow-hidden"
       initial="hidden"
       animate="visible"
       variants={asideVariants}
@@ -122,7 +123,7 @@ const ChatAside = () => {
       <h2 className="text-lg font-bold  text-blue-50 bg-blue-600 py-2 px-4">
         Użytkownicy
       </h2>
-      <div className="flex flex-col p-4 mr-2 grow gap-4 overflow-y-auto">
+      <div className="flex flex-col p-4 mr-2 grow gap-2 overflow-y-auto">
         {isLoading ? (
           <>
             {Array.from({ length: 13 }).map((_, index) => (
@@ -131,14 +132,18 @@ const ChatAside = () => {
           </>
         ) : (
           chats.map((chat, index) => (
-            <Chat
-              key={index}
-              firstName={chat.firstName}
-              lastName={chat.lastName}
-              nickname={chat.nickname}
-              imageUrl={chat.imageUrl}
-              active={chat.active}
-            />
+            <>
+              <Chat
+                key={index}
+                firstName={chat.firstName}
+                lastName={chat.lastName}
+                nickname={chat.nickname}
+                imageUrl={chat.imageUrl}
+                active={chat.active}
+                selected={chat.selected}
+              />
+              <hr className="border-gray-300 dark:border-primaryDark" />
+            </>
           ))
         )}
       </div>
