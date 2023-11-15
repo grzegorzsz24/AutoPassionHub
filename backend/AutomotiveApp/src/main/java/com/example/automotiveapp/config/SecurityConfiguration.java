@@ -40,10 +40,11 @@ public class SecurityConfiguration {
                                     antMatcher("/swagger-ui/**"),
                                     antMatcher("/swagger-ui.html"),
                                     antMatcher("/v3/**"),
-                                    antMatcher("/api/v1/auth/**"))
+                                    antMatcher("/api/v1/auth/**"),
+                                    antMatcher("/ws/**"),
+                                    antMatcher("/chat"))
                             .permitAll();
-                    requests.requestMatchers(new AntPathRequestMatcher("/user/**"), antMatcher("/uploads/**"),
-                                    antMatcher("/ws/**"), antMatcher("/chat"))
+                    requests.requestMatchers(new AntPathRequestMatcher("/user/**"), antMatcher("/uploads/**"))
                             .hasAnyAuthority("USER", "USERTEST")
                             .anyRequest()
                             .authenticated();
