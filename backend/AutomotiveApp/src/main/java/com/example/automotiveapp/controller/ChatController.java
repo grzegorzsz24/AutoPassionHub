@@ -24,11 +24,10 @@ public class ChatController {
 
     @MessageMapping("/chat")
     public void submitMessage(@Payload MessageDto messageDto) {
-        Message message = messageDtoMapper.map(messageDto);
-        Message savedMessage = messageService.saveMessage(message);
+        Message message = messageService.saveMessage(messageDtoMapper.map(messageDto));
         messagingTemplate.convertAndSendToUser(
-                String.valueOf(message.getReceiver().getId()),
-                "/queue/messages", savedMessage
+                String.valueOf(messageDto.getReceiverId()),
+                "/queue/messages", MessageDtoMapper.map(message)
         );
     }
 

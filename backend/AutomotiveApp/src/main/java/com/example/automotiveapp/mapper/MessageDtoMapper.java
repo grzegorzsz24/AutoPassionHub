@@ -9,6 +9,7 @@ import com.example.automotiveapp.repository.ChannelRepository;
 import com.example.automotiveapp.repository.UserRepository;
 import com.example.automotiveapp.service.ChannelService;
 import com.example.automotiveapp.service.utils.SecurityUtils;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;

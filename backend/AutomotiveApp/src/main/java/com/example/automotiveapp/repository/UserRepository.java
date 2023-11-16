@@ -27,4 +27,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u FROM User u WHERE u.publicProfile = true")
     List<User> findPublicProfiles();
+
 }
