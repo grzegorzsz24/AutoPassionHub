@@ -8,6 +8,10 @@ import com.example.automotiveapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 @Service
 @RequiredArgsConstructor
 public class ChannelDtoMapper {
@@ -16,16 +20,16 @@ public class ChannelDtoMapper {
     public static ChannelDto map(Channel channel) {
         ChannelDto channelDto = new ChannelDto();
         channelDto.setId(channel.getId());
-        channelDto.setSenderId(channel.getSender().getId());
-        channelDto.setReceiverId(channel.getReceiver().getId());
+        channelDto.setUsers(Set.of(channel.getSender().getId(), channel.getReceiver().getId()));
         return channelDto;
     }
 
     public Channel map(ChannelDto channelDto) {
         Channel channel = new Channel();
-        User sender = userRepository.findById(channelDto.getSenderId())
+        List<Long> userIds = new ArrayList<>(channelDto.getUsers());
+        User sender = userRepository.findById(userIds.get(0))
                         .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika"));
-        User receiver = userRepository.findById(channelDto.getReceiverId())
+        User receiver = userRepository.findById(userIds.get(1))
                         .orElseThrow(() -> new ResourceNotFoundException("Nie znaleznio użytkownika"));
         channel.setSender(sender);
         channel.setReceiver(receiver);
