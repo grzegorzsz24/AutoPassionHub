@@ -28,8 +28,8 @@
     <include file="../testdata/0003_car.sql" relativeToChangelogFile="true" context="dev"/>
     <include file="../testdata/0005_forum.sql" relativeToChangelogFile="true" context="dev"/>
     <include file="../testdata/0006_article.sql" relativeToChangelogFile="true" context="dev"/>
-    <include file="../testdata/0008_channel.sql" relativeToChangelogFile="true" context="dev"/>
-    <include file="../testdata/0009_message.sql" relativeToChangelogFile="true" context="dev"/>
-    <include file="../testdata/0010_friendship.sql" relativeToChangelogFile="true" context="dev"/>
+<!--    <include file="../testdata/0008_channel.sql" relativeToChangelogFile="true" context="dev"/>-->
+<!--    <include file="../testdata/0009_message.sql" relativeToChangelogFile="true" context="dev"/>-->
+<!--    <include file="../testdata/0010_friendship.sql" relativeToChangelogFile="true" context="dev"/>-->
 
 </databaseChangeLog>
