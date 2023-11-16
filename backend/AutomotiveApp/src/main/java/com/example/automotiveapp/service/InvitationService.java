@@ -1,12 +1,10 @@
 package com.example.automotiveapp.service;
 
-import com.example.automotiveapp.domain.Friendship;
-import com.example.automotiveapp.domain.Invitation;
-import com.example.automotiveapp.domain.InvitationStatus;
-import com.example.automotiveapp.domain.User;
+import com.example.automotiveapp.domain.*;
 import com.example.automotiveapp.dto.InvitationDto;
 import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.mapper.InvitationDtoMapper;
+import com.example.automotiveapp.repository.ChannelRepository;
 import com.example.automotiveapp.repository.FriendshipRepository;
 import com.example.automotiveapp.repository.InvitationRepository;
 import com.example.automotiveapp.repository.UserRepository;
@@ -24,6 +22,7 @@ public class InvitationService {
     private final InvitationRepository invitationRepository;
     private final UserRepository userRepository;
     private final FriendshipRepository friendshipRepository;
+    private final ChannelRepository channelRepository;
 
     public List<InvitationDto> getPendingInvitations() {
         User receiver = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail())
@@ -59,6 +58,10 @@ public class InvitationService {
         friendship.setUser1(invitation.getSender());
         friendship.setUser2(invitation.getReceiver());
         friendshipRepository.save(friendship);
+        Channel channel = new Channel();
+        channel.setSender(invitation.getReceiver());
+        channel.setReceiver(invitation.getSender());
+        channelRepository.save(channel);
     }
 
     public void rejectInvitation(Long invitationId) {

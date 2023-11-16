@@ -1,6 +1,8 @@
 package com.example.automotiveapp.service;
 
 import com.example.automotiveapp.domain.Message;
+import com.example.automotiveapp.dto.MessageDto;
+import com.example.automotiveapp.mapper.MessageDtoMapper;
 import com.example.automotiveapp.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,12 +20,19 @@ public class MessageService {
         return messageRepository.save(message);
     }
 
-    public List<Message> findMessages(Long senderId, Long receiverId) {
-        Long channelId = channelService.getChannelId(senderId, receiverId, false);
-        List<Message> messages = messageRepository.findAllByChannelId(channelId);
-        if (messages.isEmpty()) {
-            messages = new ArrayList<>();
-        }
-        return messages;
+//    public List<Message> findMessages(Long senderId, Long receiverId) {
+//        Long channelId = channelService.getChannelId(senderId, receiverId);
+//        List<Message> messages = messageRepository.findAllByChannelId(channelId);
+//        if (messages.isEmpty()) {
+//            messages = new ArrayList<>();
+//        }
+//        return messages;
+//    }
+
+    public List<MessageDto> findChatMessages(Long chatId) {
+        return messageRepository.findAllByChannelId(chatId)
+                .stream()
+                .map(MessageDtoMapper::map)
+                .toList();
     }
 }

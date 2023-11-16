@@ -1,13 +1,11 @@
 package com.example.automotiveapp.service;
 
-import com.example.automotiveapp.domain.Friendship;
-import com.example.automotiveapp.domain.Invitation;
-import com.example.automotiveapp.domain.InvitationStatus;
-import com.example.automotiveapp.domain.User;
+import com.example.automotiveapp.domain.*;
 import com.example.automotiveapp.dto.UserDto;
 import com.example.automotiveapp.exception.BadRequestException;
 import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.mapper.UserDtoMapper;
+import com.example.automotiveapp.repository.ChannelRepository;
 import com.example.automotiveapp.repository.FriendshipRepository;
 import com.example.automotiveapp.repository.InvitationRepository;
 import com.example.automotiveapp.repository.UserRepository;
@@ -27,6 +25,7 @@ public class FriendshipService {
     private final FriendshipRepository friendshipRepository;
     private final UserRepository userRepository;
     private final InvitationRepository invitationRepository;
+    private final ChannelRepository channelRepository;
 
     public List<UserDto> getUserFriends(Long userId) {
         User user = userRepository.findById(userId)
@@ -69,8 +68,10 @@ public class FriendshipService {
 
         if (friendship1.isPresent()) {
             friendshipRepository.delete(friendship1.get());
+            channelRepository.deleteChannelBySenderAndReceiverIds(user1.get().getId(), user2.get().getId());
         } else if (friendship2.isPresent()) {
             friendshipRepository.delete(friendship2.get());
+            channelRepository.deleteChannelBySenderAndReceiverIds(user1.get().getId(), user2.get().getId());
         } else {
             throw new BadRequestException("Nie znaleziono znajomości");
         }

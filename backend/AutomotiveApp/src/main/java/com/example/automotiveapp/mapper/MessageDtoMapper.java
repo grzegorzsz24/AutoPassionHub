@@ -43,7 +43,7 @@ public class MessageDtoMapper {
                 .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika"));
         message.setSender(sender);
         message.setReceiver(receiver);
-        Long channelId = channelService.getChannelId(sender.getId(), receiver.getId(), true);
+        Long channelId = channelService.getChannelId(sender.getId(), receiver.getId());
         message.setChannel(channelRepository.findById(channelId).get());
         message.setCreatedAt(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         return message;

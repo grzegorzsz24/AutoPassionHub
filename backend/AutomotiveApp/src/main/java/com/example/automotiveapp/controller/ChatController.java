@@ -1,6 +1,7 @@
 package com.example.automotiveapp.controller;
 
 import com.example.automotiveapp.domain.Message;
+import com.example.automotiveapp.dto.ChannelDto;
 import com.example.automotiveapp.dto.MessageDto;
 import com.example.automotiveapp.mapper.MessageDtoMapper;
 import com.example.automotiveapp.service.ChannelService;
@@ -13,6 +14,9 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,8 +35,18 @@ public class ChatController {
         );
     }
 
-    @GetMapping("/messages/{senderId}/{receiverId}")
-    public ResponseEntity<?> getChatMessages(@PathVariable Long senderId, @PathVariable Long receiverId) {
-        return ResponseEntity.ok(messageService.findMessages(senderId, receiverId));
+//    @GetMapping("/messages/{senderId}/{receiverId}")
+//    public ResponseEntity<?> getChatMessages(@PathVariable Long senderId, @PathVariable Long receiverId) {
+//        return ResponseEntity.ok(messageService.findMessages(senderId, receiverId));
+//    }
+
+    @GetMapping("/user/chats")
+    public ResponseEntity<List<ChannelDto>> getUserChats() {
+        return ResponseEntity.ok(channelService.findUserChats());
+    }
+
+    @GetMapping("/user/chat/messages")
+    public ResponseEntity<List<MessageDto>> getChatMessages(@RequestParam Long chatId) {
+        return ResponseEntity.ok(messageService.findChatMessages(chatId));
     }
 }
