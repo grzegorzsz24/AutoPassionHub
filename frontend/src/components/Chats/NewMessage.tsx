@@ -1,9 +1,21 @@
+import { FC, useState } from "react";
+
 import PrimaryButton from "../../ui/PrimaryButton";
 import TextareaAutosize from "react-textarea-autosize";
-import { useState } from "react";
 
-const NewMessage = () => {
+interface NewMessageProps {
+  sendMessage: (message: string) => void;
+}
+
+const NewMessage: FC<NewMessageProps> = ({ sendMessage }) => {
   const [newMessage, setNewMessage] = useState("");
+
+  const handleSendMessage = () => {
+    if (newMessage.trim() === "") return;
+    sendMessage(newMessage);
+    setNewMessage("");
+  };
+
   return (
     <div className="px-4 pt-2 flex gap-8">
       <TextareaAutosize
@@ -14,7 +26,7 @@ const NewMessage = () => {
         value={newMessage}
         onChange={(e) => setNewMessage(e.target.value)}
       />
-      <PrimaryButton onClick={() => {}}>Wyślij</PrimaryButton>
+      <PrimaryButton onClick={handleSendMessage}>Wyślij</PrimaryButton>
     </div>
   );
 };

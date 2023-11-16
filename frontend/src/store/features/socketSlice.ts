@@ -1,8 +1,10 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
+import ChatModel from "../../models/ChatModel";
+
 export interface SocketState {
   connected: boolean;
-  chats: any[];
+  chats: ChatModel[];
   onlineUsers: any[];
   currentChat: any;
   messages: any[];
@@ -23,10 +25,10 @@ const SocketSlice = createSlice({
     setConnected(state, action: PayloadAction<boolean>) {
       state.connected = action.payload;
     },
-    setChats(state, action: PayloadAction<any[]>) {
+    setChats(state, action: PayloadAction<ChatModel[]>) {
       state.chats = action.payload;
     },
-    addChat(state, action: PayloadAction<any>) {
+    addChat(state, action: PayloadAction<ChatModel>) {
       state.chats.push(action.payload);
     },
     setOnlineUsers(state, action: PayloadAction<any[]>) {

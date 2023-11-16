@@ -1,117 +1,24 @@
 import Chat from "./Chat";
-import ChatSkeleton from "./ChatSkeleton";
+import ChatModel from "../../models/ChatModel";
+import { FC } from "react";
 import { motion } from "framer-motion";
-import { useState } from "react";
 
 const asideVariants = {
   hidden: { opacity: 0, x: -200 },
   visible: { opacity: 1, x: 0 },
 };
 
-const chats = [
-  {
-    firstName: "Jan",
-    lastName: "Kowalski",
-    nickname: "janek77",
-    imageUrl: "http://localhost:8080/images/default_profile_picture.jpg",
-    active: true,
-  },
-  {
-    firstName: "Piotr",
-    lastName: "Kowalski",
-    nickname: "piotrek@77",
-    imageUrl: "http://localhost:8080/images/default_profile_picture.jpg",
-    active: false,
-    selected: true,
-  },
-  {
-    firstName: "Piotr",
-    lastName: "Wiśniewski",
-    nickname: "piotr90",
-    imageUrl: "http://localhost:8080/images/default_profile_picture.jpg",
-    active: true,
-  },
-  {
-    firstName: "Katarzyna",
-    lastName: "Wójcik",
-    nickname: "kasia91",
-    imageUrl: "http://localhost:8080/images/default_profile_picture.jpg",
-    active: false,
-  },
-  {
-    firstName: "Michał",
-    lastName: "Kozłowski",
-    nickname: "michal92",
-    imageUrl: "http://localhost:8080/images/default_profile_picture.jpg",
-    active: true,
-  },
-  {
-    firstName: "Agnieszka",
-    lastName: "Lewandowska",
-    nickname: "agnieszka93",
-    imageUrl: "http://localhost:8080/images/default_profile_picture.jpg",
-    active: false,
-  },
-  {
-    firstName: "Łukasz",
-    lastName: "Zieliński",
-    nickname: "lukasz94",
-    imageUrl: "http://localhost:8080/images/default_profile_picture.jpg",
-    active: true,
-  },
-  {
-    firstName: "Monika",
-    lastName: "Szymańska",
-    nickname: "monika95",
-    imageUrl: "http://localhost:8080/images/default_profile_picture.jpg",
-    active: false,
-  },
-  {
-    firstName: "Krzysztof",
-    lastName: "Woźniak",
-    nickname: "krzysztof96",
-    imageUrl: "http://localhost:8080/images/default_profile_picture.jpg",
-    active: true,
-  },
-  {
-    firstName: "Izabela",
-    lastName: "Dąbrowska",
-    nickname: "izabela97",
-    imageUrl: "http://localhost:8080/images/default_profile_picture.jpg",
-    active: false,
-  },
-  {
-    firstName: "Tomasz",
-    lastName: "Kowalczyk",
-    nickname: "tomasz98",
-    imageUrl: "http://localhost:8080/images/default_profile_picture.jpg",
-    active: true,
-  },
-  {
-    firstName: "Julia",
-    lastName: "Kamińska",
-    nickname: "julia99",
-    imageUrl: "http://localhost:8080/images/default_profile_picture.jpg",
-    active: false,
-  },
-  {
-    firstName: "Mateusz",
-    lastName: "Pawlak",
-    nickname: "mateusz100",
-    imageUrl: "http://localhost:8080/images/default_profile_picture.jpg",
-    active: true,
-  },
-  {
-    firstName: "Małgorzata",
-    lastName: "Kaczmarek",
-    nickname: "gosia101",
-    imageUrl: "http://localhost:8080/images/default_profile_picture.jpg",
-    active: false,
-  },
-];
+interface ChatAsideProps {
+  chats: ChatModel[];
+  currentChat?: ChatModel | null;
+  setCurrentChat: (chat: ChatModel) => void;
+}
 
-const ChatAside = () => {
-  const [isLoading, setIsLoading] = useState(false);
+const ChatAside: FC<ChatAsideProps> = ({
+  chats,
+  currentChat,
+  setCurrentChat,
+}) => {
   return (
     <motion.div
       className="bg-white flex flex-col dark:bg-primaryDark2 shadow-md rounded-md overflow-hidden"
@@ -124,28 +31,16 @@ const ChatAside = () => {
         Użytkownicy
       </h2>
       <div className="flex flex-col p-4 mr-2 grow gap-2 overflow-y-auto">
-        {isLoading ? (
-          <>
-            {Array.from({ length: 13 }).map((_, index) => (
-              <ChatSkeleton key={index} />
-            ))}
-          </>
-        ) : (
-          chats.map((chat, index) => (
-            <>
-              <Chat
-                key={index}
-                firstName={chat.firstName}
-                lastName={chat.lastName}
-                nickname={chat.nickname}
-                imageUrl={chat.imageUrl}
-                active={chat.active}
-                selected={chat.selected}
-              />
-              <hr className="border-gray-300 dark:border-primaryDark" />
-            </>
-          ))
-        )}
+        {chats.map((chat) => (
+          <div key={chat.id}>
+            <Chat
+              chat={chat}
+              setCurrentChat={setCurrentChat}
+              currentChat={currentChat}
+            />
+            <hr className="border-gray-300 dark:border-primaryDark" />
+          </div>
+        ))}
       </div>
     </motion.div>
   );
