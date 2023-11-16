@@ -20,7 +20,7 @@ public class ChannelService {
     private final ChannelRepository channelRepository;
     private final UserRepository userRepository;
     public Long getChannelId(Long senderId, Long receiverId) {
-        return channelRepository.findBySenderIdAndReceiverId(senderId, receiverId)
+        return channelRepository.findBySenderIdAndReceiverIdOrReceiverIdAndSenderId(senderId, receiverId)
                 .map(Channel::getId)
                 .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono kanału"));
     }
