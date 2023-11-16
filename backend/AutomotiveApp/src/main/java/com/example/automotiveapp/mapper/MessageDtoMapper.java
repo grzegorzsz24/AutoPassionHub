@@ -7,6 +7,7 @@ import com.example.automotiveapp.dto.MessageDto;
 import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.repository.ChannelRepository;
 import com.example.automotiveapp.repository.UserRepository;
+import com.example.automotiveapp.service.ChannelService;
 import com.example.automotiveapp.service.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -20,6 +21,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MessageDtoMapper {
     private final UserRepository userRepository;
+    private final ChannelService channelService;
     private final ChannelRepository channelRepository;
 
     public static MessageDto map(Message message) {
@@ -40,9 +42,8 @@ public class MessageDtoMapper {
                 .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika"));
         message.setSender(sender);
         message.setReceiver(receiver);
-        Channel channel = channelRepository.findById(messageDto.getChannelId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono czatu"));
-        message.setChannel(channel);
+        Long channelId = channelService.getChannelId(sender.getId(), receiver.getId(), true);
+        message.setChannel(channelRepository.findById(channelId).get());
         message.setCreatedAt(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         return message;
     }
