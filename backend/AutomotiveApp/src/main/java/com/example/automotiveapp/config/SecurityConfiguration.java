@@ -42,6 +42,7 @@ public class SecurityConfiguration {
                                     antMatcher("/v3/**"),
                                     antMatcher("/api/v1/auth/**"),
                                     antMatcher("/ws/**"),
+                                    antMatcher("/ws"),
                                     antMatcher("/chat"))
                             .permitAll();
                     requests.requestMatchers(new AntPathRequestMatcher("/user/**"), antMatcher("/uploads/**"))

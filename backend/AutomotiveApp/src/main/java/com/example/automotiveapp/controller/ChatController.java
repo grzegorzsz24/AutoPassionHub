@@ -1,6 +1,8 @@
 package com.example.automotiveapp.controller;
 
 import com.example.automotiveapp.domain.Message;
+import com.example.automotiveapp.dto.MessageDto;
+import com.example.automotiveapp.mapper.MessageDtoMapper;
 import com.example.automotiveapp.service.ChannelService;
 import com.example.automotiveapp.service.MessageService;
 import lombok.RequiredArgsConstructor;
@@ -18,12 +20,11 @@ public class ChatController {
     private final MessageService messageService;
     private final ChannelService channelService;
     private final SimpMessagingTemplate messagingTemplate;
+    private final MessageDtoMapper messageDtoMapper;
 
     @MessageMapping("/chat")
-    public void submitMessage(@Payload Message message) {
-        Long chatId = channelService.getChannelId(message.getSender().getId(), message.getReceiver().getId(), true);
-        message.setChannel(channelService.findChannelById(chatId).get());
-
+    public void submitMessage(@Payload MessageDto messageDto) {
+        Message message = messageDtoMapper.map(messageDto);
         Message savedMessage = messageService.saveMessage(message);
         messagingTemplate.convertAndSendToUser(
                 String.valueOf(message.getReceiver().getId()),
