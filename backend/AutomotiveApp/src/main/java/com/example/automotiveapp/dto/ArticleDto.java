@@ -19,4 +19,5 @@ public class ArticleDto {
     private String firstName;
     private String lastName;
     private String userImageUrl;
+    private Long userId;
 }

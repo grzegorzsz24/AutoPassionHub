@@ -20,4 +20,5 @@ public class ForumDto {
     private String carBrand;
     private String carModel;
     private boolean isSaved;
+    private Long userId;
 }

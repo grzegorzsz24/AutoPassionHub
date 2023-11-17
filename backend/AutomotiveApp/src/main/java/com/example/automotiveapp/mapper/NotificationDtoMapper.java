@@ -2,6 +2,7 @@ package com.example.automotiveapp.mapper;
 
 import com.example.automotiveapp.domain.Notification;
 import com.example.automotiveapp.domain.NotificationDto;
+import com.example.automotiveapp.domain.NotificationType;
 import com.example.automotiveapp.domain.User;
 import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.repository.UserRepository;
@@ -36,7 +37,8 @@ public class NotificationDtoMapper {
         notification.setUserTriggered(userTriggered);
         notification.setRecevier(receiver);
         notification.setCreatedAt(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
-        notification.setType(notification.getType());
+        NotificationType notificationType = NotificationType.valueOf(notificationDto.getType());
+        notification.setType(notificationType);
         return notification;
     }
 }
