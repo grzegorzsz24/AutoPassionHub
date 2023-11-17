@@ -7,22 +7,18 @@ const RegisterPage = () => {
   const navigate = useNavigate();
 
   return (
-    <AuthorizationLayout>
-      <div className="  flex flex-col items-center justify-between  h-full">
-        <h1 className="text-5xl font-semibold my-16">Rejestracja</h1>
-
+    <AuthorizationLayout title="Rejestracja">
+      <div className="w-full flex flex-col items-center">
         <RegisterForm />
-        <div className="mb-16 w-full flex flex-col items-center">
-          <hr className="w-[100%] my-16 border-1 border-inherit"></hr>
-          <OutlineButton
-            onClick={() => {
-              navigate("/login");
-            }}
-            size="lg"
-          >
-            Zaloguj się
-          </OutlineButton>
-        </div>
+        <hr className="w-[100%] my-16 border-1 border-inherit"></hr>
+        <OutlineButton
+          onClick={() => {
+            navigate("/login");
+          }}
+          size="lg"
+        >
+          Zaloguj się
+        </OutlineButton>
       </div>
     </AuthorizationLayout>
   );

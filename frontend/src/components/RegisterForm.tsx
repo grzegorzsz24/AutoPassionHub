@@ -53,7 +53,7 @@ const RegiserForm = () => {
 
   const {
     value: lastName,
-    // isValid: isLastNameValid,
+    isValid: isLastNameValid,
     hasError: lastNameHasError,
     valueChangeHandler: lastNameChangeHandler,
     inputBlurHandler: lastNameBlurHandler,
@@ -62,7 +62,7 @@ const RegiserForm = () => {
 
   const {
     value: email,
-    // isValid: isEmailValid,
+    isValid: isEmailValid,
     hasError: emailHasError,
     valueChangeHandler: emailChangeHandler,
     inputBlurHandler: emailBlurHandler,
@@ -71,7 +71,7 @@ const RegiserForm = () => {
 
   const {
     value: nickname,
-    // isValid: isNicknameValid,
+    isValid: isNicknameValid,
     hasError: nicknameHasError,
     valueChangeHandler: nicknameChangeHandler,
     inputBlurHandler: nicknameBlurHandler,
@@ -98,6 +98,9 @@ const RegiserForm = () => {
 
   const formIsValid =
     isFirstNameValid &&
+    isLastNameValid &&
+    isEmailValid &&
+    isNicknameValid &&
     isPasswordValid &&
     isConfirmPasswordValid &&
     isPasswordValid &&
@@ -235,7 +238,12 @@ const RegiserForm = () => {
         yearAriaLabel={"Rok urodzenia"}
       />
       <div>
-        <PrimaryButton onClick={() => {}} size="lg" fullWidth>
+        <PrimaryButton
+          onClick={() => {}}
+          size="lg"
+          fullWidth
+          disabled={!formIsValid}
+        >
           Załóż konto
         </PrimaryButton>
       </div>
