@@ -103,7 +103,7 @@ const ChatConversation: FC<ChatConversationProps> = ({ currentChat }) => {
   return (
     <div className="p-4 flex flex-col h-full">
       {!currentChat && (
-        <div className=" h-full flex items-center justify-center text-lg font-bold">
+        <div className=" h-full flex items-center justify-center text-lg">
           Kliknij czat aby rozpocząć
         </div>
       )}

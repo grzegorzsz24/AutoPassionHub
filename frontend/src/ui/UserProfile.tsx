@@ -28,7 +28,7 @@ const UserProfile: FC<UserProfileProps> = ({
   if (createdAt) {
     return (
       <div
-        className={`flex ${
+        className={`flex  ${
           size === "small" ? "gap-2" : size === "medium" ? "gap-4" : "gap-6"
         }`}
       >
@@ -95,7 +95,7 @@ const UserProfile: FC<UserProfileProps> = ({
 
   return (
     <div
-      className={`flex items-center ${
+      className={`flex items-center w-max ${
         size === "small" ? "gap-2" : size === "medium" ? "gap-4" : "gap-6"
       } cursor-pointer group`}
       onClick={navigateToUserPage}

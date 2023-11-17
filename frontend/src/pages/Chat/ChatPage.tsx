@@ -21,7 +21,7 @@ const ChatPage = () => {
           currentChat={currentChat}
           setCurrentChat={setCurrentChatHandler}
         />
-        <div className="bg-white dark:bg-primaryDark2 shadow-md grow rounded-md min-w-xl">
+        <div className="bg-white dark:bg-primaryDark2 shadow-md grow rounded-md">
           <ChatConversation currentChat={currentChat} />
         </div>
       </div>

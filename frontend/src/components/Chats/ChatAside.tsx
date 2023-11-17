@@ -1,7 +1,9 @@
 import Chat from "./Chat";
 import ChatModel from "../../models/ChatModel";
 import { FC } from "react";
+import OutlineButton from "../../ui/OutlineButton";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const asideVariants = {
   hidden: { opacity: 0, x: -200 },
@@ -19,9 +21,15 @@ const ChatAside: FC<ChatAsideProps> = ({
   currentChat,
   setCurrentChat,
 }) => {
+  const navigate = useNavigate();
+
+  const goToFriendsPage = () => {
+    navigate("/friends/suggestions");
+  };
+
   return (
     <motion.div
-      className="bg-white flex flex-col dark:bg-primaryDark2 shadow-md rounded-md overflow-hidden"
+      className="bg-white flex flex-col dark:bg-primaryDark2 shadow-md rounded-md overflow-hidden "
       initial="hidden"
       animate="visible"
       variants={asideVariants}
@@ -31,6 +39,14 @@ const ChatAside: FC<ChatAsideProps> = ({
         Użytkownicy
       </h2>
       <div className="flex flex-col p-4 mr-2 grow gap-2 overflow-y-auto">
+        {chats.length === 0 && (
+          <div className="flex flex-col gap-4 items-center p-6">
+            <p>Brak znajomych</p>
+            <OutlineButton size="sm" onClick={goToFriendsPage}>
+              Dodaj znajomych
+            </OutlineButton>
+          </div>
+        )}
         {chats.map((chat) => (
           <div key={chat.id}>
             <Chat
