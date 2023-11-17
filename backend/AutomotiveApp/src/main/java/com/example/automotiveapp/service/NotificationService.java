@@ -2,6 +2,7 @@ package com.example.automotiveapp.service;
 
 import com.example.automotiveapp.domain.Notification;
 import com.example.automotiveapp.domain.NotificationDto;
+import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.mapper.NotificationDtoMapper;
 import com.example.automotiveapp.repository.NotificationRepository;
 import com.example.automotiveapp.service.utils.SecurityUtils;
@@ -25,5 +26,12 @@ public class NotificationService {
                 .stream()
                 .map(NotificationDtoMapper::map)
                 .toList();
+    }
+
+    public NotificationDto setNotificationAsRead(Long notificationId) {
+        Notification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono powiadomienia"));
+        notification.setRead(true);
+        return NotificationDtoMapper.map(notification);
     }
 }
