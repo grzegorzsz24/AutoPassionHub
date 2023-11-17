@@ -6,6 +6,7 @@ import LoadingSpinner from "../../ui/LoadingSpinner";
 import MessageModel from "../../models/MessageModel";
 import Messages from "./Messages";
 import NewMessage from "./NewMessage";
+import OutlineButton from "../../ui/OutlineButton";
 import UserModel from "../../models/UserModel";
 import UserProfile from "../../ui/UserProfile";
 import { getChatMessages } from "../../services/chatService";
@@ -123,10 +124,17 @@ const ChatConversation: FC<ChatConversationProps> = ({ currentChat }) => {
           <div className="grow overflow-y-auto py-4">
             {isLoading && <LoadingSpinner small />}
             {!isLoading && messages.length === 0 && (
-              <p className="h-full flex items-end justify-center text-lg">
-                Brak wiadomości. Przywitaj się z użytkownikiem {user?.firstName}{" "}
-                👋
-              </p>
+              <div className="h-full flex flex-col items-center justify-end gap-4 text-md">
+                <p>Brak wiadomości.</p>
+                <OutlineButton
+                  onClick={() => {
+                    sendMessage("👋");
+                  }}
+                  size="sm"
+                >
+                  Pomachaj użytkowinkowi {user?.firstName} 👋
+                </OutlineButton>
+              </div>
             )}
             {!isLoading && messages.length > 0 && (
               <Messages messages={messages} />

@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import {
   NotificationStatus,
   addNotification,
@@ -51,6 +51,7 @@ const Post: FC<PostProps> = ({
   const [comments, setComments] = useState<CommentModel[]>([]);
   const [commentsAreLoading, setCommentsAreLoading] = useState(false);
   const [numberOfComments, setNumberOfComments] = useState(commentsNumber);
+  const postRef = useRef<HTMLDivElement>(null);
 
   const [commentsAreShown, setCommentsAreShown] = useState(false);
 
@@ -176,8 +177,17 @@ const Post: FC<PostProps> = ({
     }
   };
 
+  useEffect(() => {
+    if (commentsAreShown && postRef.current) {
+      postRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [commentsAreShown]);
+
   return (
-    <div className="bg-white text-primaryDark dark:bg-primaryDark2 dark:text-blue-100 max-w-2xl w-full rounded-md shadow-md">
+    <div
+      className="bg-white text-primaryDark dark:bg-primaryDark2 dark:text-blue-100 max-w-2xl w-full rounded-md shadow-md"
+      ref={postRef}
+    >
       <PostHeader
         id={id}
         firstName={firstName}

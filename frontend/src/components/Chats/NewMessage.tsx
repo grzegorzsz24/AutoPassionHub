@@ -1,7 +1,7 @@
 import EmojiPicker, { EmojiStyle, Theme } from "emoji-picker-react";
 import { FC, useEffect, useRef, useState } from "react";
+import { MdEmojiEmotions, MdOutlineInsertEmoticon } from "react-icons/md";
 
-import { MdEmojiEmotions } from "react-icons/md";
 import PrimaryButton from "../../ui/PrimaryButton";
 import TextareaAutosize from "react-textarea-autosize";
 
@@ -60,11 +60,12 @@ const NewMessage: FC<NewMessageProps> = ({ sendMessage }) => {
         value={newMessage}
         onChange={(e) => setNewMessage(e.target.value)}
       />
-      <div ref={emojiIconRef}>
-        <MdEmojiEmotions
-          className="text-4xl text-gray-600 dark:text-blue-50 cursor-pointer hover:text-blue-600 dark:hover:text-blue-600 transition-all hover:scale-110"
-          onClick={toggleEmojiPicker}
-        />
+      <div
+        ref={emojiIconRef}
+        className="text-4xl text-gray-600 dark:text-blue-50 cursor-pointer hover:text-blue-600 dark:hover:text-blue-600 transition-all hover:scale-110"
+        onClick={toggleEmojiPicker}
+      >
+        {showPicker ? <MdEmojiEmotions /> : <MdOutlineInsertEmoticon />}
       </div>
       {showPicker && (
         <div className="absolute bottom-12 right-0 " ref={pickerRef}>

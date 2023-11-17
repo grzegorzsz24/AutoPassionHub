@@ -6,7 +6,7 @@ const AppLayout = () => {
   const isLoading = useAppSelector((state) => state.loading.loading);
 
   return (
-    <div className="bg-blue-50 dark:bg-primaryDark min-h-screen  w-full h-screen text-primaryDark">
+    <div className="bg-blue-50 dark:bg-primaryDark min-h-screen  w-full h-screen text-primaryDark overflow-auto">
       {<Outlet />}
       {isLoading && <LoadingSpinner />}
     </div>
