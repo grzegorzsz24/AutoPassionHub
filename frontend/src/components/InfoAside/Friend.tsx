@@ -5,12 +5,14 @@ import FriendSkeleton from "./FriendSkeleton";
 import UserModel from "../../models/UserModel";
 import { getUserById } from "../../services/userService";
 import { useAppSelector } from "../../store/store";
+import { useNavigate } from "react-router-dom";
 
 interface FriendProps {
   chat: ChatModel;
 }
 
 const Friend: FC<FriendProps> = ({ chat }) => {
+  const navigate = useNavigate();
   const { userId: loggedInUserId } = useAppSelector((state) => state.user);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<UserModel | null>(null);
@@ -36,6 +38,10 @@ const Friend: FC<FriendProps> = ({ chat }) => {
     }
   };
 
+  const goToUserChat = () => {
+    navigate(`/chats?chat=${chat.id}`);
+  };
+
   useEffect(() => {
     fetchUser();
   }, [chat]);
@@ -45,9 +51,7 @@ const Friend: FC<FriendProps> = ({ chat }) => {
       {isLoading && <FriendSkeleton />}
       {!isLoading && user && (
         <div
-          onClick={() => {
-            console.log("xddd");
-          }}
+          onClick={goToUserChat}
           className={`p-2  w-full  dark:border-primaryDark flex gap-6 items-center  group  transition-all rounded-md hover:bg-blue-600 cursor-pointer`}
         >
           <div className="relative">

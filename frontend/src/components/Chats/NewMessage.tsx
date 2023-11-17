@@ -41,7 +41,7 @@ const NewMessage: FC<NewMessageProps> = ({ sendMessage }) => {
         pickerRef.current &&
         !pickerRef.current.contains(event.target as Node) &&
         emojiIconRef.current &&
-        !emojiIconRef.current.contains(event.target as Node) // Sprawdź, czy kliknięcie nie pochodzi z ikony
+        !emojiIconRef.current.contains(event.target as Node)
       ) {
         setShowPicker(false);
       }
