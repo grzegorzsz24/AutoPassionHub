@@ -62,7 +62,7 @@ const NewMessage: FC<NewMessageProps> = ({ sendMessage }) => {
       />
       <div ref={emojiIconRef}>
         <MdEmojiEmotions
-          className="text-4xl text-grayDark dark:text-blue-50 cursor-pointer hover:text-blue-600 transition-all hover:scale-110"
+          className="text-4xl text-gray-600 dark:text-blue-50 cursor-pointer hover:text-blue-600 dark:hover:text-blue-600 transition-all hover:scale-110"
           onClick={toggleEmojiPicker}
         />
       </div>
