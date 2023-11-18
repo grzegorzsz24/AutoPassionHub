@@ -3,6 +3,7 @@ import {
   addNotification,
 } from "../../store/features/notificationSlice";
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
+import { useAppDispatch, useAppSelector } from "../../store/store";
 
 import { FC } from "react";
 import PrimaryButton from "../../ui/PrimaryButton";
@@ -10,7 +11,7 @@ import UserModel from "../../models/UserModel";
 import UserProfile from "../../ui/UserProfile";
 import handleError from "../../services/errorHandler";
 import { sendFriendRequest } from "../../services/friendService";
-import { useAppDispatch } from "../../store/store";
+import { useStompClient } from "react-stomp-hooks";
 
 interface AddFriendElementProps {
   user: UserModel;
@@ -21,7 +22,9 @@ const AddFriendElement: FC<AddFriendElementProps> = ({
   user,
   deleteUserFromList,
 }) => {
+  const stompClient = useStompClient();
   const dispatch = useAppDispatch();
+  const { userId: loggedInUserId } = useAppSelector((state) => state.user);
 
   const addFriend = async () => {
     try {
@@ -29,6 +32,18 @@ const AddFriendElement: FC<AddFriendElementProps> = ({
       const data = await sendFriendRequest(user.id);
       if (data.status !== "ok") {
         throw new Error(data.message);
+      }
+      if (stompClient) {
+        stompClient.publish({
+          destination: `/app/notification`,
+          body: JSON.stringify({
+            userTriggeredId: Number(loggedInUserId),
+            receiverId: user.id,
+            content: "Użytkownik wysłał ci zaproszenie do znajomych",
+            type: "INVITATION_SENT",
+            entityId: 0,
+          }),
+        });
       }
       dispatch(
         addNotification({

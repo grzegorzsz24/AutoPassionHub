@@ -8,6 +8,7 @@ import {
   rejectFriendRequest,
 } from "../../services/friendService";
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
+import { useAppDispatch, useAppSelector } from "../../store/store";
 
 import PendingInvitationModel from "../../models/PendingInvitationModel";
 import PrimaryButton from "../../ui/PrimaryButton";
@@ -15,7 +16,7 @@ import UserModel from "../../models/UserModel";
 import UserProfile from "../../ui/UserProfile";
 import { getUserById } from "../../services/userService";
 import handleError from "../../services/errorHandler";
-import { useAppDispatch } from "../../store/store";
+import { useStompClient } from "react-stomp-hooks";
 
 interface PendingInvitationProps {
   invitation: PendingInvitationModel;
@@ -26,7 +27,9 @@ const FriendInvitation: FC<PendingInvitationProps> = ({
   invitation,
   removeInvitationFromList,
 }) => {
+  const stompClient = useStompClient();
   const dispatch = useAppDispatch();
+  const { userId: loggedInUserId } = useAppSelector((state) => state.user);
 
   const [user, setUser] = useState<UserModel>();
 
@@ -36,6 +39,18 @@ const FriendInvitation: FC<PendingInvitationProps> = ({
       const data = await acceptFriendRequest(invitation.id);
       if (data.status !== "ok") {
         throw new Error(data.message);
+      }
+      if (stompClient) {
+        stompClient.publish({
+          destination: `/app/notification`,
+          body: JSON.stringify({
+            userTriggeredId: Number(loggedInUserId),
+            receiverId: invitation.sender,
+            content: "Użytkownik zaakceptował twoje zaproszenie do znajomych",
+            type: "INVITATION_ACCEPTED",
+            entityId: invitation.id,
+          }),
+        });
       }
       dispatch(
         addNotification({

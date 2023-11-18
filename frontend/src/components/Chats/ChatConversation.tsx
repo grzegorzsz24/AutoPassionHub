@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useStompClient, useSubscription } from "react-stomp-hooks";
 
 import ChatModel from "../../models/ChatModel";
 import { FC } from "react";
@@ -13,8 +14,6 @@ import { getChatMessages } from "../../services/chatService";
 import { getUserById } from "../../services/userService";
 import handleError from "../../services/errorHandler";
 import { useAppSelector } from "../../store/store";
-import { useStompClient } from "react-stomp-hooks";
-import { useSubscription } from "react-stomp-hooks";
 
 interface ChatConversationProps {
   currentChat: ChatModel | null;

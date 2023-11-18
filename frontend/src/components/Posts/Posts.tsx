@@ -128,6 +128,7 @@ const Posts = () => {
             content={post.content}
             postedAt={post.postedAt}
             file={post.file}
+            userId={post.userId}
             user={post.user}
             imageUrls={post.imageUrls}
             likesNumber={post.likesNumber}

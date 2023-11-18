@@ -9,6 +9,7 @@ import {
   editComment,
 } from "../../services/commentService";
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
+import { useAppDispatch, useAppSelector } from "../../store/store";
 
 import CommentModel from "../../models/CommentModel";
 import Comments from "./Comments";
@@ -21,7 +22,7 @@ import PostText from "./PostText";
 import { debounce } from "lodash";
 import handleError from "../../services/errorHandler";
 import { toggleLike } from "../../services/likeService";
-import { useAppDispatch } from "../../store/store";
+import { useStompClient } from "react-stomp-hooks";
 
 interface PostProps extends PostModel {
   deletePostHandler: (id: number) => void;
@@ -32,7 +33,7 @@ const Post: FC<PostProps> = ({
   id,
   content,
   postedAt,
-  // file,
+  userId,
   user,
   imageUrls,
   likesNumber,
@@ -44,7 +45,9 @@ const Post: FC<PostProps> = ({
   deletePostHandler,
   editPostHandler,
 }) => {
+  const stompClient = useStompClient();
   const dispatch = useAppDispatch();
+  const { userId: loggedInUserId } = useAppSelector((state) => state.user);
   const [editMode, setEditMode] = useState(false);
   const [isLiked, setIsLiked] = useState(liked);
   const [numberOfLikes, setNumberOfLikes] = useState(likesNumber);
@@ -60,6 +63,18 @@ const Post: FC<PostProps> = ({
       const data = await toggleLike(id);
       if (data.status !== "ok") {
         throw new Error(data.message);
+      }
+      if (stompClient && isLiked === false) {
+        stompClient.publish({
+          destination: `/app/notification`,
+          body: JSON.stringify({
+            userTriggeredId: Number(loggedInUserId),
+            receiverId: userId,
+            content: "Użytkownik polubił twój post",
+            type: "POST_LIKE",
+            entityId: id,
+          }),
+        });
       }
     } catch (error) {
       const newError = handleError(error);
@@ -155,6 +170,18 @@ const Post: FC<PostProps> = ({
       const data = await addComment(id, content);
       if (data.status !== "ok") {
         throw new Error(data.message);
+      }
+      if (stompClient && userId !== Number(loggedInUserId)) {
+        stompClient.publish({
+          destination: `/app/notification`,
+          body: JSON.stringify({
+            userTriggeredId: Number(loggedInUserId),
+            receiverId: userId,
+            content: "Użytkownik skomentował twój post",
+            type: "POST_COMMENT",
+            entityId: id,
+          }),
+        });
       }
       setComments((prev) => [data.comment, ...prev]);
       setNumberOfComments((prev) => prev + 1);

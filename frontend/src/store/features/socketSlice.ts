@@ -1,10 +1,12 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 import ChatModel from "../../models/ChatModel";
+import NotificationModel from "../../models/NotificationModel";
 
 export interface SocketState {
   connected: boolean;
   chats: ChatModel[];
+  notifications: NotificationModel[];
   onlineUsers: any[];
   currentChat: any;
   messages: any[];
@@ -13,6 +15,7 @@ export interface SocketState {
 const initialState: SocketState = {
   connected: false,
   chats: [],
+  notifications: [],
   onlineUsers: [],
   currentChat: {},
   messages: [],
@@ -30,6 +33,19 @@ const SocketSlice = createSlice({
     },
     addChat(state, action: PayloadAction<ChatModel>) {
       state.chats.push(action.payload);
+    },
+    setNotifications(state, action: PayloadAction<NotificationModel[]>) {
+      state.notifications = action.payload;
+    },
+    addNotification(state, action: PayloadAction<NotificationModel>) {
+      state.notifications = [action.payload, ...state.notifications];
+    },
+    changeNotificationStatusAsRead(state, action: PayloadAction<number>) {
+      state.notifications = state.notifications.map((notification) =>
+        notification.notificationId === action.payload
+          ? { ...notification, read: true }
+          : notification
+      );
     },
     setOnlineUsers(state, action: PayloadAction<any[]>) {
       state.onlineUsers = action.payload;
@@ -59,6 +75,9 @@ export const {
   setConnected,
   setChats,
   addChat,
+  setNotifications,
+  addNotification,
+  changeNotificationStatusAsRead,
   setOnlineUsers,
   addOnlineUser,
   removeOnlineUser,

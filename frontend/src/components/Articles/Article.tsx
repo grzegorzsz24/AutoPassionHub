@@ -4,6 +4,7 @@ import {
   NotificationStatus,
   addNotification,
 } from "../../store/features/notificationSlice";
+import { useAppDispatch, useAppSelector } from "../../store/store";
 
 import ArticleModel from "../../models/ArticleModel";
 import DateFormatter from "../../utils/DateFormatter";
@@ -12,14 +13,17 @@ import { debounce } from "lodash";
 import handleError from "../../services/errorHandler";
 import { toggleLike } from "../../services/articleService";
 import { toogleArticleBookmark } from "../../services/articleService";
-import { useAppDispatch } from "../../store/store";
 import { useNavigate } from "react-router-dom";
+import { useStompClient } from "react-stomp-hooks";
 
 interface ArticleProps {
   article: ArticleModel;
 }
 
 const Article: FC<ArticleProps> = ({ article }) => {
+  const stompClient = useStompClient();
+  const { userId: loggedInUserId } = useAppSelector((state) => state.user);
+
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [numberOfLikes, setNumberOfLikes] = useState<number>(
@@ -33,6 +37,18 @@ const Article: FC<ArticleProps> = ({ article }) => {
       const data = await toggleLike(article.id);
       if (data.status !== "ok") {
         throw new Error(data.message);
+      }
+      if (stompClient && isLiked === false) {
+        stompClient.publish({
+          destination: `/app/notification`,
+          body: JSON.stringify({
+            userTriggeredId: Number(loggedInUserId),
+            receiverId: article.userId,
+            content: "Użytkownik polubił twój artykuł",
+            type: "ARTICLE_LIKE",
+            entityId: article.id,
+          }),
+        });
       }
     } catch (error) {
       const newError = handleError(error);

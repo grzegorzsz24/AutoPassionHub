@@ -9,7 +9,9 @@ import {
 import { MdChat, MdForum } from "react-icons/md";
 
 import { BsFillCalendarEventFill } from "react-icons/bs";
+import MessagesButton from "../../ui/MessagesButton";
 import NavigationLink from "../../ui/NavigationLink";
+import NotificationButton from "../../ui/NotificationButton";
 import { useState } from "react";
 
 const menuVariants = {
@@ -74,12 +76,19 @@ const Navigation = () => {
         ))}
       </nav>
       <div className="sm:hidden bg-blue-600 w-full py-2 px-4">
-        <button
-          className="text-blue-50 text-2xl hover:scale-125 transition-all cursor-pointer"
-          onClick={toggleMenuNav}
-        >
-          {menuNavIsOpen ? <CgClose /> : <CgMenu />}
-        </button>
+        <div className="flex items-center justify-between">
+          <button
+            className="text-blue-50 text-2xl hover:scale-125 transition-all cursor-pointer"
+            onClick={toggleMenuNav}
+          >
+            {menuNavIsOpen ? <CgClose /> : <CgMenu />}
+          </button>
+          <div className="flex items-center gap-8 xl:gap-16">
+            <MessagesButton />
+            <NotificationButton />
+          </div>
+        </div>
+
         <AnimatePresence>
           {menuNavIsOpen && (
             <motion.nav

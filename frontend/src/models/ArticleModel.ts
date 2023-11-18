@@ -3,6 +3,7 @@ interface ArticleModel {
   title: string;
   content: string;
   publishedAt: string;
+  userId: number;
   user: string;
   firstName: string;
   lastName: string;

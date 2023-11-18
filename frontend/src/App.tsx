@@ -1,10 +1,15 @@
-import { setChats, setConnected } from "./store/features/socketSlice";
+import {
+  setChats,
+  setConnected,
+  setNotifications,
+} from "./store/features/socketSlice";
 import { useAppDispatch, useAppSelector } from "./store/store";
 
 import Notification from "./ui/Notification";
 import { RouterProvider } from "react-router-dom";
 import { StompSessionProvider } from "react-stomp-hooks";
 import { getAllChats } from "./services/chatService";
+import { getNotifications } from "./services/notificationService";
 import handleError from "./services/errorHandler";
 import router from "./router/routerConfig";
 import { useEffect } from "react";
@@ -27,6 +32,23 @@ function App() {
       handleError(error);
     }
   };
+
+  const fetchAllNotifications = async () => {
+    try {
+      const response = await getNotifications();
+      if (response.status !== "ok") {
+        throw new Error(response.message);
+      }
+      console.log(response);
+      dispatch(setNotifications(response.notifications));
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllNotifications();
+  }, [user]);
 
   useEffect(() => {
     fetchAllChats();
