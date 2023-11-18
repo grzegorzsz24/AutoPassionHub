@@ -5,5 +5,6 @@ public enum NotificationType {
     POST_LIKE,
     ARTICLE_LIKE,
     FORUM_COMMENT,
-    INVITATION
+    INVITATION_SENT,
+    INVITATION_ACCEPTED
 }
