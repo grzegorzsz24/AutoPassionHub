@@ -24,7 +24,6 @@ const LikeNotification: FC<LikeNotificationProps> = ({
   const navigate = useNavigate();
   const [user, setUser] = useState<UserModel | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  console.log(notification);
 
   const fetchUser = async () => {
     if (!notification) return;

@@ -14,8 +14,10 @@ import PendingInvitationModel from "../../models/PendingInvitationModel";
 import PrimaryButton from "../../ui/PrimaryButton";
 import UserModel from "../../models/UserModel";
 import UserProfile from "../../ui/UserProfile";
+import { getAllChats } from "../../services/chatService";
 import { getUserById } from "../../services/userService";
 import handleError from "../../services/errorHandler";
+import { setChats } from "../../store/features/socketSlice";
 import { useStompClient } from "react-stomp-hooks";
 
 interface PendingInvitationProps {
@@ -32,6 +34,19 @@ const FriendInvitation: FC<PendingInvitationProps> = ({
   const { userId: loggedInUserId } = useAppSelector((state) => state.user);
 
   const [user, setUser] = useState<UserModel>();
+
+  const fetchAllChats = async () => {
+    try {
+      const response = await getAllChats();
+      if (response.status !== "ok") {
+        throw new Error(response.message);
+      }
+      console.log(response);
+      dispatch(setChats(response.data));
+    } catch (error) {
+      handleError(error);
+    }
+  };
 
   const acceptInvitation = async () => {
     try {
@@ -52,6 +67,7 @@ const FriendInvitation: FC<PendingInvitationProps> = ({
           }),
         });
       }
+      fetchAllChats();
       dispatch(
         addNotification({
           message: data.message,

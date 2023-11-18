@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import CommentNotification from "../components/Notifications/CommentNotification";
 import InvitationNotification from "../components/Notifications/InvitationNotification";
 import { IoNotifications } from "react-icons/io5";
-import LikeNotification from "../components/Notifications/LikePostNotification";
+import LikeNotification from "../components/Notifications/LikeNotification";
 import { useAppSelector } from "../store/store";
 import { useState } from "react";
 
@@ -65,7 +65,7 @@ const NotificationButton = () => {
             animate="visible"
             exit="hidden"
             variants={menuVariants}
-            className="absolute top-full max-h-96 w-96 overflow-y-auto right-0  bg-grayLight dark:bg-grayDark  rounded-md px-4 py-4 flex flex-col gap-2  shadow-md items-center z-10"
+            className="absolute top-full max-h-96 w-96 overflow-y-auto right-0  bg-grayLight dark:bg-grayDark text-grayDark dark:text-blue-50 rounded-md px-4 py-4 flex flex-col gap-2  shadow-md items-center z-10"
           >
             {notifications.map((notification) => {
               switch (notification.type) {

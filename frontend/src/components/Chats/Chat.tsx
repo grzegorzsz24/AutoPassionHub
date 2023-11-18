@@ -48,7 +48,6 @@ const Chat: FC<ChatProps> = ({ chat, currentChat, setCurrentChat }) => {
           <div
             onClick={() => {
               setCurrentChat(chat);
-              console.log("xddd");
             }}
             className={`px-2 py-4  w-full  dark:border-primaryDark flex gap-6  group  transition-all rounded-md ${
               currentChat && currentChat.id === chat.id
@@ -56,11 +55,11 @@ const Chat: FC<ChatProps> = ({ chat, currentChat, setCurrentChat }) => {
                 : "cursor-pointer hover:bg-blue-600 hover:text-blue-50"
             }`}
           >
-            <div className="relative">
+            <div className="relative h-12 w-12 shrink-0">
               <img
                 src={user.imageUrl}
                 alt="profile"
-                className="rounded-full h-12 w-12"
+                className="rounded-full "
               />
               {active && (
                 <div className="absolute top-[-4px] right-[-4px] w-4 h-4 rounded-full bg-green-500"></div>

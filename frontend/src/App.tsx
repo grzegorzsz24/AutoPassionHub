@@ -47,10 +47,12 @@ function App() {
   };
 
   useEffect(() => {
+    if (!user.userId) return;
     fetchAllNotifications();
   }, [user]);
 
   useEffect(() => {
+    if (!user.userId) return;
     fetchAllChats();
   }, [user]);
 

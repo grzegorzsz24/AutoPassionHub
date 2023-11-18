@@ -25,7 +25,6 @@ const CommentNotification: FC<CommentNotificationProps> = ({
   const navigate = useNavigate();
   const [user, setUser] = useState<UserModel | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  console.log(notification);
 
   const fetchUser = async () => {
     if (!notification) return;
@@ -77,7 +76,7 @@ const CommentNotification: FC<CommentNotificationProps> = ({
                 alt="user image"
                 className=" rounded-full"
               />
-              <div className="absolute bottom-[-4px] right-[-4px] bg-green-500 text-white rounded-full p-1">
+              <div className="absolute bottom-[-4px] right-[-4px] bg-orange-500 text-white rounded-full p-1">
                 {typeOfContent === "POST" ? (
                   <FaComment className="text-md" />
                 ) : (

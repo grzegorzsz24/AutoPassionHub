@@ -64,7 +64,11 @@ const Post: FC<PostProps> = ({
       if (data.status !== "ok") {
         throw new Error(data.message);
       }
-      if (stompClient && isLiked === false) {
+      if (
+        stompClient &&
+        isLiked === false &&
+        userId !== Number(loggedInUserId)
+      ) {
         stompClient.publish({
           destination: `/app/notification`,
           body: JSON.stringify({

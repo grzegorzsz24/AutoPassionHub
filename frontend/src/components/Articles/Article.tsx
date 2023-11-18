@@ -38,7 +38,11 @@ const Article: FC<ArticleProps> = ({ article }) => {
       if (data.status !== "ok") {
         throw new Error(data.message);
       }
-      if (stompClient && isLiked === false) {
+      if (
+        stompClient &&
+        isLiked === false &&
+        article.userId !== Number(loggedInUserId)
+      ) {
         stompClient.publish({
           destination: `/app/notification`,
           body: JSON.stringify({
