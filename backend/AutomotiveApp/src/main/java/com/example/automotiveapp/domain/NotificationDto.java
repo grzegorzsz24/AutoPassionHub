@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class NotificationDto {
+    private Long notificationId;
     private Long userTriggeredId;
     private Long receiverId;
     private String content;

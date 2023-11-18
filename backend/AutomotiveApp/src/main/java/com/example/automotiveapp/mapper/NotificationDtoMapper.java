@@ -24,6 +24,7 @@ public class NotificationDtoMapper {
         notificationDto.setUserTriggeredId(notification.getUserTriggered().getId());
         notificationDto.setReceiverId(notification.getRecevier().getId());
         notificationDto.setType(String.valueOf(notification.getType()));
+        notificationDto.setNotificationId(notification.getId());
         return notificationDto;
     }
 
