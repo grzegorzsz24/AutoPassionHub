@@ -32,6 +32,7 @@ public class NotificationService {
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono powiadomienia"));
         notification.setRead(true);
+        notificationRepository.save(notification);
         return NotificationDtoMapper.map(notification);
     }
 }
