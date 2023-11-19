@@ -97,12 +97,12 @@ const AddPost: FC<AddPostProps> = ({ addPostToList }) => {
   };
 
   return (
-    <div className="bg-white dark:bg-primaryDark2 text-primaryDark dark:text-blue-50 rounded-md  py-4 max-w-2xl w-full shadow-md ">
-      <div className="flex gap-6 px-4">
+    <div className="bg-white dark:bg-primaryDark2 text-primaryDark dark:text-blue-50 sm:rounded-md  py-4 max-w-2xl w-full shadow-md ">
+      <div className="flex gap-2 sm:gap-6 px-2 sm:px-4">
         <img
           src={imageUrl}
           alt="Your profile picture"
-          className="w-12 h-12 rounded-full shadow-md"
+          className="w-8 h-8 sm:w-12 sm:h-12 rounded-full shadow-md"
         />
         <TextareaAutosize
           value={postText}
@@ -110,7 +110,7 @@ const AddPost: FC<AddPostProps> = ({ addPostToList }) => {
           //   maxLength={300}
           minRows={2}
           placeholder={`Co słychać, ${firstName}?`}
-          className="bg-transparent resize-none w-full outline-none border-none rounded-md overflow-auto py-2 px-2 mb-2 focus:ring-2 focus:ring-blue-600"
+          className="bg-transparent resize-none w-full outline-none border-none rounded-md overflow-auto p-2 mb-2 focus:ring-2 focus:ring-blue-600 text-sm sm:text-md"
         />
       </div>
 
@@ -122,14 +122,14 @@ const AddPost: FC<AddPostProps> = ({ addPostToList }) => {
           />
         </div>
       )}
-      <div className="px-4">
-        <label className=" flex flex-col items-center gap-6 py-2 border-2 border-blue-600 my-4 rounded-md cursor-pointer">
+      <div className="px-2 sm:px-4">
+        <label className=" flex flex-col items-center gap-6 py-2 border-2 border-blue-600 my-2 sm:my-4 rounded-md cursor-pointer">
           <div className="flex flex-col items-center">
-            <MdPhoto className="text-2xl mb-2" />
-            <span className="text-sm font-bold">Dodaj zdjęcia</span>
+            <MdPhoto className="text-lg sm:text-2xl mb-2" />
+            <span className="text-xs sm:text-sm font-bold">Dodaj zdjęcia</span>
             <span className="text-xs">(Maksymalnie 5 zdjęć)</span>
             {selectedImages.length > 0 && (
-              <span className="my-4 text-sm">
+              <span className="my-4 text-xs sm:text-sm">
                 Wybrano {selectedImages.length}{" "}
                 {selectedImages.length === 1
                   ? "zdjęcie"

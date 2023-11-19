@@ -50,7 +50,7 @@ const UserProfileButton = () => {
 
   return (
     <div
-      className="relative"
+      className="relative shrink-0"
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
     >

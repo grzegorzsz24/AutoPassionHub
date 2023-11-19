@@ -29,7 +29,7 @@ const ChatAside: FC<ChatAsideProps> = ({
 
   return (
     <motion.div
-      className="bg-white flex flex-col dark:bg-primaryDark2 shadow-md rounded-md overflow-hidden "
+      className="bg-white flex flex-col dark:bg-primaryDark2 shadow-md rounded-md overflow-hidden shrink-0"
       initial="hidden"
       animate="visible"
       variants={asideVariants}

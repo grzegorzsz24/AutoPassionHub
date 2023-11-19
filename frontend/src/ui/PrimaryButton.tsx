@@ -27,13 +27,13 @@ const PrimaryButton: FC<PrimaryButtonProps> = ({
       buttonClasses += " py-1 px-2 text-xs";
       break;
     case "sm":
-      buttonClasses += " py-1 px-2 text-sm";
+      buttonClasses += " py-1 px-2 text-xs sm:text-sm";
       break;
     case "lg":
-      buttonClasses += " py-2 px-8 text-xl";
+      buttonClasses += " py-2 px-8 text-md sm:text-xl";
       break;
     default:
-      buttonClasses += " py-2 px-4 text-md";
+      buttonClasses += " py-2 px-4 text-sm sm:text-md";
   }
 
   switch (color) {

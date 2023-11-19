@@ -39,7 +39,7 @@ const UserProfile: FC<UserProfileProps> = ({
             size === "small"
               ? "w-8 h-8"
               : size === "medium"
-              ? "w-12 h-12"
+              ? "w-8 h-8 sm:w-12 sm:h-12"
               : "w-14 h-14"
           }`}
           onClick={navigateToUserPage}
@@ -56,7 +56,7 @@ const UserProfile: FC<UserProfileProps> = ({
                 size === "small"
                   ? "text-sm"
                   : size === "medium"
-                  ? "text-md"
+                  ? "text-sm sm:text-md"
                   : "text-xl"
               }`}
               onClick={navigateToUserPage}
@@ -68,7 +68,7 @@ const UserProfile: FC<UserProfileProps> = ({
                 size === "small"
                   ? "text-xs"
                   : size === "medium"
-                  ? "text-sm"
+                  ? "text-xs sm:text-sm"
                   : "text-md"
               }`}
             >
@@ -81,7 +81,7 @@ const UserProfile: FC<UserProfileProps> = ({
                 size === "small"
                   ? "text-[0.5rem]"
                   : size === "medium"
-                  ? "text-[0.6rem]"
+                  ? "text-[0.5rem] sm:text-[0.6rem]"
                   : "text-[0.8rem]"
               }`}
             >

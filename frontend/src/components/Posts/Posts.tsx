@@ -111,8 +111,8 @@ const Posts = () => {
   }, []);
 
   return (
-    <div className="bg-gears-light dark:bg-gears-dark bg-no-repeat bg-contain bg-center gap-8 items-center overflow-y-auto h-full flex-grow px-4">
-      <div className="flex flex-col items-center gap-12 py-12">
+    <div className="bg-gears-light dark:bg-gears-dark bg-no-repeat bg-contain bg-center gap-8 items-center overflow-y-auto h-full flex-grow ">
+      <div className="flex flex-col items-center gap-6 sm:gap-12 py-6 sm:py-12">
         {!isLoading && <AddPost addPostToList={addPostToList} />}
         {isLoading && (
           <>

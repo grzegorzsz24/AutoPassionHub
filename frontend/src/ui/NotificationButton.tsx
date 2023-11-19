@@ -65,7 +65,7 @@ const NotificationButton = () => {
             animate="visible"
             exit="hidden"
             variants={menuVariants}
-            className="absolute top-full max-h-96 w-96 overflow-y-auto right-0  bg-grayLight dark:bg-grayDark text-grayDark dark:text-blue-50 rounded-md px-4 py-4 flex flex-col gap-2  shadow-md items-center z-10"
+            className="absolute top-full max-h-96 w-[80vw] sm:w-96 overflow-y-auto right-[-10px] bg-grayLight dark:bg-grayDark text-grayDark dark:text-blue-50 rounded-md px-4 py-4 flex flex-col gap-2  shadow-md items-center z-10"
           >
             {notifications.map((notification) => {
               switch (notification.type) {

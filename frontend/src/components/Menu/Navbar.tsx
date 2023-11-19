@@ -13,11 +13,13 @@ const Navbar = () => {
       </div>
       <SearchBar />
       <div className="flex items-center gap-8 xl:gap-16">
-        <div className="hidden sm:block">
-          <MessagesButton />
-        </div>
-        <div className="hidden sm:block">
-          <NotificationButton />
+        <div className="flex items-center gap-6">
+          <div className="hidden sm:block">
+            <MessagesButton />
+          </div>
+          <div className="hidden sm:block">
+            <NotificationButton />
+          </div>
         </div>
         <UserProfileButton />
       </div>

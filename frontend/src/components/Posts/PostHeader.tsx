@@ -60,7 +60,7 @@ const PostHeader: FC<PostHeaderProps> = ({
   };
 
   return (
-    <div className=" py-4 px-4 flex items-center justify-between">
+    <div className=" py-4 px-2 sm:px-4 flex items-center justify-between">
       <UserProfile
         size="medium"
         imageUrl={avatar}
@@ -75,12 +75,12 @@ const PostHeader: FC<PostHeaderProps> = ({
         onMouseLeave={onMouseLeaveHandler}
       >
         <p className="text-primaryDark dark:text-blue-100">
-          <BiDotsHorizontalRounded className="text-2xl" />
+          <BiDotsHorizontalRounded className="text-lg sm:text-2xl" />
         </p>
         <AnimatePresence>
           {optionsAreShown && (
             <motion.div
-              className="absolute z-40 right-0 bg-white text-primaryDark dark:bg-primaryDark2 dark:text-blue-50  py-4 px-8 flex flex-col gap-2 text-md rounded-md shadow-md"
+              className="absolute z-40 right-0 bg-white text-primaryDark dark:bg-primaryDark2 dark:text-blue-50  py-4 px-2 sm:px-8 flex flex-col gap-2 text-md rounded-md shadow-md"
               initial="hidden"
               animate="visible"
               exit="hidden"

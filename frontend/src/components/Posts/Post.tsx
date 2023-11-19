@@ -239,7 +239,7 @@ const Post: FC<PostProps> = ({
         />
       )}
       {imageUrls.length > 0 && (
-        <div className="h-96">
+        <div className="h-64 sm:h-96">
           <Gallery images={imageUrls} />
         </div>
       )}
