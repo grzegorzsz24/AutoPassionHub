@@ -33,7 +33,7 @@ const PrimaryButton: FC<PrimaryButtonProps> = ({
       buttonClasses += " py-2 px-8 text-md sm:text-xl";
       break;
     default:
-      buttonClasses += " py-2 px-4 text-sm sm:text-md";
+      buttonClasses += " py-1 sm:py-2 px-4 text-sm sm:text-md";
   }
 
   switch (color) {
