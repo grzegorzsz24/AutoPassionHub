@@ -59,7 +59,7 @@ const AppLayout = () => {
   });
 
   return (
-    <div className="bg-blue-50 dark:bg-primaryDark min-h-screen  w-full sm:h-screen text-primaryDark overflow-auto">
+    <div className="bg-blue-50 dark:bg-primaryDark min-h-screen  w-full sm:h-screen h-full text-primaryDark overflow-auto ">
       {<Outlet />}
       {isLoading && <LoadingSpinner />}
     </div>

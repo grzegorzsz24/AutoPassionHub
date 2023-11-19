@@ -101,15 +101,15 @@ const ChatConversation: FC<ChatConversationProps> = ({ currentChat }) => {
   }, [currentChat]);
 
   return (
-    <div className="p-4 flex flex-col h-full">
+    <div className="p-2 md:p-4 flex flex-col h-96 md:h-full ">
       {!currentChat && (
-        <div className=" h-full flex items-center justify-center text-lg">
+        <div className=" h-full flex items-center justify-center md:text-lg">
           Kliknij czat aby rozpocząć
         </div>
       )}
       {currentChat && (
         <>
-          <div className="px-4 pb-4 border-b-2 dark:border-blue-600">
+          <div className="px-2 md:px-4 pb-4 border-b-2 dark:border-blue-600">
             {user && (
               <UserProfile
                 imageUrl={user.imageUrl}
