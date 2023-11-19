@@ -86,4 +86,9 @@ public class PostController {
         Page<PostDto> paginatedUserPosts = postService.getUserPosts(userId, pageable);
         return ResponseEntity.ok(paginatedUserPosts.getContent());
     }
+
+    @GetMapping
+    public ResponseEntity<PostDto> getPostById(@RequestParam Long postId) {
+        return ResponseEntity.ok(postService.findPostById(postId).get());
+    }
 }
