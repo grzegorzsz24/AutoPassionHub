@@ -48,7 +48,7 @@ public class PostController {
     @PatchMapping("/{id}")
     public ResponseEntity<?> updatePost(@PathVariable Long id, @RequestBody JsonMergePatch patch) {
         try {
-            PostDto postDto = postService.findPostById(id).orElseThrow();
+            PostDto postDto = postService.findPostById(id);
             PostDto postPatched = applyPatch(postDto, patch);
             postService.updatePost(postPatched);
 
@@ -68,7 +68,7 @@ public class PostController {
 
     @GetMapping("/{postId}")
     public ResponseEntity<PostDto> getPostById(@PathVariable Long postId) {
-        return ResponseEntity.ok(postService.findPostById(postId).get());
+        return ResponseEntity.ok(postService.findPostById(postId));
     }
 
     @GetMapping("/friends")

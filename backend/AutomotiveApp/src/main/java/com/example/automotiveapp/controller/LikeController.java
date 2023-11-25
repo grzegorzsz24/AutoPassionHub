@@ -32,8 +32,7 @@ public class LikeController {
 
     @GetMapping("/{postId}")
     public ResponseEntity<List<LikeDto>> getAllPostLikes(@PathVariable Long postId) {
-        postService.findPostById(postId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        postService.findPostById(postId);
         return ResponseEntity.ok(likeService.getPostLikes(postId));
     }
 

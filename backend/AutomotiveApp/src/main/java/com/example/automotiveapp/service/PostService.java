@@ -79,11 +79,11 @@ public class PostService {
     }
 
 
-    public Optional<PostDto> findPostById(long id) {
-        if (postRepository.findById(id).isEmpty()) {
-            throw new ResourceNotFoundException("Nie znaleziono posta");
-        }
-        return postRepository.findById(id).map(PostDtoMapper::map);
+    public PostDto findPostById(long id) {
+        PostDto postDto = PostDtoMapper.map(postRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono postu")));
+        postDto.setLiked(likeRepository.getLikeByUser_EmailAndPostId(SecurityUtils.getCurrentUserEmail(), id).isPresent());
+        return postDto;
     }
 
     public void updatePost(PostDto postToUpdate) {
