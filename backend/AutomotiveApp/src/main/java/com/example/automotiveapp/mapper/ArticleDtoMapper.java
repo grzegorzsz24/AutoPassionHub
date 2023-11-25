@@ -22,6 +22,7 @@ public class ArticleDtoMapper {
         articleDto.setUser(article.getUser().getNickname());
         articleDto.setFirstName(article.getUser().getFirstName());
         articleDto.setLastName(article.getUser().getLastName());
+        articleDto.setUserId(article.getUser().getId());
         articleDto.setUserImageUrl("http://localhost:8080/images/" + article.getUser().getFile().getFileUrl());
         return articleDto;
     }

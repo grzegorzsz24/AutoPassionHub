@@ -1,6 +1,7 @@
 package com.example.automotiveapp.controller;
 
 import com.example.automotiveapp.domain.request.PostSaveRequest;
+import com.example.automotiveapp.dto.ForumDto;
 import com.example.automotiveapp.dto.PostDto;
 import com.example.automotiveapp.service.PostService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -47,7 +48,7 @@ public class PostController {
     @PatchMapping("/{id}")
     public ResponseEntity<?> updatePost(@PathVariable Long id, @RequestBody JsonMergePatch patch) {
         try {
-            PostDto postDto = postService.findPostById(id).orElseThrow();
+            PostDto postDto = postService.findPostById(id);
             PostDto postPatched = applyPatch(postDto, patch);
             postService.updatePost(postPatched);
 
@@ -63,6 +64,11 @@ public class PostController {
         JsonNode postNode = objectMapper.valueToTree(postDto);
         JsonNode postPatchedNode = patch.apply(postNode);
         return objectMapper.treeToValue(postPatchedNode, PostDto.class);
+    }
+
+    @GetMapping("/{postId}")
+    public ResponseEntity<PostDto> getPostById(@PathVariable Long postId) {
+        return ResponseEntity.ok(postService.findPostById(postId));
     }
 
     @GetMapping("/friends")

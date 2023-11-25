@@ -1,12 +1,16 @@
 package com.example.automotiveapp.service;
 
+import com.example.automotiveapp.domain.Article;
 import com.example.automotiveapp.domain.Like;
 import com.example.automotiveapp.dto.ArticleDto;
 import com.example.automotiveapp.dto.LikeDto;
 import com.example.automotiveapp.dto.PostDto;
 import com.example.automotiveapp.exception.BadRequestException;
 import com.example.automotiveapp.exception.ResourceNotFoundException;
+import com.example.automotiveapp.mapper.ArticleDtoMapper;
 import com.example.automotiveapp.mapper.LikeDtoMapper;
+import com.example.automotiveapp.mapper.UserDtoMapper;
+import com.example.automotiveapp.repository.ArticleRepository;
 import com.example.automotiveapp.repository.LikeRepository;
 import com.example.automotiveapp.repository.PostRepository;
 import com.example.automotiveapp.service.utils.SecurityUtils;
@@ -24,6 +28,10 @@ public class LikeService {
     private final PostService postService;
     private final ArticleService articleService;
     private final PostRepository postRepository;
+    private final ArticleRepository articleRepository;
+    private final ArticleDtoMapper articleDtoMapper;
+    private final UserService userService;
+    private final UserDtoMapper userDtoMapper;
 
     public LikeDto saveLike(LikeDto likeDto) {
         if (likeDto.getPost() == null && likeDto.getArticle() == null) {
@@ -42,8 +50,7 @@ public class LikeService {
     }
 
     private void updatePostLike(Like like) {
-        PostDto likedPost = postService.findPostById(like.getPost().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono posta"));
+        PostDto likedPost = postService.findPostById(like.getPost().getId());
         Optional<Like> userLike = likeRepository.getLikeByUser_EmailAndPostId(SecurityUtils.getCurrentUserEmail(), like.getPost().getId());
         if (userLike.isPresent()) {
             likedPost.setLikesNumber(likedPost.getLikesNumber() - 1);
@@ -66,7 +73,9 @@ public class LikeService {
             likedArticle.setLikesNumber(likedArticle.getLikesNumber() + 1);
             likeRepository.save(like);
         }
-        articleService.updateArticle(likedArticle);
+        Article article = articleDtoMapper.map(likedArticle);
+        article.setUser(userDtoMapper.map(userService.findUserByNickname(likedArticle.getUser()).get()));
+        articleRepository.save(article);
     }
 
     public List<LikeDto> getPostLikes(Long postId) {

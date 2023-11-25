@@ -8,14 +8,17 @@ import {
   rejectFriendRequest,
 } from "../../services/friendService";
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
+import { useAppDispatch, useAppSelector } from "../../store/store";
 
 import PendingInvitationModel from "../../models/PendingInvitationModel";
 import PrimaryButton from "../../ui/PrimaryButton";
 import UserModel from "../../models/UserModel";
 import UserProfile from "../../ui/UserProfile";
+import { getAllChats } from "../../services/chatService";
 import { getUserById } from "../../services/userService";
 import handleError from "../../services/errorHandler";
-import { useAppDispatch } from "../../store/store";
+import { setChats } from "../../store/features/socketSlice";
+import { useStompClient } from "react-stomp-hooks";
 
 interface PendingInvitationProps {
   invitation: PendingInvitationModel;
@@ -26,9 +29,24 @@ const FriendInvitation: FC<PendingInvitationProps> = ({
   invitation,
   removeInvitationFromList,
 }) => {
+  const stompClient = useStompClient();
   const dispatch = useAppDispatch();
+  const { userId: loggedInUserId } = useAppSelector((state) => state.user);
 
   const [user, setUser] = useState<UserModel>();
+
+  const fetchAllChats = async () => {
+    try {
+      const response = await getAllChats();
+      if (response.status !== "ok") {
+        throw new Error(response.message);
+      }
+      console.log(response);
+      dispatch(setChats(response.data));
+    } catch (error) {
+      handleError(error);
+    }
+  };
 
   const acceptInvitation = async () => {
     try {
@@ -37,6 +55,19 @@ const FriendInvitation: FC<PendingInvitationProps> = ({
       if (data.status !== "ok") {
         throw new Error(data.message);
       }
+      if (stompClient) {
+        stompClient.publish({
+          destination: `/app/notification`,
+          body: JSON.stringify({
+            userTriggeredId: Number(loggedInUserId),
+            receiverId: invitation.sender,
+            content: "Użytkownik zaakceptował twoje zaproszenie do znajomych",
+            type: "INVITATION_ACCEPTED",
+            entityId: invitation.id,
+          }),
+        });
+      }
+      fetchAllChats();
       dispatch(
         addNotification({
           message: data.message,
@@ -110,17 +141,16 @@ const FriendInvitation: FC<PendingInvitationProps> = ({
     <div className="text-darkPrimary dark:text-blue-50">
       {user && (
         <div
-          className="flex items-center justify-between gap-4 w-full 2xl:w-2/3 overflow-y-auto py-4 px-6  rounded-md bg-white dark:bg-primaryDark2 shadow-md"
+          className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4 w-full 2xl:w-2/3 overflow-y-auto py-2 sm:py-4 px-4 sm:px-6  sm:rounded-md bg-white dark:bg-primaryDark2 shadow-md"
           key={user.id}
         >
           <UserProfile
-            size="large"
+            size="medium"
             imageUrl={user.imageUrl}
             firstName={user.firstName}
             lastName={user.lastName}
             nickname={user.nickname}
           />
-
           <div className="flex items-center gap-4">
             <PrimaryButton onClick={acceptInvitation} color="green">
               Akceptuj

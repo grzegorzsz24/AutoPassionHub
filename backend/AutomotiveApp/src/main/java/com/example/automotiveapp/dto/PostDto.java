@@ -24,4 +24,5 @@ public class PostDto {
     private String firstName;
     private String lastName;
     private String userImageUrl;
+    private Long userId;
 }

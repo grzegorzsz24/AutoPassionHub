@@ -30,6 +30,7 @@ public class PostDtoMapper {
         postDto.setFirstName(post.getUser().getFirstName());
         postDto.setLastName(post.getUser().getLastName());
         postDto.setUserImageUrl("http://localhost:8080/images/" + post.getUser().getFile().getFileUrl());
+        postDto.setUserId(post.getUser().getId());
         return postDto;
     }
 

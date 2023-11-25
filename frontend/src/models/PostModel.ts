@@ -3,6 +3,7 @@ interface PostModel {
   content: string;
   postedAt: string;
   file: string | null;
+  userId: number;
   user: string;
   imageUrls: string[];
   likesNumber: number;

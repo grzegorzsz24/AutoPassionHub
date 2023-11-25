@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import {
   NotificationStatus,
   addNotification,
@@ -9,6 +9,7 @@ import {
   editComment,
 } from "../../services/commentService";
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
+import { useAppDispatch, useAppSelector } from "../../store/store";
 
 import CommentModel from "../../models/CommentModel";
 import Comments from "./Comments";
@@ -21,7 +22,7 @@ import PostText from "./PostText";
 import { debounce } from "lodash";
 import handleError from "../../services/errorHandler";
 import { toggleLike } from "../../services/likeService";
-import { useAppDispatch } from "../../store/store";
+import { useStompClient } from "react-stomp-hooks";
 
 interface PostProps extends PostModel {
   deletePostHandler: (id: number) => void;
@@ -32,7 +33,7 @@ const Post: FC<PostProps> = ({
   id,
   content,
   postedAt,
-  // file,
+  userId,
   user,
   imageUrls,
   likesNumber,
@@ -44,13 +45,16 @@ const Post: FC<PostProps> = ({
   deletePostHandler,
   editPostHandler,
 }) => {
+  const stompClient = useStompClient();
   const dispatch = useAppDispatch();
+  const { userId: loggedInUserId } = useAppSelector((state) => state.user);
   const [editMode, setEditMode] = useState(false);
   const [isLiked, setIsLiked] = useState(liked);
   const [numberOfLikes, setNumberOfLikes] = useState(likesNumber);
   const [comments, setComments] = useState<CommentModel[]>([]);
   const [commentsAreLoading, setCommentsAreLoading] = useState(false);
   const [numberOfComments, setNumberOfComments] = useState(commentsNumber);
+  const postRef = useRef<HTMLDivElement>(null);
 
   const [commentsAreShown, setCommentsAreShown] = useState(false);
 
@@ -59,6 +63,22 @@ const Post: FC<PostProps> = ({
       const data = await toggleLike(id);
       if (data.status !== "ok") {
         throw new Error(data.message);
+      }
+      if (
+        stompClient &&
+        isLiked === false &&
+        userId !== Number(loggedInUserId)
+      ) {
+        stompClient.publish({
+          destination: `/app/notification`,
+          body: JSON.stringify({
+            userTriggeredId: Number(loggedInUserId),
+            receiverId: userId,
+            content: "Użytkownik polubił twój post",
+            type: "POST_LIKE",
+            entityId: id,
+          }),
+        });
       }
     } catch (error) {
       const newError = handleError(error);
@@ -155,6 +175,18 @@ const Post: FC<PostProps> = ({
       if (data.status !== "ok") {
         throw new Error(data.message);
       }
+      if (stompClient && userId !== Number(loggedInUserId)) {
+        stompClient.publish({
+          destination: `/app/notification`,
+          body: JSON.stringify({
+            userTriggeredId: Number(loggedInUserId),
+            receiverId: userId,
+            content: "Użytkownik skomentował twój post",
+            type: "POST_COMMENT",
+            entityId: id,
+          }),
+        });
+      }
       setComments((prev) => [data.comment, ...prev]);
       setNumberOfComments((prev) => prev + 1);
       dispatch(
@@ -176,8 +208,17 @@ const Post: FC<PostProps> = ({
     }
   };
 
+  useEffect(() => {
+    if (commentsAreShown && postRef.current) {
+      postRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [commentsAreShown]);
+
   return (
-    <div className="bg-white text-primaryDark dark:bg-primaryDark2 dark:text-blue-100 max-w-2xl w-full rounded-md shadow-md">
+    <div
+      className="bg-white text-primaryDark dark:bg-primaryDark2 dark:text-blue-100 max-w-2xl w-full rounded-md shadow-md"
+      ref={postRef}
+    >
       <PostHeader
         id={id}
         firstName={firstName}
@@ -198,7 +239,7 @@ const Post: FC<PostProps> = ({
         />
       )}
       {imageUrls.length > 0 && (
-        <div className="h-96">
+        <div className="h-64 sm:h-96">
           <Gallery images={imageUrls} />
         </div>
       )}

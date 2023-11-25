@@ -50,7 +50,7 @@ const UserProfileButton = () => {
 
   return (
     <div
-      className="relative"
+      className="relative shrink-0"
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
     >
@@ -60,13 +60,15 @@ const UserProfileButton = () => {
           className="w-10 h-10 3xl:w-14 3xl:h-14 rounded-full group-hover:ring-4 group-hover:ring-blue-600 transition-all"
           onClick={navigateToUserPage}
         />
-        <span
-          className="block font-semibold text-sm xl:text-lg"
-          onClick={navigateToUserPage}
-        >
-          {firstName} {lastName}
-        </span>
-        <FaChevronDown className="text-md xl:text-xl" />
+        <div className="hidden sm:flex items-center justify-center gap-2">
+          <span
+            className="block font-semibold text-sm xl:text-lg"
+            onClick={navigateToUserPage}
+          >
+            {firstName} {lastName}
+          </span>
+          <FaChevronDown className="text-md xl:text-xl" />
+        </div>
       </button>
       <AnimatePresence>
         {isHovering && (
@@ -75,7 +77,7 @@ const UserProfileButton = () => {
             animate="visible"
             exit="hidden"
             variants={menuVariants}
-            className="absolute top-full bg-grayLight dark:bg-grayDark w-full rounded-md px-2 py-4 flex flex-col gap-2 shadow-md items-center"
+            className="absolute top-full right-0 sm:left-0 bg-grayLight dark:bg-grayDark w-36 sm:w-full rounded-md px-8 py-4 flex flex-col gap-2 shadow-md items-center z-10"
           >
             <li className="hover:underline transition">
               <Link to="/me">Mój profil</Link>

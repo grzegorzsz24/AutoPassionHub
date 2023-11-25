@@ -98,13 +98,13 @@ const SearchBar: FC<SearchBarProps> = ({ placeholder = "Szukaj" }) => {
 
   return (
     <div
-      className="search-bar bg-grayLight dark:bg-grayDark flex items-center  rounded-md text-md xl:text-xl min-w-12 relative cursor-text focus-within:ring-2 focus-within:ring-blue-600 "
+      className=" bg-grayLight dark:bg-grayDark flex items-center grow max-w-md rounded-md text-sm xl:text-md 2xl:text-lg min-w-12 relative cursor-text focus-within:ring-2 focus-within:ring-blue-600 "
       onClick={setFocusOnInput}
     >
       <input
         type="text"
         placeholder={placeholder}
-        className="bg-grayLight dark:bg-grayDark px-2 xl:px-4 py-2 focus:outline-none  rounded-md xl:w-96"
+        className="bg-grayLight dark:bg-grayDark px-2 xl:px-4 py-2 focus:outline-none  rounded-md w-full"
         ref={searchInputRef}
         onChange={changeHandler}
         onFocus={focusHandler}

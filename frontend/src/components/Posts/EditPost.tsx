@@ -23,18 +23,13 @@ const EditPost: FC<EditPostProps> = ({
   };
 
   return (
-    <div className="flex flex-col gap-6 px-4">
-      {/* <textarea
-        value={content}
-        onChange={onChangeHandler}
-        className="bg-transparent resize-none w-full outline-none border-none rounded-md h-32  overflow-auto py-2 px-2 mb-2 focus:ring-2 focus:ring-blue-600"
-      /> */}
+    <div className="flex flex-col gap-2 sm:gap-6 px-2 sm:px-4">
       <TextareaAutosize
         value={content}
         onChange={onChangeHandler}
         //   maxLength={300}
         minRows={2}
-        className="bg-transparent resize-none w-full outline-none border-none rounded-md overflow-auto py-2 px-2 mb-2 focus:ring-2 focus:ring-blue-600"
+        className="bg-transparent resize-none w-full outline-none border-none rounded-md overflow-auto py-2 px-2 mb-2 focus:ring-2 focus:ring-blue-600 text-sm sm:text-md xl:text-lg"
       />
       <div className="flex flex-col gap-2 mb-2">
         <PrimaryButton

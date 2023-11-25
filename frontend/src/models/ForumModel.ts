@@ -3,6 +3,7 @@ interface ForumModel {
   title: string;
   content: string;
   createdAt: string;
+  userId: number;
   user: string;
   commentsNumber: number;
   firstName: string;

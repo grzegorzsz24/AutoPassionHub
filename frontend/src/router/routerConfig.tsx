@@ -6,6 +6,7 @@ import ArticlePage from "../pages/Articles/ArticlePage";
 import ArticlePageLayout from "../pages/Articles/ArticlePageLayout";
 import ArticlesPage from "../pages/Articles/ArticlesPage";
 import BookmarksPageLayout from "../pages/Bookmarks/BookmarksPageLayout";
+import ChatPage from "../pages/Chat/ChatPage";
 import EventPage from "../pages/Events/EventPage";
 import EventsPage from "../pages/Events/EventsPage";
 import EventsPageLayout from "../pages/Events/EventsPageLayout";
@@ -18,6 +19,7 @@ import MainPageLayout from "../pages/MainPageLayout";
 import MyArticlesPage from "../pages/Articles/MyArticlesPage";
 import MyForumsPage from "../pages/Forums/MyForumsPage";
 import OutletLayout from "../pages/OutletLayout";
+import PostPage from "../pages/Posts/PostPage";
 import ProtectedRoute from "./ProtectedRoute";
 import ReceivedInvitationsPage from "../pages/Friends/ReceivedInvitationsPage";
 import Redirect from "./Redirect";
@@ -48,6 +50,10 @@ const router = createBrowserRouter([
           {
             path: "/",
             element: <MainPage />,
+          },
+          {
+            path: "posts/:id",
+            element: <PostPage />,
           },
           {
             path: "/articles",
@@ -114,6 +120,10 @@ const router = createBrowserRouter([
                 element: <SentInvitationsPage />,
               },
             ],
+          },
+          {
+            path: "/chats",
+            element: <ChatPage />,
           },
           {
             path: "/bookmarks",

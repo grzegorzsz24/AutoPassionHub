@@ -30,6 +30,7 @@ public class ForumDtoMapper {
         forumDto.setUserImageUrl("http://localhost:8080/images/" + forum.getUser().getFile().getFileUrl());
         forumDto.setCarBrand(forum.getCar().getBrand());
         forumDto.setCarModel(forum.getCar().getModel());
+        forumDto.setUserId(forum.getUser().getId());
         return forumDto;
     }
 

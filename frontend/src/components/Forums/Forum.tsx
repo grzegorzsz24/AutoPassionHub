@@ -10,6 +10,7 @@ import {
   getForumComments,
   updateForumComment,
 } from "../../services/forumService";
+import { useAppDispatch, useAppSelector } from "../../store/store";
 
 import AddComment from "./AddComment";
 import Comment from "./Comment";
@@ -19,14 +20,17 @@ import ForumModel from "../../models/ForumModel";
 import ToogleBookmarkButton from "../../ui/ToogleBookmarkButton";
 import UserProfile from "../../ui/UserProfile";
 import handleError from "../../services/errorHandler";
-import { useAppDispatch } from "../../store/store";
+import { useStompClient } from "react-stomp-hooks";
 
 interface ForumProps {
   forum: ForumModel;
 }
 
 const Forum: FC<ForumProps> = ({ forum }) => {
+  const stompClient = useStompClient();
   const dispatch = useAppDispatch();
+  const { userId: loggedInUserId } = useAppSelector((state) => state.user);
+
   const [comments, setComments] = useState<CommentModel[]>([]);
   const [isLoadingAddComment, setIsLoadingAddComment] =
     useState<boolean>(false);
@@ -38,6 +42,18 @@ const Forum: FC<ForumProps> = ({ forum }) => {
       const data = await addCommentToForum(forum.id, content);
       if (data.status !== "ok") {
         throw new Error(data.message);
+      }
+      if (stompClient && Number(loggedInUserId) !== forum.userId) {
+        stompClient.publish({
+          destination: `/app/notification`,
+          body: JSON.stringify({
+            userTriggeredId: Number(loggedInUserId),
+            receiverId: forum.userId,
+            content: "Użytkownik skomentował twoje forum",
+            type: "FORUM_COMMENT",
+            entityId: forum.id,
+          }),
+        });
       }
       setComments((prevState) => [data.data, ...prevState]);
     } catch (error) {

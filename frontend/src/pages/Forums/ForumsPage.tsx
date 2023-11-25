@@ -67,7 +67,6 @@ const ForumsPage = () => {
 
       setForums(data.data);
       setTotalNumberOfForums(data.totalNumberOfForums);
-      console.log(data.totalNumberOfForums);
     } catch (error) {
       const newError = handleError(error);
       reduxDispatch(

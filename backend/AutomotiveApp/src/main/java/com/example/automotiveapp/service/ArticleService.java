@@ -49,6 +49,7 @@ public class ArticleService {
         ArticleDto articleDto = ArticleDtoMapper.map(article);
         articleDto.setLiked(likeRepository.getLikeByUser_EmailAndArticleId(SecurityUtils.getCurrentUserEmail(), article.getId()).isPresent());
         articleDto.setSaved(savedArticleRepository.findByUserEmailAndArticle_Id(SecurityUtils.getCurrentUserEmail(), article.getId()).isPresent());
+        articleDto.setUser(article.getUser().getNickname());
         return articleDto;
     }
 
