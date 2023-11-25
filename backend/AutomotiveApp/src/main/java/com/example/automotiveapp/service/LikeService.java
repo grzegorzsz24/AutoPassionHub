@@ -50,8 +50,7 @@ public class LikeService {
     }
 
     private void updatePostLike(Like like) {
-        PostDto likedPost = postService.findPostById(like.getPost().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono posta"));
+        PostDto likedPost = postService.findPostById(like.getPost().getId());
         Optional<Like> userLike = likeRepository.getLikeByUser_EmailAndPostId(SecurityUtils.getCurrentUserEmail(), like.getPost().getId());
         if (userLike.isPresent()) {
             likedPost.setLikesNumber(likedPost.getLikesNumber() - 1);

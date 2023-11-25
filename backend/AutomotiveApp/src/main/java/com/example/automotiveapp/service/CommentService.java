@@ -66,7 +66,7 @@ public class CommentService {
     }
 
     public List<CommentDto> findCommentsByPostId(Long postId) {
-        postService.findPostById(postId).orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono posta"));
+        postService.findPostById(postId);
         return commentRepository.findAllByPostId(postId).stream()
                 .map(CommentDtoMapper::map)
                 .toList();
