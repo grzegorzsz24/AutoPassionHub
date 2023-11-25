@@ -1,6 +1,7 @@
 package com.example.automotiveapp.controller;
 
 import com.example.automotiveapp.domain.request.PostSaveRequest;
+import com.example.automotiveapp.dto.ForumDto;
 import com.example.automotiveapp.dto.PostDto;
 import com.example.automotiveapp.service.PostService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -65,6 +66,11 @@ public class PostController {
         return objectMapper.treeToValue(postPatchedNode, PostDto.class);
     }
 
+    @GetMapping("/{postId}")
+    public ResponseEntity<PostDto> getPostById(@PathVariable Long postId) {
+        return ResponseEntity.ok(postService.findPostById(postId).get());
+    }
+
     @GetMapping("/friends")
     public ResponseEntity<List<PostDto>> getFriendsPosts(
             @RequestParam(defaultValue = "1") int page,
@@ -85,10 +91,5 @@ public class PostController {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<PostDto> paginatedUserPosts = postService.getUserPosts(userId, pageable);
         return ResponseEntity.ok(paginatedUserPosts.getContent());
-    }
-
-    @GetMapping
-    public ResponseEntity<PostDto> getPostById(@RequestParam Long postId) {
-        return ResponseEntity.ok(postService.findPostById(postId).get());
     }
 }
