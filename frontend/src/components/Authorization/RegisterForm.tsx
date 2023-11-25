@@ -5,17 +5,17 @@ import "./RegisterForm.css";
 import {
   NotificationStatus,
   addNotification,
-} from "../store/features/notificationSlice";
-import { startLoading, stopLoading } from "../store/features/loadingSlice";
+} from "../../store/features/notificationSlice";
+import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 
 import DatePicker from "react-date-picker";
-import FormInput from "../ui/FormInput";
-import PrimaryButton from "../ui/PrimaryButton";
-import Validator from "../utils/Validator";
-import handleError from "../services/errorHandler";
-import { registerUser } from "../services/userService";
-import { useAppDispatch } from "../store/store";
-import useInput from "../hooks/useInput";
+import FormInput from "../../ui/FormInput";
+import PrimaryButton from "../../ui/PrimaryButton";
+import Validator from "../../utils/Validator";
+import handleError from "../../services/errorHandler";
+import { registerUser } from "../../services/userService";
+import { useAppDispatch } from "../../store/store";
+import useInput from "../../hooks/useInput";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
@@ -139,7 +139,6 @@ const RegiserForm = () => {
         dateOfBirth: date,
         password,
       });
-      console.log(response);
       if (response.status === "ok") {
         dispatch(
           addNotification({

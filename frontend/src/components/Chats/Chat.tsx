@@ -16,7 +16,7 @@ const Chat: FC<ChatProps> = ({ chat, currentChat, setCurrentChat }) => {
   const { userId: loggedInUserId } = useAppSelector((state) => state.user);
   const [user, setUser] = useState<UserModel | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const active = true;
+  // const active = true;
 
   const fetchUser = async () => {
     setIsLoading(true);
@@ -61,9 +61,9 @@ const Chat: FC<ChatProps> = ({ chat, currentChat, setCurrentChat }) => {
                 alt="profile"
                 className="rounded-full "
               />
-              {active && (
+              {/* {active && (
                 <div className="absolute top-[-4px] right-[-4px] w-4 h-4 rounded-full bg-green-500"></div>
-              )}
+              )} */}
             </div>
             <div className="py-1 text-center md:text-left">
               <div className="font-bold  rounded text-xs sm:text-base">

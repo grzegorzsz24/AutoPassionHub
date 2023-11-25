@@ -27,12 +27,9 @@ const UserPage = () => {
   const [user, setUser] = useState<UserModel | null>(null);
   const [posts, setPosts] = useState<PostModel[]>([]);
 
-  console.log(`location.pathname: ${location.pathname}`);
-  console.log(`userNickname: ${userNickname}`);
-  console.log(`nicknameFromParams: ${nicknameFromParams}`);
   const nickname =
     location.pathname === "/me" ? userNickname : nicknameFromParams;
-  console.log(nickname);
+
   const getUserData = async () => {
     try {
       dispatch(startLoading());
@@ -41,7 +38,6 @@ const UserPage = () => {
         throw new Error(data.message);
       }
       setUser(data.user);
-      console.log(data.user);
     } catch (error) {
       const newError = handleError(error);
       dispatch(

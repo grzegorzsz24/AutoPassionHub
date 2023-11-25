@@ -26,7 +26,6 @@ function App() {
       if (response.status !== "ok") {
         throw new Error(response.message);
       }
-      console.log(response);
       dispatch(setChats(response.data));
     } catch (error) {
       handleError(error);
@@ -39,7 +38,6 @@ function App() {
       if (response.status !== "ok") {
         throw new Error(response.message);
       }
-      console.log(response);
       dispatch(setNotifications(response.notifications));
     } catch (error) {
       handleError(error);

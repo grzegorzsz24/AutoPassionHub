@@ -52,6 +52,9 @@ const CommentNotification: FC<CommentNotificationProps> = ({
       if (typeOfContent === "FORUM") {
         navigate(`/forums/${notification.entityId}`);
       }
+      if (typeOfContent === "POST") {
+        navigate(`/posts/${notification.entityId}`);
+      }
     } catch (error) {
       console.log(error);
     }

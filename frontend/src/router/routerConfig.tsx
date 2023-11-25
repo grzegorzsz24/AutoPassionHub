@@ -19,6 +19,7 @@ import MainPageLayout from "../pages/MainPageLayout";
 import MyArticlesPage from "../pages/Articles/MyArticlesPage";
 import MyForumsPage from "../pages/Forums/MyForumsPage";
 import OutletLayout from "../pages/OutletLayout";
+import PostPage from "../pages/Posts/PostPage";
 import ProtectedRoute from "./ProtectedRoute";
 import ReceivedInvitationsPage from "../pages/Friends/ReceivedInvitationsPage";
 import Redirect from "./Redirect";
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
           {
             path: "/",
             element: <MainPage />,
+          },
+          {
+            path: "posts/:id",
+            element: <PostPage />,
           },
           {
             path: "/articles",

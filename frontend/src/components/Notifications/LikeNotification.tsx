@@ -51,6 +51,9 @@ const LikeNotification: FC<LikeNotificationProps> = ({
       if (typeOfContent === "ARTICLE") {
         navigate(`/articles/${notification.entityId}`);
       }
+      if (typeOfContent === "POST") {
+        navigate(`/posts/${notification.entityId}`);
+      }
     } catch (error) {
       console.log(error);
     }

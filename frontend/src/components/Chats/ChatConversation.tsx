@@ -23,7 +23,6 @@ const ChatConversation: FC<ChatConversationProps> = ({ currentChat }) => {
   const stompClient = useStompClient();
   const { userId: loggedInUserId } = useAppSelector((state) => state.user);
   const [user, setUser] = useState<UserModel | null>(null);
-  console.log(currentChat);
   const [messages, setMessages] = useState<MessageModel[]>([]);
   useSubscription(`/user/${loggedInUserId}/queue/messages`, (message) =>
     setMessages((prev) => [...prev, JSON.parse(message.body)])

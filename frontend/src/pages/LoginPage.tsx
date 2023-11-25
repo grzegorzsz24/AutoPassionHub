@@ -1,5 +1,5 @@
 import AuthorizationLayout from "./AuthorizationLayout";
-import LoginForm from "../components/LoginForm";
+import LoginForm from "../components/Authorization/LoginForm";
 import OutlineButton from "../ui/OutlineButton";
 import { useNavigate } from "react-router-dom";
 

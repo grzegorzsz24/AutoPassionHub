@@ -48,6 +48,31 @@ const getPosts = async () => {
   }
 };
 
+const getPostById = async (id: number) => {
+  const formData = new FormData();
+  formData.append("postId", String(id));
+  try {
+    const response = await fetch(`${API_URL}/user/posts/${id}`, {
+      method: "GET",
+      credentials: "include",
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message);
+    }
+
+    return {
+      status: "ok",
+      message: "Pobrano post.",
+      post: data,
+    };
+  } catch (error) {
+    return createErrorResponse(error);
+  }
+};
+
 const getUserPosts = async (id: number) => {
   try {
     const response = await fetch(`${API_URL}/user/posts/user?userId=${id}`, {
@@ -107,4 +132,11 @@ const editPost = async (id: number, content: string) => {
   }
 };
 
-export { createPost, getPosts, getUserPosts, deletePost, editPost };
+export {
+  createPost,
+  getPosts,
+  getPostById,
+  getUserPosts,
+  deletePost,
+  editPost,
+};

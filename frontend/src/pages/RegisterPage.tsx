@@ -1,6 +1,6 @@
 import AuthorizationLayout from "./AuthorizationLayout";
 import OutlineButton from "../ui/OutlineButton";
-import RegisterForm from "../components/RegisterForm";
+import RegisterForm from "../components/Authorization/RegisterForm";
 import { useNavigate } from "react-router-dom";
 
 const RegisterPage = () => {
