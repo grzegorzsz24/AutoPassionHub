@@ -7,15 +7,14 @@ import com.example.automotiveapp.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class MessageService {
     private final MessageRepository messageRepository;
     private final ChannelService channelService;
+
     public Message saveMessage(Message message) {
         return messageRepository.save(message);
     }

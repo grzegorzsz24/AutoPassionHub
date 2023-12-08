@@ -32,9 +32,9 @@ public class NotificationDtoMapper {
         Notification notification = new Notification();
         BeanUtils.copyProperties(notificationDto, notification);
         User userTriggered = userRepository.findById(notificationDto.getUserTriggeredId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika"));
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika"));
         User receiver = userRepository.findById(notificationDto.getReceiverId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika"));
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika"));
         notification.setUserTriggered(userTriggered);
         notification.setRecevier(receiver);
         notification.setCreatedAt(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));

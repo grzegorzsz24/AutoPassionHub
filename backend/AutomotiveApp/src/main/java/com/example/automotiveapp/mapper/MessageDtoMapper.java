@@ -1,6 +1,5 @@
 package com.example.automotiveapp.mapper;
 
-import com.example.automotiveapp.domain.Channel;
 import com.example.automotiveapp.domain.Message;
 import com.example.automotiveapp.domain.User;
 import com.example.automotiveapp.dto.MessageDto;
@@ -8,15 +7,12 @@ import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.repository.ChannelRepository;
 import com.example.automotiveapp.repository.UserRepository;
 import com.example.automotiveapp.service.ChannelService;
-import com.example.automotiveapp.service.utils.SecurityUtils;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

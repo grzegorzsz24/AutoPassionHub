@@ -1,6 +1,7 @@
 package com.example.automotiveapp.controller;
 
 import com.example.automotiveapp.dto.EventDto;
+import com.example.automotiveapp.dto.ReportDto;
 import com.example.automotiveapp.reponse.ApiResponse;
 import com.example.automotiveapp.reponse.EventResponse;
 import com.example.automotiveapp.service.EventService;
@@ -43,5 +44,10 @@ public class EventController {
     public ResponseEntity<ApiResponse> deleteEvent(@RequestParam Long eventId) {
         eventService.deleteEvent(eventId);
         return ResponseEntity.ok(new ApiResponse("Wydarzenie zostało usunięte", HttpStatus.OK));
+    }
+
+    @PostMapping("/report")
+    public ResponseEntity<ReportDto> reportEvent(@RequestBody ReportDto reportDto) {
+        return ResponseEntity.ok(eventService.reportEvent(reportDto));
     }
 }

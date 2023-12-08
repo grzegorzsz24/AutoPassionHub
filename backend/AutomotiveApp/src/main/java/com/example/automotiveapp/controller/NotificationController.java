@@ -1,8 +1,6 @@
 package com.example.automotiveapp.controller;
 
-import com.example.automotiveapp.domain.Notification;
 import com.example.automotiveapp.domain.NotificationDto;
-import com.example.automotiveapp.mapper.NotificationDtoMapper;
 import com.example.automotiveapp.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
