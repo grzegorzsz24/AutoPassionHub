@@ -1,5 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
+type UserRole = "USER" | "ADMIN";
+
 export interface UserState {
   userId: string;
   firstName: string;
@@ -9,6 +11,7 @@ export interface UserState {
   imageUrl: string;
   cookieExpirationDate: string;
   publicProfile: boolean;
+  role: UserRole;
 }
 
 const initialState: UserState = {
@@ -20,6 +23,7 @@ const initialState: UserState = {
   imageUrl: "",
   cookieExpirationDate: "1970-01-01",
   publicProfile: false,
+  role: "USER",
 };
 
 if (localStorage.getItem("MotoSplotUser")) {
@@ -32,6 +36,7 @@ if (localStorage.getItem("MotoSplotUser")) {
   initialState.imageUrl = user.imageUrl;
   initialState.cookieExpirationDate = user.cookieExpirationDate;
   initialState.publicProfile = user.publicProfile;
+  initialState.role = user.role;
 }
 
 const clearLocalStorage = () => {
@@ -51,6 +56,7 @@ const UserSlice = createSlice({
       state.imageUrl = action.payload.imageUrl;
       state.cookieExpirationDate = action.payload.cookieExpirationDate;
       state.publicProfile = action.payload.publicProfile;
+      state.role = action.payload.role;
       localStorage.setItem("MotoSplotUser", JSON.stringify(action.payload));
     },
     updateUser(state, action: PayloadAction<Partial<UserState>>) {
@@ -84,6 +90,8 @@ const UserSlice = createSlice({
       state.nickname = "";
       state.imageUrl = "";
       state.cookieExpirationDate = "1970-01-01";
+      state.publicProfile = false;
+      state.role = "USER";
       clearLocalStorage();
     },
     updateUserImage(state, action: PayloadAction<string>) {
