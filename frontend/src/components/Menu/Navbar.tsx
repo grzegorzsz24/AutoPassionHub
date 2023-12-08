@@ -12,11 +12,9 @@ const Navbar = () => {
         <Logo />
       </div>
       <SearchBar />
-      <div className="flex items-center gap-8 xl:gap-16">
-        <div className="hidden sm:block">
+      <div className="flex items-center gap-4 md:gap-8 xl:gap-16">
+        <div className="hidden sm:flex items-center gap-8">
           <MessagesButton />
-        </div>
-        <div className="hidden sm:block">
           <NotificationButton />
         </div>
         <UserProfileButton />

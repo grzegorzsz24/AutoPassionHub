@@ -51,7 +51,7 @@ const NewMessage: FC<NewMessageProps> = ({ sendMessage }) => {
   }, []);
 
   return (
-    <div className="px-4 pt-2 flex gap-8 relative">
+    <div className="px-2 sm:px-4 pt-2 flex flex-col sm:flex-row gap-2 sm:gap-8 relative">
       <TextareaAutosize
         className="bg-grayLight dark:bg-grayDark resize-none w-full outline-none border-none rounded-md overflow-auto py-2 px-2  focus:ring-2 focus:ring-blue-600"
         minRows={1}
@@ -62,13 +62,13 @@ const NewMessage: FC<NewMessageProps> = ({ sendMessage }) => {
       />
       <div
         ref={emojiIconRef}
-        className="text-4xl text-gray-600 dark:text-blue-50 cursor-pointer hover:text-blue-600 dark:hover:text-blue-600 transition-all hover:scale-110"
+        className="text-4xl text-gray-600 dark:text-blue-50 cursor-pointer hover:text-blue-600 dark:hover:text-blue-600 transition-all hover:scale-110 hidden sm:block"
         onClick={toggleEmojiPicker}
       >
         {showPicker ? <MdEmojiEmotions /> : <MdOutlineInsertEmoticon />}
       </div>
       {showPicker && (
-        <div className="absolute bottom-12 right-0 " ref={pickerRef}>
+        <div className="absolute bottom-12 right-0" ref={pickerRef}>
           <EmojiPicker
             onEmojiClick={(e) => addEmojiToMessage(e.emoji)}
             height={"400px"}

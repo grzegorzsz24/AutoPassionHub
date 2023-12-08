@@ -45,11 +45,11 @@ const PendingInvitation: FC<PendingInvitationProps> = ({ invitation }) => {
     <div className="text-darkPrimary dark:text-blue-50">
       {user && (
         <div
-          className="flex items-center justify-between gap-4 w-full 2xl:w-2/3 overflow-y-auto py-4 px-6  rounded-md bg-white dark:bg-primaryDark2 shadow-md"
+          className="flex items-center justify-between gap-2 sm:gap-4 w-full 2xl:w-2/3 overflow-y-auto py-2 sm:py-4 px-4 sm:px-6  sm:rounded-md bg-white dark:bg-primaryDark2 shadow-md"
           key={user.id}
         >
           <UserProfile
-            size="large"
+            size="medium"
             imageUrl={user.imageUrl}
             firstName={user.firstName}
             lastName={user.lastName}

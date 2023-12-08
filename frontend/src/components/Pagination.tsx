@@ -14,7 +14,6 @@ const Pagination: FC<PaginationProps> = ({
   goToPage,
 }) => {
   const pageButtons = [];
-  console.log(currentPage, totalPages);
 
   for (let i = 1; i <= totalPages; i++) {
     pageButtons.push(

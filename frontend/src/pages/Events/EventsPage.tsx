@@ -57,7 +57,6 @@ const EventsPage = () => {
       const data = await getEvents(page, size);
       if (data.status !== "ok") throw new Error(data.message);
       setEvents(data.events);
-      console.log(data.events);
       setTotalNumberOfEvents(data.eventsNumber);
     } catch (error) {
       const newError = handleError(error);

@@ -1,24 +1,21 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 import ChatModel from "../../models/ChatModel";
+import NotificationMessageModel from "../../models/NotificationMessageModel";
 import NotificationModel from "../../models/NotificationModel";
 
 export interface SocketState {
   connected: boolean;
   chats: ChatModel[];
   notifications: NotificationModel[];
-  onlineUsers: any[];
-  currentChat: any;
-  messages: any[];
+  messageNotifications: NotificationMessageModel[];
 }
 
 const initialState: SocketState = {
   connected: false,
   chats: [],
   notifications: [],
-  onlineUsers: [],
-  currentChat: {},
-  messages: [],
+  messageNotifications: [],
 };
 
 const SocketSlice = createSlice({
@@ -47,26 +44,44 @@ const SocketSlice = createSlice({
           : notification
       );
     },
-    setOnlineUsers(state, action: PayloadAction<any[]>) {
-      state.onlineUsers = action.payload;
+    setMessageNotifications(
+      state,
+      action: PayloadAction<NotificationMessageModel[]>
+    ) {
+      state.messageNotifications = action.payload;
     },
-    addOnlineUser(state, action: PayloadAction<any>) {
-      state.onlineUsers.push(action.payload);
-    },
-    removeOnlineUser(state, action: PayloadAction<string>) {
-      state.onlineUsers = state.onlineUsers.filter(
-        (user) => user.userId !== action.payload
+    addMessageNotification(
+      state,
+      action: PayloadAction<NotificationMessageModel>
+    ) {
+      const notificationExists = state.messageNotifications.find(
+        (notification) => notification.channelId === action.payload.channelId
       );
+      if (notificationExists) {
+        state.messageNotifications = state.messageNotifications.map(
+          (notification) =>
+            notification.channelId === action.payload.channelId
+              ? action.payload
+              : notification
+        );
+        return;
+      } else {
+        state.messageNotifications = [
+          action.payload,
+          ...state.messageNotifications,
+        ];
+      }
     },
-    setCurrentChat(state, action: PayloadAction<any>) {
-      state.currentChat = action.payload;
-      state.messages = [];
-    },
-    setMessages(state, action: PayloadAction<any[]>) {
-      state.messages = action.payload;
-    },
-    addMessage(state, action: PayloadAction<any>) {
-      state.messages.push(action.payload);
+    changeMessageNotificationStatusAsRead(
+      state,
+      action: PayloadAction<number>
+    ) {
+      state.messageNotifications = state.messageNotifications.map(
+        (notification) =>
+          notification.channelId === action.payload
+            ? { ...notification, read: true }
+            : notification
+      );
     },
   },
 });
@@ -78,12 +93,9 @@ export const {
   setNotifications,
   addNotification,
   changeNotificationStatusAsRead,
-  setOnlineUsers,
-  addOnlineUser,
-  removeOnlineUser,
-  setCurrentChat,
-  setMessages,
-  addMessage,
+  setMessageNotifications,
+  addMessageNotification,
+  changeMessageNotificationStatusAsRead,
 } = SocketSlice.actions;
 
 export default SocketSlice.reducer;

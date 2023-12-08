@@ -39,8 +39,8 @@ const UserProfile: FC<UserProfileProps> = ({
             size === "small"
               ? "w-8 h-8"
               : size === "medium"
-              ? "w-12 h-12"
-              : "w-14 h-14"
+              ? "w-8 h-8 sm:w-12 sm:h-12"
+              : "w-10 h-10 sm:w-14 sm:h-14"
           }`}
           onClick={navigateToUserPage}
         />
@@ -56,8 +56,8 @@ const UserProfile: FC<UserProfileProps> = ({
                 size === "small"
                   ? "text-sm"
                   : size === "medium"
-                  ? "text-md"
-                  : "text-xl"
+                  ? "text-sm sm:text-md"
+                  : "text-lg sm:text-xl"
               }`}
               onClick={navigateToUserPage}
             >
@@ -68,8 +68,8 @@ const UserProfile: FC<UserProfileProps> = ({
                 size === "small"
                   ? "text-xs"
                   : size === "medium"
-                  ? "text-sm"
-                  : "text-md"
+                  ? "text-xs sm:text-sm"
+                  : "text-sm sm:text-md"
               }`}
             >
               @{nickname}
@@ -81,7 +81,7 @@ const UserProfile: FC<UserProfileProps> = ({
                 size === "small"
                   ? "text-[0.5rem]"
                   : size === "medium"
-                  ? "text-[0.6rem]"
+                  ? "text-[0.5rem] sm:text-[0.6rem]"
                   : "text-[0.8rem]"
               }`}
             >
@@ -108,7 +108,7 @@ const UserProfile: FC<UserProfileProps> = ({
             ? "w-8 h-8"
             : size === "medium"
             ? "w-12 h-12"
-            : "w-14 h-14"
+            : "w-10 h-10 sm:w-14 sm:h-14"
         }`}
       />
       <div className="flex flex-col text-sm">
@@ -118,7 +118,7 @@ const UserProfile: FC<UserProfileProps> = ({
               ? "text-sm"
               : size === "medium"
               ? "text-md"
-              : "text-xl"
+              : "text-lg sm:text-xl"
           }`}
         >
           <p>
@@ -131,7 +131,7 @@ const UserProfile: FC<UserProfileProps> = ({
               ? "text-xs"
               : size === "medium"
               ? "text-sm"
-              : "text-md"
+              : "text-sm sm:text-md"
           }`}
         >
           {nickname}

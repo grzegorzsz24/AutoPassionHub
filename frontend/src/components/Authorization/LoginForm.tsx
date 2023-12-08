@@ -1,17 +1,17 @@
 import {
   NotificationStatus,
   addNotification,
-} from "../store/features/notificationSlice";
-import { startLoading, stopLoading } from "../store/features/loadingSlice";
+} from "../../store/features/notificationSlice";
+import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 
-import FormInput from "../ui/FormInput";
-import PrimaryButton from "../ui/PrimaryButton";
-import Validator from "../utils/Validator";
-import handleError from "../services/errorHandler";
-import { loginUser } from "../services/userService";
-import { setUser } from "../store/features/userSlice";
-import { useAppDispatch } from "../store/store";
-import useInput from "../hooks/useInput";
+import FormInput from "../../ui/FormInput";
+import PrimaryButton from "../../ui/PrimaryButton";
+import Validator from "../../utils/Validator";
+import handleError from "../../services/errorHandler";
+import { loginUser } from "../../services/userService";
+import { setUser } from "../../store/features/userSlice";
+import { useAppDispatch } from "../../store/store";
+import useInput from "../../hooks/useInput";
 import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {

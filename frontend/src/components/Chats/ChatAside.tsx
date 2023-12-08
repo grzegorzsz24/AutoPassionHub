@@ -29,16 +29,16 @@ const ChatAside: FC<ChatAsideProps> = ({
 
   return (
     <motion.div
-      className="bg-white flex flex-col dark:bg-primaryDark2 shadow-md rounded-md overflow-hidden "
+      className="bg-white flex flex-col dark:bg-primaryDark2 shadow-md md:rounded-md overflow-hidden shrink-0"
       initial="hidden"
       animate="visible"
       variants={asideVariants}
       transition={{ duration: 0.3, ease: "easeInOut" }}
     >
-      <h2 className="text-lg font-bold  text-blue-50 bg-blue-600 py-2 px-4">
+      <h2 className="md:text-lg font-bold  text-blue-50 bg-blue-600 py-1 sm:py-2 px-2 sm:px-4">
         Użytkownicy
       </h2>
-      <div className="flex flex-col p-4 mr-2 grow gap-2 overflow-y-auto">
+      <div className="flex md:flex-col justify-center md:justify-start p-2 md:p-4 mr-2 grow gap-2 overflow-y-auto ">
         {chats.length === 0 && (
           <div className="flex flex-col gap-4 items-center p-6">
             <p>Brak znajomych</p>

@@ -51,6 +51,9 @@ const LikeNotification: FC<LikeNotificationProps> = ({
       if (typeOfContent === "ARTICLE") {
         navigate(`/articles/${notification.entityId}`);
       }
+      if (typeOfContent === "POST") {
+        navigate(`/posts/${notification.entityId}`);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -65,10 +68,10 @@ const LikeNotification: FC<LikeNotificationProps> = ({
       {isLoading && <NotificationSkeleton />}
       {!isLoading && user && (
         <div
-          className="flex items-center justify-between gap-2 w-full hover:bg-blue-600 hover:text-blue-50 p-2 rounded-md transition-all cursor-pointer"
+          className="flex items-center justify-between  w-full hover:bg-blue-600 hover:text-blue-50 p-2 rounded-md transition-all cursor-pointer"
           onClick={handleNotificationClick}
         >
-          <div className="flex gap-4 w-max grow">
+          <div className="flex items-center justify-start gap-4 w-max grow">
             <div className=" flex items-center justify-center  relative  w-10 h-10 shrink-0">
               <img
                 src={user?.imageUrl}

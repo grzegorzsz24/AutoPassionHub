@@ -24,14 +24,14 @@ const ChatPage = () => {
   };
 
   return (
-    <div className="h-full flex ">
-      <div className="m-8 flex gap-8 grow  text-primaryDark2 dark:text-blue-50">
+    <div className="flex h-full">
+      <div className="my-4 md:m-6 lg:m-8 flex flex-col md:flex-row  gap-4 md:gap-8 grow  text-primaryDark2 dark:text-blue-50 overflow-y-auto">
         <ChatAside
           chats={chats}
           currentChat={currentChat}
           setCurrentChat={setCurrentChatHandler}
         />
-        <div className="bg-white dark:bg-primaryDark2 shadow-md grow rounded-md">
+        <div className="bg-white dark:bg-primaryDark2 shadow-md grow rounded-md h-full">
           <ChatConversation currentChat={currentChat} />
         </div>
       </div>

@@ -27,13 +27,13 @@ const OutlineButton: FC<OutlineButtonProps> = ({
       buttonClasses += " py-1 px-2 text-xs";
       break;
     case "sm":
-      buttonClasses += " py-1 px-2 text-sm";
+      buttonClasses += " py-1 px-2 text-xs sm:text-sm";
       break;
     case "lg":
-      buttonClasses += " py-2 px-16 text-xl";
+      buttonClasses += " py-2 px-16 text-lg sm:text-xl";
       break;
     default:
-      buttonClasses += " py-2 px-4 text-lg";
+      buttonClasses += " py-2 px-4 text-md sm:text-lg";
   }
 
   switch (color) {

@@ -5,7 +5,7 @@ interface NoContentProps {
 }
 
 const NoContent: FC<NoContentProps> = ({ children }) => {
-  return <p className=" text-xl">{children}</p>;
+  return <p className="text-center sm:text-left sm:text-lg ">{children}</p>;
 };
 
 export default NoContent;

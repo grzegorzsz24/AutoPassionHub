@@ -66,9 +66,9 @@ const AddFriendElement: FC<AddFriendElementProps> = ({
   };
 
   return (
-    <div className="flex items-center justify-between gap-4 w-full 2xl:w-2/3 overflow-y-auto py-4 px-6  rounded-md bg-white dark:bg-primaryDark2 shadow-md">
+    <div className="flex items-center justify-between gap-2 sm:gap-4 w-full 2xl:w-2/3 overflow-y-auto py-2 sm:py-4 px-4 sm:px-6  sm:rounded-md bg-white dark:bg-primaryDark2 shadow-md">
       <UserProfile
-        size="large"
+        size="medium"
         imageUrl={user.imageUrl}
         firstName={user.firstName}
         lastName={user.lastName}

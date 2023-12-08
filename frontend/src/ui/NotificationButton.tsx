@@ -53,7 +53,7 @@ const NotificationButton = () => {
       <button className="text-2xl xl:text-3xl text-blue-950 dark:text-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded-md relative">
         <IoNotifications className="group-hover:scale-125 transition-all" />
         {notifications && notificationsNotRead.length > 0 && (
-          <div className="bg-green-500 absolute  left-4 bottom-4 text-sm w-4 h-4 xl:w-6 xl:h-6 rounded-full flex items-center justify-center text-blue-50 dark:text-blue-900 font-bold group-hover:ring-4 group-hover:ring-green-300 transition-all animate-bounce">
+          <div className="bg-green-500 absolute  left-4 bottom-4 text-sm w-4 h-4 xl:w-6 xl:h-6 rounded-full flex items-center justify-center text-blue-50 dark:text-blue-900 font-bold group-hover:ring-4 group-hover:ring-green-300 transition-all">
             {notificationsNotRead.length}
           </div>
         )}
@@ -65,7 +65,7 @@ const NotificationButton = () => {
             animate="visible"
             exit="hidden"
             variants={menuVariants}
-            className="absolute top-full max-h-96 w-96 overflow-y-auto right-0  bg-grayLight dark:bg-grayDark text-grayDark dark:text-blue-50 rounded-md px-4 py-4 flex flex-col gap-2  shadow-md items-center z-10"
+            className="absolute top-full max-h-96 w-[80vw] sm:w-96 overflow-y-auto right-[-10px] bg-grayLight dark:bg-grayDark text-grayDark dark:text-blue-50 rounded-md px-4 py-4 flex flex-col gap-2  shadow-md items-center z-10"
           >
             {notifications.map((notification) => {
               switch (notification.type) {

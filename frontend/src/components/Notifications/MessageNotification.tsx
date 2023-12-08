@@ -1,25 +1,20 @@
 import { FC, useEffect, useState } from "react";
 
 import DateFormatter from "../../utils/DateFormatter";
-import { FaComment } from "react-icons/fa";
-import { MdForum } from "react-icons/md";
-import NotificationModel from "../../models/NotificationModel";
+import NotificationMessageModel from "../../models/NotificationMessageModel";
 import NotificationSkeleton from "./NotificationSkeleton";
 import UserModel from "../../models/UserModel";
-import { changeNotificationStatusAsRead } from "../../store/features/socketSlice";
+import { changeMessageNotificationStatusAsRead } from "../../store/features/socketSlice";
 import { getUserById } from "../../services/userService";
-import { markNotificationAsRead } from "../../services/notificationService";
 import { useAppDispatch } from "../../store/store";
 import { useNavigate } from "react-router-dom";
 
-interface CommentNotificationProps {
-  notification: NotificationModel;
-  typeOfContent: "POST" | "FORUM";
+interface MessageNotificationProps {
+  notification: NotificationMessageModel;
 }
 
-const CommentNotification: FC<CommentNotificationProps> = ({
+const MessageNotification: FC<MessageNotificationProps> = ({
   notification,
-  typeOfContent,
 }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -30,7 +25,7 @@ const CommentNotification: FC<CommentNotificationProps> = ({
     if (!notification) return;
     try {
       setIsLoading(true);
-      const response = await getUserById(notification.userTriggeredId);
+      const response = await getUserById(notification.senderId);
       if (response.status !== "ok") {
         throw new Error(response.message);
       }
@@ -43,21 +38,9 @@ const CommentNotification: FC<CommentNotificationProps> = ({
   };
 
   const handleNotificationClick = async () => {
-    try {
-      const data = await markNotificationAsRead(notification.notificationId);
-      if (data.status !== "ok") {
-        throw new Error(data.message);
-      }
-      dispatch(changeNotificationStatusAsRead(notification.notificationId));
-      if (typeOfContent === "FORUM") {
-        navigate(`/forums/${notification.entityId}`);
-      }
-      if (typeOfContent === "POST") {
-        navigate(`/posts/${notification.entityId}`);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    dispatch(changeMessageNotificationStatusAsRead(notification.channelId));
+
+    navigate(`/chats?chat=${notification.channelId}`);
   };
 
   useEffect(() => {
@@ -73,27 +56,21 @@ const CommentNotification: FC<CommentNotificationProps> = ({
           onClick={handleNotificationClick}
         >
           <div className="flex items-center justify-start gap-4 w-max grow">
-            <div className=" flex items-center justify-center relative w-10 h-10 shrink-0">
+            <div className="flex items-center justify-center relative w-10 h-10 shrink-0">
               <img
                 src={user?.imageUrl}
                 alt="user image"
                 className=" rounded-full"
               />
-              <div className="absolute bottom-[-4px] right-[-4px] bg-orange-500 text-white rounded-full p-1">
-                {typeOfContent === "POST" ? (
-                  <FaComment className="text-md" />
-                ) : (
-                  <MdForum className="text-md" />
-                )}
-              </div>
             </div>
-            <div className="flex flex-col gap-1">
-              <p className="text-sm text-wrap">
-                <span className="font-bold">
-                  {user?.firstName} {user?.lastName}
-                </span>{" "}
-                skomentował{" "}
-                {typeOfContent === "POST" ? "twój post" : "twoje forum"}
+            <div className="flex flex-col">
+              <p className="font-bold">
+                {user?.firstName} {user?.lastName}
+              </p>
+              <p className="text-sm">
+                {notification.message.length > 30
+                  ? notification.message.slice(0, 30) + "..."
+                  : notification.message}
               </p>
               <p className="text-xs">
                 {DateFormatter.formatDate(notification.createdAt)}
@@ -109,4 +86,4 @@ const CommentNotification: FC<CommentNotificationProps> = ({
   );
 };
 
-export default CommentNotification;
+export default MessageNotification;
