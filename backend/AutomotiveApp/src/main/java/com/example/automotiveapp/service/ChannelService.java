@@ -19,6 +19,7 @@ import java.util.Optional;
 public class ChannelService {
     private final ChannelRepository channelRepository;
     private final UserRepository userRepository;
+
     public Long getChannelId(Long senderId, Long receiverId) {
         return channelRepository.findBySenderIdAndReceiverIdOrReceiverIdAndSenderId(senderId, receiverId)
                 .map(Channel::getId)

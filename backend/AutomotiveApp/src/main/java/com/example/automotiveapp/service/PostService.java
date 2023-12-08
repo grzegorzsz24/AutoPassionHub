@@ -16,7 +16,6 @@ import com.example.automotiveapp.service.utils.SecurityUtils;
 import com.example.automotiveapp.storage.FileStorageService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -24,11 +23,13 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class PostService {
     private final PostRepository postRepository;
     private final PostDtoMapper postDtoMapper;
@@ -51,7 +52,6 @@ public class PostService {
         if (postToSave.getFiles() != null) {
             List<String> savedImageNames = fileStorageService.saveImage(postToSave.getFiles());
             for (String imageName : savedImageNames) {
-                log.info(imageName);
                 File file = new File();
                 file.setFileUrl(imageName);
                 file.setPost(post);

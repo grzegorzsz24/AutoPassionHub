@@ -1,6 +1,9 @@
 package com.example.automotiveapp.service;
 
-import com.example.automotiveapp.domain.*;
+import com.example.automotiveapp.domain.Friendship;
+import com.example.automotiveapp.domain.Invitation;
+import com.example.automotiveapp.domain.InvitationStatus;
+import com.example.automotiveapp.domain.User;
 import com.example.automotiveapp.dto.UserDto;
 import com.example.automotiveapp.exception.BadRequestException;
 import com.example.automotiveapp.exception.ResourceNotFoundException;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -34,7 +38,7 @@ public class FriendshipService {
 
         List<User> friends = new ArrayList<>();
         for (Friendship friendship : friendships) {
-            User friend = friendship.getUser1().getId() == userId ? friendship.getUser2() : friendship.getUser1();
+            User friend = Objects.equals(friendship.getUser1().getId(), userId) ? friendship.getUser2() : friendship.getUser1();
             friends.add(friend);
         }
         return friends.stream()

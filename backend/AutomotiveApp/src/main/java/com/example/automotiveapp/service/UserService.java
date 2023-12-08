@@ -15,7 +15,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -145,15 +144,15 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public List<UserDto> searchUsers(String keyword, Pageable pageable) {
-        List<UserDto> userlist = userRepository.searchUsers(keyword, pageable).stream()
-                .map(UserDtoMapper::map)
-                .toList();
-        if (userlist.isEmpty()) {
-            throw new ResourceNotFoundException("Nie znaleziono żadnego użytkownika");
-        }
-        return userlist;
-    }
+//    public List<UserDto> searchUsers(String keyword, Pageable pageable) {
+//        List<UserDto> userlist = userRepository.searchUsers(keyword, pageable).stream()
+//                .map(UserDtoMapper::map)
+//                .toList();
+//        if (userlist.isEmpty()) {
+//            throw new ResourceNotFoundException("Nie znaleziono żadnego użytkownika");
+//        }
+//        return userlist;
+//    }
 
     public Optional<UserDto> findUserById(Long userId) {
         return userRepository.findById(userId).map(UserDtoMapper::map);

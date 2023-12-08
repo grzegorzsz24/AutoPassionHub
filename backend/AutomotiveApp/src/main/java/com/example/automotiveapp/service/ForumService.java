@@ -2,6 +2,7 @@ package com.example.automotiveapp.service;
 
 import com.example.automotiveapp.domain.Forum;
 import com.example.automotiveapp.dto.ForumDto;
+import com.example.automotiveapp.exception.BadRequestException;
 import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.mapper.ForumDtoMapper;
 import com.example.automotiveapp.reponse.ForumResponse;
@@ -27,6 +28,9 @@ public class ForumService {
 
     public ForumDto saveForum(ForumDto forumDto) {
         Forum forum = forumDtoMapper.map(forumDto);
+        if (forumRepository.findByTitle(forumDto.getTitle()).isPresent()) {
+            throw new BadRequestException("Forum o podanym tytule już istnieje");
+        }
         Forum savedForum = forumRepository.save(forum);
         return ForumDtoMapper.map(savedForum);
     }
