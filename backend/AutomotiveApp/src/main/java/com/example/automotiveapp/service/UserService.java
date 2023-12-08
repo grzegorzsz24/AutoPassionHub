@@ -145,15 +145,15 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public List<UserDto> searchUsers(String keyword, Pageable pageable) {
-        List<UserDto> userlist = userRepository.searchUsers(keyword, pageable).stream()
-                .map(UserDtoMapper::map)
-                .toList();
-        if (userlist.isEmpty()) {
-            throw new ResourceNotFoundException("Nie znaleziono żadnego użytkownika");
-        }
-        return userlist;
-    }
+//    public List<UserDto> searchUsers(String keyword, Pageable pageable) {
+//        List<UserDto> userlist = userRepository.searchUsers(keyword, pageable).stream()
+//                .map(UserDtoMapper::map)
+//                .toList();
+//        if (userlist.isEmpty()) {
+//            throw new ResourceNotFoundException("Nie znaleziono żadnego użytkownika");
+//        }
+//        return userlist;
+//    }
 
     public Optional<UserDto> findUserById(Long userId) {
         return userRepository.findById(userId).map(UserDtoMapper::map);
