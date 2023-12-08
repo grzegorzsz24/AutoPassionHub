@@ -10,4 +10,5 @@ public class ReportDto {
     private Long reportTypeId;
     private String reportType;
     private Long userId;
+    private boolean isRead;
 }

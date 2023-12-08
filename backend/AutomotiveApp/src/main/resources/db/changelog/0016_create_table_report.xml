@@ -21,6 +21,9 @@
                              referencedTableName="users"
                              referencedColumnNames="id"/>
             </column>
+            <column name="is_read" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
 </databaseChangeLog>
