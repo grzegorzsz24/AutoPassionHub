@@ -20,4 +20,5 @@ public class AuthenticationResponse {
     private String userId;
     private String imageUrl;
     private boolean publicProfile;
+    private String role;
 }

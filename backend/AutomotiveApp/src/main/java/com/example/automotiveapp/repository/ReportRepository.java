@@ -11,5 +11,6 @@ import java.util.Optional;
 @Repository
 public interface ReportRepository extends JpaRepository<Report, Long> {
     Optional<Report> findByReportTypeIdAndReportType(Long reportTypeId, ReportType reportType);
+
     List<Report> findAllByReportType(ReportType reportType);
 }
