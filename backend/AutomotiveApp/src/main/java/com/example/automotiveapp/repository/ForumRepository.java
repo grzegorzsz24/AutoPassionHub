@@ -23,4 +23,6 @@ public interface ForumRepository extends JpaRepository<Forum, Long> {
             "AND (s.model = :carModel OR :carModel IS NULL)")
     Long countByTitleAndCarBrandAndCarModel(
             String title, String carBrand, String carModel);
+
+    List<Forum> findAllByTitleContainsIgnoreCase(String title);
 }

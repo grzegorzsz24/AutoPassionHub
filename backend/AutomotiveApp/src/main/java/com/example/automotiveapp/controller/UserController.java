@@ -59,13 +59,13 @@ public class UserController {
         return ResponseEntity.ok(new ApiResponse("Widoczność profilu została zmieniona", HttpStatus.OK));
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<UserDto>> searchAllUsers(@RequestParam String nickname,
-                                                        @RequestParam(defaultValue = "1") int page,
-                                                        @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page - 1, size);
-        return ResponseEntity.ok(userService.searchUsers(nickname, pageable));
-    }
+//    @GetMapping("/search")
+//    public ResponseEntity<List<UserDto>> searchAllUsers(@RequestParam String nickname,
+//                                                        @RequestParam(defaultValue = "1") int page,
+//                                                        @RequestParam(defaultValue = "10") int size) {
+//        Pageable pageable = PageRequest.of(page - 1, size);
+//        return ResponseEntity.ok(userService.searchUsers(nickname, pageable));
+//    }
 
     @GetMapping("/{nickname}")
     public ResponseEntity<UserDto> getUserByNickname(@PathVariable String nickname) {
