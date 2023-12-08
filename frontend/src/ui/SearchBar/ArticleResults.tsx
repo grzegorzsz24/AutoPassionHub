@@ -16,7 +16,7 @@ const ArticleResults: FC<ForumResultsProps> = ({ articles }) => {
             to={`/articles/${article.id}`}
             className=" py-2 px-4 hover:bg-blue-600 hover:text-blue-50 flex flex-col rounded-md"
           >
-            <div className="flex items-center text-indigo-500">
+            <div className="flex items-center text-blue-50 bg-indigo-500 w-min py-1 px-2 rounded-md">
               <FaBookReader className="inline-block mr-2" />
               <span className="text-xs">Artykuł</span>
             </div>

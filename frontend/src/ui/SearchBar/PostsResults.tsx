@@ -16,7 +16,7 @@ const PostsResults: FC<PostsResultsProps> = ({ posts }) => {
             to={`/posts/${post.id}`}
             className=" py-2 px-4 hover:bg-blue-600 hover:text-blue-50 flex flex-col rounded-md"
           >
-            <div className="flex items-center text-orange-500">
+            <div className="flex items-center text-blue-50 bg-orange-500 w-min py-1 px-2 rounded-md">
               <IoMdPhotos className="inline-block mr-2 " />
               <span className="text-xs">Post</span>
             </div>
