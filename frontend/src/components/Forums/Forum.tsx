@@ -13,13 +13,17 @@ import {
 import { useAppDispatch, useAppSelector } from "../../store/store";
 
 import AddComment from "./AddComment";
+import { BiDotsHorizontalRounded } from "react-icons/bi";
 import Comment from "./Comment";
 import CommentModel from "../../models/CommentModel";
 import DateFormatter from "../../utils/DateFormatter";
+import DropdownMenu from "../../ui/DropdownMenu";
 import ForumModel from "../../models/ForumModel";
+import OutlineButton from "../../ui/OutlineButton";
 import ToogleBookmarkButton from "../../ui/ToogleBookmarkButton";
 import UserProfile from "../../ui/UserProfile";
 import handleError from "../../services/errorHandler";
+import { reportForum } from "../../services/reportService";
 import { useStompClient } from "react-stomp-hooks";
 
 interface ForumProps {
@@ -35,6 +39,8 @@ const Forum: FC<ForumProps> = ({ forum }) => {
   const [isLoadingAddComment, setIsLoadingAddComment] =
     useState<boolean>(false);
   const [isBookmarked, setIsBookmarked] = useState<boolean>(forum.saved);
+
+  const userIsForumAuthor = Number(loggedInUserId) === forum.userId;
 
   const addCommentHandler = async (content: string) => {
     try {
@@ -174,6 +180,29 @@ const Forum: FC<ForumProps> = ({ forum }) => {
     }
   };
 
+  const reportForumHandler = async () => {
+    try {
+      const data = await reportForum(forum.id);
+      if (data.status !== "ok") {
+        throw new Error(data.message);
+      }
+      dispatch(
+        addNotification({
+          type: NotificationStatus.SUCCESS,
+          message: data.message,
+        })
+      );
+    } catch (error) {
+      const newError = handleError(error);
+      dispatch(
+        addNotification({
+          type: NotificationStatus.ERROR,
+          message: newError.message,
+        })
+      );
+    }
+  };
+
   useEffect(() => {
     getComments();
   }, []);
@@ -199,6 +228,21 @@ const Forum: FC<ForumProps> = ({ forum }) => {
           lastName={forum.lastName}
           nickname={forum.user}
         />
+        {!userIsForumAuthor && (
+          <DropdownMenu
+            triggerElement={
+              <BiDotsHorizontalRounded className="text-lg sm:text-2xl" />
+            }
+          >
+            <OutlineButton
+              size="sm"
+              fullWidth={true}
+              onClick={reportForumHandler}
+            >
+              Zgłoś forum
+            </OutlineButton>
+          </DropdownMenu>
+        )}
       </div>
       <p className="leading-10 mb-12 text-justify">{forum.content}</p>
       <div className="w-full mx-auto p-6 flex flex-col gap-6">
