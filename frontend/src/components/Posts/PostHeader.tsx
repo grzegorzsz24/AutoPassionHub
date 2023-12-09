@@ -34,7 +34,9 @@ const PostHeader: FC<PostHeaderProps> = ({
   setEditMode,
 }) => {
   const dispatch = useAppDispatch();
-  const { nickname: userNickname } = useAppSelector((state) => state.user);
+  const { nickname: userNickname, role } = useAppSelector(
+    (state) => state.user
+  );
 
   const reportPostHandler = async () => {
     try {
@@ -77,25 +79,25 @@ const PostHeader: FC<PostHeaderProps> = ({
         }
       >
         {nickname === userNickname && (
-          <>
-            <OutlineButton
-              size="sm"
-              fullWidth={true}
-              onClick={() => setEditMode(true)}
-            >
-              Edytuj post
-            </OutlineButton>
-            <OutlineButton
-              size="sm"
-              color="red"
-              fullWidth={true}
-              onClick={() => {
-                deletePostHandler(id);
-              }}
-            >
-              Usuń post
-            </OutlineButton>
-          </>
+          <OutlineButton
+            size="sm"
+            fullWidth={true}
+            onClick={() => setEditMode(true)}
+          >
+            Edytuj post
+          </OutlineButton>
+        )}
+        {(nickname === userNickname || role === "ADMIN") && (
+          <OutlineButton
+            size="sm"
+            color="red"
+            fullWidth={true}
+            onClick={() => {
+              deletePostHandler(id);
+            }}
+          >
+            Usuń post
+          </OutlineButton>
         )}
 
         {userIsNotPostAuthor && (

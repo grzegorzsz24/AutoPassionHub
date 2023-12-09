@@ -105,7 +105,7 @@ const PostPage = () => {
   }, []);
 
   return (
-    <div className="flex h-full py-6 w-full">
+    <div className="flex h-full py-2 w-full">
       <div className="my-4 md:m-6 lg:m-8 flex   gap-4 md:gap-8 grow  text-primaryDark2 dark:text-blue-50 overflow-y-auto">
         {isLoading && <LoadingSpinner />}
         {post && (

@@ -8,7 +8,6 @@ import { FC } from "react";
 import Gallery from "../Gallery";
 import { NotificationStatus } from "../../store/features/notificationSlice";
 import OutlineButton from "../../ui/OutlineButton";
-import PrimaryButton from "../../ui/PrimaryButton";
 import { addNotification } from "../../store/features/notificationSlice";
 import handleError from "../../services/errorHandler";
 import { reportEvent } from "../../services/reportService";
@@ -20,7 +19,7 @@ interface EventProps {
 
 const Event: FC<EventProps> = ({ event, onDeleteEvent }) => {
   const dispatch = useAppDispatch();
-  const { userId } = useAppSelector((state) => state.user);
+  const { userId, role } = useAppSelector((state) => state.user);
 
   const userIsEventAuthor = Number(userId) === event.user;
 
@@ -61,28 +60,36 @@ const Event: FC<EventProps> = ({ event, onDeleteEvent }) => {
           <div className="flex flex-col gap-2 items-start">
             <h3 className="text-xl font-bold">{event.title}</h3>
             <p className="text-lg">{event.city}</p>
-            {event.user === Number(userId) && (
-              <PrimaryButton size="sm" color="red" onClick={onDeleteEvent}>
-                Usuń wydarzenie
-              </PrimaryButton>
-            )}
           </div>
         </div>
-        {!userIsEventAuthor && (
-          <DropdownMenu
-            triggerElement={
-              <BiDotsHorizontalRounded className="text-lg sm:text-2xl" />
-            }
-          >
-            <OutlineButton
-              size="sm"
-              fullWidth={true}
-              onClick={reportEventHandler}
-            >
-              Zgłoś wydarzenie
-            </OutlineButton>
-          </DropdownMenu>
-        )}
+
+        <DropdownMenu
+          triggerElement={
+            <BiDotsHorizontalRounded className="text-lg sm:text-2xl" />
+          }
+        >
+          <>
+            {(role === "ADMIN" || userIsEventAuthor) && (
+              <OutlineButton
+                size="sm"
+                color="red"
+                fullWidth={true}
+                onClick={onDeleteEvent}
+              >
+                Usuń wydarzenie
+              </OutlineButton>
+            )}
+            {role !== "ADMIN" && !userIsEventAuthor && (
+              <OutlineButton
+                size="sm"
+                fullWidth={true}
+                onClick={reportEventHandler}
+              >
+                Zgłoś wydarzenie
+              </OutlineButton>
+            )}
+          </>
+        </DropdownMenu>
       </div>
       <div className="h-64 ">
         <Gallery images={[event.imageUrl]} />

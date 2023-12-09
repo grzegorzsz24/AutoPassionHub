@@ -4,16 +4,21 @@ const API_URL = import.meta.env.VITE_API_URL as string;
 
 type ReportType = "POST_REPORT" | "FORUM_REPORT" | "EVENT_REPORT";
 
+export interface Report {
+  id: number;
+  read: boolean;
+  reportType: ReportType;
+  reportTypeId: number;
+  userId: number;
+}
+
 const getReports = async (reportType: ReportType) => {
   try {
     const response = await fetch(
       `${API_URL}/admin/reports?reportType=${reportType}`,
       {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          credentials: "include",
-        },
+        credentials: "include",
       }
     );
     const data = await response.json();
@@ -37,10 +42,7 @@ const checkReportAsSeen = async (id: number) => {
       `${API_URL}/admin/reports/read?reportId=${id}`,
       {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          credentials: "include",
-        },
+        credentials: "include",
       }
     );
     const data = await response.json();
@@ -59,17 +61,16 @@ const checkReportAsSeen = async (id: number) => {
 
 const deleteReport = async (id: number) => {
   try {
-    const response = await fetch(`${API_URL}/admin/reports/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `${API_URL}/admin/reports/delete?reportId=${id}`,
+      {
+        method: "DELETE",
         credentials: "include",
-      },
-    });
-    const data = await response.json();
+      }
+    );
 
     if (!response.ok) {
-      throw new Error(data.message);
+      throw new Error("Nie udało się usunąć raportu.");
     }
     return {
       status: "ok",
