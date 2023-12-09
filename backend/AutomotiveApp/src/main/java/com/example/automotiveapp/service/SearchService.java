@@ -1,14 +1,8 @@
 package com.example.automotiveapp.service;
 
 import com.example.automotiveapp.dto.*;
-import com.example.automotiveapp.mapper.ArticleDtoMapper;
-import com.example.automotiveapp.mapper.ForumDtoMapper;
-import com.example.automotiveapp.mapper.PostDtoMapper;
-import com.example.automotiveapp.mapper.UserDtoMapper;
-import com.example.automotiveapp.repository.ArticleRepository;
-import com.example.automotiveapp.repository.ForumRepository;
-import com.example.automotiveapp.repository.PostRepository;
-import com.example.automotiveapp.repository.UserRepository;
+import com.example.automotiveapp.mapper.*;
+import com.example.automotiveapp.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +15,7 @@ public class SearchService {
     private final ForumRepository forumRepository;
     private final ArticleRepository articleRepository;
     private final PostRepository postRepository;
+    private final EventRepository eventRepository;
 
     public SearchResultsDto search(String keyword) {
         SearchResultsDto searchResultsDto = new SearchResultsDto();
@@ -46,6 +41,12 @@ public class SearchService {
                 .map(PostDtoMapper::map)
                 .toList();
         searchResultsDto.setPosts(posts);
+
+        List<EventDto> events = eventRepository.findAllByTitleContainsIgnoreCase(keyword)
+                .stream()
+                .map(EventDtoMapper::map)
+                .toList();
+        searchResultsDto.setEvents(events);
 
         return searchResultsDto;
     }

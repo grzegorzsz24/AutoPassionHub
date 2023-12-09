@@ -54,6 +54,12 @@ public class ForumController {
         return ResponseEntity.ok(forumService.findForumById(forumId));
     }
 
+    @DeleteMapping("/{forumId}")
+    public ResponseEntity<?> deleteForum(@PathVariable Long forumId) {
+        forumService.deleteForumById(forumId);
+        return ResponseEntity.noContent().build();
+    }
+
     @PostMapping("/report")
     public ResponseEntity<ReportDto> reportForum(@RequestBody ReportDto reportDto) {
         return ResponseEntity.ok(forumService.reportForum(reportDto));

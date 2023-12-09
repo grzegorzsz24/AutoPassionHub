@@ -87,4 +87,8 @@ public class ForumService {
 
         return ReportDtoMapper.map(reportRepository.save(reportDtoMapper.map(reportDto)));
     }
+
+    public void deleteForumById(Long forumId) {
+        forumRepository.deleteById(forumId);
+    }
 }
