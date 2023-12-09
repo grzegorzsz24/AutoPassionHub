@@ -84,9 +84,9 @@ const reportPost = async (id: number) => {
   try {
     const response = await fetch(`${API_URL}/user/posts/report`, {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        credentials: "include",
       },
       body: JSON.stringify({
         reportTypeId: id,
@@ -110,9 +110,9 @@ const reportForum = async (id: number) => {
   try {
     const response = await fetch(`${API_URL}/user/forums/report`, {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        credentials: "include",
       },
       body: JSON.stringify({
         reportTypeId: id,
@@ -136,9 +136,9 @@ const reportEvent = async (id: number) => {
   try {
     const response = await fetch(`${API_URL}/user/events/report`, {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        credentials: "include",
       },
       body: JSON.stringify({
         reportTypeId: id,
