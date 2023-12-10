@@ -1,6 +1,8 @@
 import AddArticlePage from "../pages/Articles/AddArticlePage";
 import AddEventPage from "../pages/Events/AddEventPage";
 import AddForumPage from "../pages/Forums/AddForumPage";
+import AdminPageLayout from "../pages/Admin/AdminPageLayout";
+import AdminRoute from "./AdminRoute";
 import AppLayout from "../pages/AppLayout";
 import ArticlePage from "../pages/Articles/ArticlePage";
 import ArticlePageLayout from "../pages/Articles/ArticlePageLayout";
@@ -24,6 +26,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import ReceivedInvitationsPage from "../pages/Friends/ReceivedInvitationsPage";
 import Redirect from "./Redirect";
 import RegisterPage from "../pages/RegisterPage";
+import ReportedContentPage from "../pages/Admin/ReportedContentPage";
 import SavedArticlesPage from "../pages/Articles/SavedArticlesPage";
 import SavedForumsPage from "../pages/Forums/SavedForumsPage";
 import SentInvitationsPage from "../pages/Friends/SentInvitationsPage";
@@ -204,6 +207,24 @@ const router = createBrowserRouter([
           {
             path: "/user/:nickname",
             element: <UserPage />,
+          },
+          {
+            path: "admin",
+            element: <AdminRoute element={<AdminPageLayout />} />,
+            children: [
+              {
+                path: "posts",
+                element: <ReportedContentPage reportType="POST_REPORT" />,
+              },
+              {
+                path: "forums",
+                element: <ReportedContentPage reportType="FORUM_REPORT" />,
+              },
+              {
+                path: "events",
+                element: <ReportedContentPage reportType="EVENT_REPORT" />,
+              },
+            ],
           },
         ],
       },

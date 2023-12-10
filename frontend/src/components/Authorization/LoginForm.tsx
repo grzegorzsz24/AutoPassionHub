@@ -64,6 +64,7 @@ const LoginForm = () => {
             imageUrl: response.imageUrl,
             cookieExpirationDate: response.cookieExpirationDate,
             publicProfile: response.publicProfile,
+            role: response.role,
           })
         );
         dispatch(

@@ -10,7 +10,8 @@ values
 insert into
     roles (name)
 values
-    ('USER');
+    ('USER'),
+    ('ADMIN');
 
 insert into
     user_role (user_id, role_id)
@@ -18,4 +19,4 @@ values
     (1, 1),
     (2, 1),
     (3, 1),
-    (4, 1);
+    (4, 2);

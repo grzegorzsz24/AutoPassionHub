@@ -58,6 +58,14 @@ const AppLayout = () => {
     );
   });
 
+  useSubscription(
+    `/user/${user.userId}/queue/admin/notifications`,
+    (message) => {
+      const body = JSON.parse(message.body);
+      dispatch(addNotification(body));
+    }
+  );
+
   return (
     <div className="bg-blue-50 dark:bg-primaryDark min-h-screen  w-full sm:h-screen h-full text-primaryDark overflow-auto ">
       {<Outlet />}

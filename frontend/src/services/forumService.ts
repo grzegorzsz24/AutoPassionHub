@@ -29,6 +29,22 @@ const createForum = async (
   }
 };
 
+const deleteForum = async (id: number) => {
+  try {
+    const response = await fetch(`${API_URL}/user/forums/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+
+    if (response.ok) {
+      return createSuccessResponse("Usunięto forum.");
+    }
+    throw new Error("Nie udało się usunąć forum.");
+  } catch (error) {
+    return createErrorResponse(error);
+  }
+};
+
 const getForums = async (
   page: number,
   size: number,
@@ -264,6 +280,7 @@ const addForumToSaved = async (forumId: number) => {
 
 export {
   createForum,
+  deleteForum,
   getForums,
   getUserForums,
   getForumById,

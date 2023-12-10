@@ -15,7 +15,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -157,5 +156,12 @@ public class UserService {
 
     public Optional<UserDto> findUserById(Long userId) {
         return userRepository.findById(userId).map(UserDtoMapper::map);
+    }
+
+    public List<UserDto> getUsersWithAdminRole() {
+        return userRepository.findAllUsersByRole("ADMIN")
+                .stream()
+                .map(UserDtoMapper::map)
+                .toList();
     }
 }

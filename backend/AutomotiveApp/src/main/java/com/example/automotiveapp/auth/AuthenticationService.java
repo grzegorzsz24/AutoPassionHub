@@ -88,6 +88,7 @@ public class AuthenticationService {
                 .cookieExpirationDate(expirationDate.toString())
                 .userId(userId)
                 .publicProfile(user.isPublicProfile())
+                .role(user.getRoles().stream().findFirst().get().getName())
                 .build();
     }
 }
