@@ -53,9 +53,9 @@ public class ArticleService {
         return articleDto;
     }
 
-    public ArticleResponse getAllArticles(String title, int page, int size) {
+    public ArticleResponse findAllApprovedArticles(String title, int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
-        List<Article> articles = articleRepository.findByTitleContainsIgnoreCase(title, pageable);
+        List<Article> articles = articleRepository.findByTitleContainsIgnoreCaseAndApprovedIsTrue(title, pageable);
         List<ArticleDto> articleDtos = new ArrayList<>();
         setArticlesLikesAndSavedStatus(articles, articleDtos);
         return new ArticleResponse(articleDtos, (long) articles.size());
@@ -78,4 +78,22 @@ public class ArticleService {
         return new ArticleResponse(articleDtos, (long) articles.size());
     }
 
+    public ArticleResponse findAllNotApprovedArticles(int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        List<Article> articles = articleRepository.findAllByApprovedIsFalse(pageable);
+        List<ArticleDto> articleDtos = new ArrayList<>();
+        setArticlesLikesAndSavedStatus(articles, articleDtos);
+        return new ArticleResponse(articleDtos, (long) articles.size());
+    }
+
+    public void setArticleApproved(Long articleId) {
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono artykułu"));
+        article.setApproved(true);
+        articleRepository.save(article);
+    }
+
+    public void deleteArticleById(Long articleId) {
+        articleRepository.deleteById(articleId);
+    }
 }

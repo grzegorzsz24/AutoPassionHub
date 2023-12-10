@@ -20,4 +20,5 @@ public class ArticleDto {
     private String lastName;
     private String userImageUrl;
     private Long userId;
+    private boolean approved;
 }

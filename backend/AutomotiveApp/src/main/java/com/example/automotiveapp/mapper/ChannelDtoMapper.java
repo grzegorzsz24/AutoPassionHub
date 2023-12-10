@@ -28,9 +28,9 @@ public class ChannelDtoMapper {
         Channel channel = new Channel();
         List<Long> userIds = new ArrayList<>(channelDto.getUsers());
         User sender = userRepository.findById(userIds.get(0))
-                        .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika"));
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika"));
         User receiver = userRepository.findById(userIds.get(1))
-                        .orElseThrow(() -> new ResourceNotFoundException("Nie znaleznio użytkownika"));
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleznio użytkownika"));
         channel.setSender(sender);
         channel.setReceiver(receiver);
         return channel;

@@ -16,6 +16,7 @@ import java.util.List;
 public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final NotificationDtoMapper notificationDtoMapper;
+
     public NotificationDto saveNotification(NotificationDto notificationDto) {
         Notification notification = notificationRepository.save(notificationDtoMapper.map(notificationDto));
         return NotificationDtoMapper.map(notification);

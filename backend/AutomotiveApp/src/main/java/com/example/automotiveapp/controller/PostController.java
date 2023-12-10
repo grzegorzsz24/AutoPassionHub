@@ -1,7 +1,6 @@
 package com.example.automotiveapp.controller;
 
 import com.example.automotiveapp.domain.request.PostSaveRequest;
-import com.example.automotiveapp.dto.ForumDto;
 import com.example.automotiveapp.dto.PostDto;
 import com.example.automotiveapp.service.PostService;
 import com.fasterxml.jackson.core.JsonProcessingException;
