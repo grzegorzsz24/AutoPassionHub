@@ -6,6 +6,7 @@ import {
 import {
   addCommentToForum,
   addForumToSaved,
+  deleteForum,
   deleteForumComment,
   getForumComments,
   updateForumComment,
@@ -24,6 +25,7 @@ import ToogleBookmarkButton from "../../ui/ToogleBookmarkButton";
 import UserProfile from "../../ui/UserProfile";
 import handleError from "../../services/errorHandler";
 import { reportForum } from "../../services/reportService";
+import { useNavigate } from "react-router-dom";
 import { useStompClient } from "react-stomp-hooks";
 
 interface ForumProps {
@@ -31,9 +33,12 @@ interface ForumProps {
 }
 
 const Forum: FC<ForumProps> = ({ forum }) => {
+  const navigate = useNavigate();
   const stompClient = useStompClient();
   const dispatch = useAppDispatch();
-  const { userId: loggedInUserId } = useAppSelector((state) => state.user);
+  const { userId: loggedInUserId, role } = useAppSelector(
+    (state) => state.user
+  );
 
   const [comments, setComments] = useState<CommentModel[]>([]);
   const [isLoadingAddComment, setIsLoadingAddComment] =
@@ -41,6 +46,31 @@ const Forum: FC<ForumProps> = ({ forum }) => {
   const [isBookmarked, setIsBookmarked] = useState<boolean>(forum.saved);
 
   const userIsForumAuthor = Number(loggedInUserId) === forum.userId;
+
+  const deleteForumHandler = async () => {
+    try {
+      const data = await deleteForum(forum.id);
+      if (data.status !== "ok") {
+        throw new Error(data.message);
+      }
+      dispatch(
+        addNotification({
+          type: NotificationStatus.SUCCESS,
+          message: data.message,
+        })
+      );
+
+      navigate(-1);
+    } catch (error) {
+      const newError = handleError(error);
+      dispatch(
+        addNotification({
+          type: NotificationStatus.ERROR,
+          message: newError.message,
+        })
+      );
+    }
+  };
 
   const addCommentHandler = async (content: string) => {
     try {
@@ -234,13 +264,25 @@ const Forum: FC<ForumProps> = ({ forum }) => {
               <BiDotsHorizontalRounded className="text-lg sm:text-2xl" />
             }
           >
-            <OutlineButton
-              size="sm"
-              fullWidth={true}
-              onClick={reportForumHandler}
-            >
-              Zgłoś forum
-            </OutlineButton>
+            {role !== "ADMIN" && (
+              <OutlineButton
+                size="sm"
+                fullWidth={true}
+                onClick={reportForumHandler}
+              >
+                Zgłoś forum
+              </OutlineButton>
+            )}
+            {role === "ADMIN" && (
+              <OutlineButton
+                size="sm"
+                color="red"
+                fullWidth={true}
+                onClick={deleteForumHandler}
+              >
+                Usuń forum
+              </OutlineButton>
+            )}
           </DropdownMenu>
         )}
       </div>
