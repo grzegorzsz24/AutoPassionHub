@@ -11,6 +11,7 @@ import OutlineButton from "../../ui/OutlineButton";
 import { addNotification } from "../../store/features/notificationSlice";
 import handleError from "../../services/errorHandler";
 import { reportEvent } from "../../services/reportService";
+import { useStompClient } from "react-stomp-hooks";
 
 interface EventProps {
   event: EventModel;
@@ -18,6 +19,7 @@ interface EventProps {
 }
 
 const Event: FC<EventProps> = ({ event, onDeleteEvent }) => {
+  const stompClient = useStompClient();
   const dispatch = useAppDispatch();
   const { userId, role } = useAppSelector((state) => state.user);
 
@@ -35,6 +37,18 @@ const Event: FC<EventProps> = ({ event, onDeleteEvent }) => {
           type: NotificationStatus.SUCCESS,
         })
       );
+      if (stompClient) {
+        stompClient.publish({
+          destination: `/app/admin/notification`,
+          body: JSON.stringify({
+            userTriggeredId: userId,
+            receiverId: 1,
+            content: "Użytkownik zgłosił post",
+            type: "FORUM_REPORT",
+            entityId: event.id,
+          }),
+        });
+      }
     } catch (error) {
       const newError = handleError(error);
       dispatch(

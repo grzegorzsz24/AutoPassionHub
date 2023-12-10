@@ -4,6 +4,7 @@ import CommentNotification from "../components/Notifications/CommentNotification
 import InvitationNotification from "../components/Notifications/InvitationNotification";
 import { IoNotifications } from "react-icons/io5";
 import LikeNotification from "../components/Notifications/LikeNotification";
+import ReportNotification from "../components/Notifications/ReportNotification";
 import { useAppSelector } from "../store/store";
 import { useState } from "react";
 
@@ -115,6 +116,15 @@ const NotificationButton = () => {
                       key={notification.createdAt}
                       notification={notification}
                       typeOfContent="ACCEPTED"
+                    />
+                  );
+                case "POST_REPORT":
+                case "FORUM_REPORT":
+                case "EVENT_REPORT":
+                  return (
+                    <ReportNotification
+                      key={notification.createdAt}
+                      notification={notification}
                     />
                   );
                 default:

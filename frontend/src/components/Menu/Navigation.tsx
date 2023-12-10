@@ -62,7 +62,7 @@ const links = [
 
 const adminLinks = [
   {
-    to: "/admin/posts",
+    to: "/admin",
     icon: <RiAdminFill className="text-sm lg:text-lg xl:text-xl" />,
     text: "Admin",
   },

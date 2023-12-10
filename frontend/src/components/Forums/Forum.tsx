@@ -222,6 +222,18 @@ const Forum: FC<ForumProps> = ({ forum }) => {
           message: data.message,
         })
       );
+      if (stompClient) {
+        stompClient.publish({
+          destination: `/app/admin/notification`,
+          body: JSON.stringify({
+            userTriggeredId: loggedInUserId,
+            receiverId: 1,
+            content: "Użytkownik zgłosił post",
+            type: "FORUM_REPORT",
+            entityId: forum.id,
+          }),
+        });
+      }
     } catch (error) {
       const newError = handleError(error);
       dispatch(

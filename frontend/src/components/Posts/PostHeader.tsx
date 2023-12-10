@@ -11,6 +11,7 @@ import OutlineButton from "../../ui/OutlineButton";
 import UserProfile from "../../ui/UserProfile";
 import handleError from "../../services/errorHandler";
 import { reportPost } from "../../services/reportService";
+import { useStompClient } from "react-stomp-hooks";
 
 interface PostHeaderProps {
   id: number;
@@ -34,9 +35,12 @@ const PostHeader: FC<PostHeaderProps> = ({
   setEditMode,
 }) => {
   const dispatch = useAppDispatch();
-  const { nickname: userNickname, role } = useAppSelector(
-    (state) => state.user
-  );
+  const stompClient = useStompClient();
+  const {
+    nickname: userNickname,
+    role,
+    userId,
+  } = useAppSelector((state) => state.user);
 
   const reportPostHandler = async () => {
     try {
@@ -50,6 +54,18 @@ const PostHeader: FC<PostHeaderProps> = ({
           type: NotificationStatus.SUCCESS,
         })
       );
+      if (stompClient) {
+        stompClient.publish({
+          destination: `/app/admin/notification`,
+          body: JSON.stringify({
+            userTriggeredId: Number(userId),
+            receiverId: 1,
+            content: "Użytkownik zgłosił post",
+            type: "POST_REPORT",
+            entityId: id,
+          }),
+        });
+      }
     } catch (error) {
       const newError = handleError(error);
       dispatch(
@@ -100,7 +116,7 @@ const PostHeader: FC<PostHeaderProps> = ({
           </OutlineButton>
         )}
 
-        {userIsNotPostAuthor && (
+        {userIsNotPostAuthor && role !== "ADMIN" && (
           <OutlineButton size="sm" fullWidth={true} onClick={reportPostHandler}>
             Zgłoś post
           </OutlineButton>
