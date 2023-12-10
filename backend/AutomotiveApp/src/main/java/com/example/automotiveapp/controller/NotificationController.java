@@ -42,7 +42,7 @@ public class NotificationController {
         return ResponseEntity.ok(notificationService.setNotificationAsRead(notificationId));
     }
 
-    @MessageMapping("admin/notification")
+    @MessageMapping("/admin/notification")
     public void sendAdminNotification(@Payload NotificationDto notificationRequest) {
         NotificationDto notificationDto = notificationService.saveNotification(notificationRequest);
         List<UserDto> adminUsers = userService.getUsersWithAdminRole();
