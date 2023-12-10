@@ -151,14 +151,20 @@ const UserPage = () => {
   }, [user]);
 
   return (
-    <div className=" px-6 py-8 overflow-y-auto h-full flex-grow  mx-auto flex justify-center">
-      <div className="max-w-2xl w-full mb-16 h-full">
+    <div className=" px-6 h-full flex-grow  mx-auto flex justify-center">
+      <div className=" w-full mb-16 py-8  h-full overflow-y-auto">
         <UserHeader user={user} />
-        <div className="py-4">
+        <div className="py-4  flex items-center justify-center ">
           {nickname === userNickname && (
-            <OutlineButton size="sm" fullWidth onClick={navigateToSettingsPage}>
-              Ustawienia
-            </OutlineButton>
+            <div className="flex items-center w-full max-w-2xl">
+              <OutlineButton
+                size="sm"
+                fullWidth
+                onClick={navigateToSettingsPage}
+              >
+                Ustawienia
+              </OutlineButton>
+            </div>
           )}
         </div>
         <div className="flex flex-col gap-4 items-center my-6">

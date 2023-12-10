@@ -89,7 +89,7 @@ const ForumFilters: FC<ForumFiltersProps> = ({
   if (isLoading) return <ForumFiltersSkeleton />;
 
   return (
-    <div className="flex gap-4 items-center">
+    <div className="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
       <form onSubmit={onSubmitTitleForm}>
         <input
           value={typedTitle}
@@ -98,12 +98,12 @@ const ForumFilters: FC<ForumFiltersProps> = ({
           }}
           type="text"
           placeholder="Szukaj po nazwie"
-          className="p-2 rounded-md focus:ring-2 ring-blue-600 bg-white dark:bg-grayDark outline-none w-72"
+          className="p-2 rounded-md focus:ring-2 ring-blue-600 bg-white dark:bg-grayDark outline-none w-full lg:w-72"
         />
       </form>
       <form className="flex gap-4">
         <select
-          className="p-2 rounded-md cursor-pointer focus:ring-2 ring-blue-600 bg-white dark:bg-grayDark w-36"
+          className="p-2 rounded-md cursor-pointer focus:ring-2 ring-blue-600 bg-white dark:bg-grayDark w-full lg:w-36"
           value={carBrand}
           onChange={(e) => setCarBrand(e.target.value)}
         >
@@ -115,7 +115,7 @@ const ForumFilters: FC<ForumFiltersProps> = ({
           ))}
         </select>
         <select
-          className="p-2 rounded-md cursor-pointer focus:ring-2 ring-blue-600 bg-white dark:bg-grayDark w-36"
+          className="p-2 rounded-md cursor-pointer focus:ring-2 ring-blue-600 bg-white dark:bg-grayDark w-full lg:w-36"
           disabled={!carBrand}
           value={carModel}
           onChange={(e) => setCarModel(e.target.value)}

@@ -2,14 +2,30 @@ import { FC, useRef, useState } from "react";
 import {
   NotificationStatus,
   addNotification,
-} from "../store/features/notificationSlice";
+} from "../../store/features/notificationSlice";
 
+import ArticleMenu from "../../components/Menu/ArticleMenu";
+import ArticleModel from "../../models/ArticleModel";
+import ArticleResults from "./ArticleResults";
 import { FaSearch } from "react-icons/fa";
+import ForumModel from "../../models/ForumModel";
+import ForumResults from "./ForumResults";
 import { NavLink } from "react-router-dom";
-import UserModel from "../models/UserModel";
-import { findUserBySearchQuery } from "../services/userService";
-import handleError from "../services/errorHandler";
-import { useAppDispatch } from "../store/store";
+import PostModel from "../../models/PostModel";
+import PostsResults from "./PostsResults";
+import UserModel from "../../models/UserModel";
+import UserResults from "./UserResults";
+import { findUserBySearchQuery } from "../../services/userService";
+import { getSearchResults } from "../../services/searchService";
+import handleError from "../../services/errorHandler";
+import { useAppDispatch } from "../../store/store";
+
+interface SearchResults {
+  users: UserModel[];
+  posts: PostModel[];
+  articles: ArticleModel[];
+  forums: ForumModel[];
+}
 
 interface SearchBarProps {
   placeholder?: string;
@@ -19,10 +35,44 @@ const SearchBar: FC<SearchBarProps> = ({ placeholder = "Szukaj" }) => {
   const dispatch = useAppDispatch();
   const searchInputRef = useRef<HTMLInputElement>(null);
   const resultsDivRef = useRef<HTMLDivElement | null>(null);
-  const [searchResults, setSearchResults] = useState<UserModel[]>([]);
+  // const [searchResults, setSearchResults] = useState<UserModel[]>([]);
+  const [searchResults, setSearchResults] = useState<SearchResults>({
+    users: [],
+    posts: [],
+    articles: [],
+    forums: [],
+  });
   const [isFocused, setIsFocused] = useState(false);
   const [abortController, setAbortController] =
     useState<AbortController | null>(null);
+
+  const updateSearchResults = (
+    users: UserModel[],
+    forums: ForumModel[],
+    articles: ArticleModel[],
+    posts: PostModel[]
+  ) => {
+    setSearchResults((prev) => ({
+      ...prev,
+      users,
+      forums,
+      articles,
+      posts,
+    }));
+  };
+
+  const clearSearchResults = () => {
+    updateSearchResults([], [], [], []);
+  };
+
+  const searchResulsAreEmpty = () => {
+    return (
+      searchResults.users.length === 0 &&
+      searchResults.forums.length === 0 &&
+      searchResults.articles.length === 0 &&
+      searchResults.posts.length === 0
+    );
+  };
 
   const fetchSearchResults = async (searchQuery: string) => {
     if (searchQuery.length > 0) {
@@ -32,24 +82,28 @@ const SearchBar: FC<SearchBarProps> = ({ placeholder = "Szukaj" }) => {
       const newAbortController = new AbortController();
       setAbortController(newAbortController);
       try {
-        const data = await findUserBySearchQuery(
-          searchQuery,
-          1,
-          20,
-          newAbortController
-        );
+        // const data = await findUserBySearchQuery(
+        //   searchQuery,
+        //   1,
+        //   20,
+        //   newAbortController
+        // );
+        const data = await getSearchResults(searchQuery, newAbortController);
+        console.log(data);
         if (data.status !== "ok") {
           throw new Error(data.message);
         }
-        if (data.users.length === 0) {
-          setSearchResults([]);
-        } else {
-          setSearchResults(data.users);
-        }
+
+        updateSearchResults(data.users, data.forums, data.articles, data.posts);
+        // if (data.users.length === 0) {
+        //   setSearchResults([]);
+        // } else {
+        //   setSearchResults(data.users);
+        // }
       } catch (error) {
         const newError = handleError(error);
         if (
-          newError.message === "Nie znaleziono żadnego użytkownika" ||
+          newError.message === "Brak wyników wyszukiwań" ||
           newError.message === "The user aborted a request."
         ) {
           setSearchResults([]);
@@ -63,7 +117,7 @@ const SearchBar: FC<SearchBarProps> = ({ placeholder = "Szukaj" }) => {
         }
       }
     } else {
-      setSearchResults([]);
+      clearSearchResults();
     }
   };
 
@@ -88,7 +142,7 @@ const SearchBar: FC<SearchBarProps> = ({ placeholder = "Szukaj" }) => {
       setIsFocused(false);
     }
     if (searchInputRef.current?.value === "") {
-      setSearchResults([]);
+      clearSearchResults();
     }
   };
 
@@ -119,27 +173,14 @@ const SearchBar: FC<SearchBarProps> = ({ placeholder = "Szukaj" }) => {
       </span>
       {isFocused && (
         <div
-          className="absolute top-12 bg-grayLight dark:bg-grayDark py-4 px-2 rounded-md w-full z-50"
+          className="absolute top-12 bg-grayLight dark:bg-grayDark py-4 px-2 rounded-md w-full z-50 max-h-96 overflow-y-auto"
           ref={resultsDivRef}
         >
-          <ul>
-            {searchResults.map((user) => (
-              <li key={user.id}>
-                <NavLink
-                  to={`/user/${user.nickname}`}
-                  className=" py-2 px-4 hover:bg-blue-600 hover:text-blue-50 flex items-center gap-2 rounded-md"
-                >
-                  <img
-                    src={user.imageUrl}
-                    alt=""
-                    className="w-8 h-8 rounded-full"
-                  />
-                  {user.firstName} {user.lastName}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-          {searchResults.length === 0 && searchInputRef.current?.value && (
+          <UserResults users={searchResults.users} />
+          <PostsResults posts={searchResults.posts} />
+          <ForumResults forums={searchResults.forums} />
+          <ArticleResults articles={searchResults.articles} />
+          {searchResulsAreEmpty() && searchInputRef.current?.value && (
             <p className="text-center text-sm">Brak wyników</p>
           )}
           {!searchInputRef.current?.value && (
