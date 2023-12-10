@@ -157,4 +157,11 @@ public class UserService {
     public Optional<UserDto> findUserById(Long userId) {
         return userRepository.findById(userId).map(UserDtoMapper::map);
     }
+
+    public List<UserDto> getUsersWithAdminRole() {
+        return userRepository.findAllUsersByRole("ADMIN")
+                .stream()
+                .map(UserDtoMapper::map)
+                .toList();
+    }
 }
