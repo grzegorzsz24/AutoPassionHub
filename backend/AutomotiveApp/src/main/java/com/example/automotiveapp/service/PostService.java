@@ -1,17 +1,14 @@
 package com.example.automotiveapp.service;
 
-import com.example.automotiveapp.domain.File;
-import com.example.automotiveapp.domain.Post;
-import com.example.automotiveapp.domain.User;
+import com.example.automotiveapp.domain.*;
 import com.example.automotiveapp.domain.request.PostSaveRequest;
 import com.example.automotiveapp.dto.PostDto;
+import com.example.automotiveapp.dto.ReportDto;
 import com.example.automotiveapp.exception.BadRequestException;
 import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.mapper.PostDtoMapper;
-import com.example.automotiveapp.repository.FileRepository;
-import com.example.automotiveapp.repository.LikeRepository;
-import com.example.automotiveapp.repository.PostRepository;
-import com.example.automotiveapp.repository.UserRepository;
+import com.example.automotiveapp.mapper.ReportDtoMapper;
+import com.example.automotiveapp.repository.*;
 import com.example.automotiveapp.service.utils.SecurityUtils;
 import com.example.automotiveapp.storage.FileStorageService;
 import jakarta.transaction.Transactional;
@@ -39,6 +36,8 @@ public class PostService {
     private final FileRepository fileRepository;
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
+    private final ReportRepository reportRepository;
+    private final ReportDtoMapper reportDtoMapper;
 
     @Transactional
     public PostDto savePost(PostSaveRequest postToSave) {
@@ -139,5 +138,18 @@ public class PostService {
             postDto.setLiked(likeRepository.getLikeByUser_EmailAndPostId(SecurityUtils.getCurrentUserEmail(), post.getId()).isPresent());
             friendsPosts.add(postDto);
         }
+    }
+
+    public ReportDto reportPost(ReportDto reportDto) {
+        if (postRepository.findById(reportDto.getReportTypeId()).isEmpty()) {
+            throw new ResourceNotFoundException("Nie znaleziono postu");
+        }
+        Optional<Report> report = reportRepository
+                .findByReportTypeIdAndReportType(reportDto.getReportTypeId(), ReportType.POST_REPORT);
+        if (report.isPresent()) {
+            throw new BadRequestException("Post już został zgłoszony");
+        }
+
+        return ReportDtoMapper.map(reportRepository.save(reportDtoMapper.map(reportDto)));
     }
 }

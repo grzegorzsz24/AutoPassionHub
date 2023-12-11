@@ -2,12 +2,18 @@ package com.example.automotiveapp.service;
 
 import com.example.automotiveapp.domain.Event;
 import com.example.automotiveapp.domain.File;
+import com.example.automotiveapp.domain.Report;
+import com.example.automotiveapp.domain.ReportType;
 import com.example.automotiveapp.dto.EventDto;
+import com.example.automotiveapp.dto.ReportDto;
+import com.example.automotiveapp.exception.BadRequestException;
 import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.mapper.EventDtoMapper;
+import com.example.automotiveapp.mapper.ReportDtoMapper;
 import com.example.automotiveapp.reponse.EventResponse;
 import com.example.automotiveapp.repository.EventRepository;
 import com.example.automotiveapp.repository.FileRepository;
+import com.example.automotiveapp.repository.ReportRepository;
 import com.example.automotiveapp.storage.FileStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +32,8 @@ public class EventService {
     private final EventDtoMapper eventDtoMapper;
     private final FileStorageService fileStorageService;
     private final FileRepository fileRepository;
+    private final ReportRepository reportRepository;
+    private final ReportDtoMapper reportDtoMapper;
 
     public EventResponse getAllEvents(int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
@@ -71,5 +79,18 @@ public class EventService {
         modifiedImageUrl.delete(0, "http://localhost:8080/images/".length());
         fileStorageService.deleteFile(modifiedImageUrl.toString());
         eventRepository.deleteById(id);
+    }
+
+    public ReportDto reportEvent(ReportDto reportDto) {
+        if (eventRepository.findById(reportDto.getReportTypeId()).isEmpty()) {
+            throw new ResourceNotFoundException("Nie znaleziono wydarzenia");
+        }
+        Optional<Report> report = reportRepository
+                .findByReportTypeIdAndReportType(reportDto.getReportTypeId(), ReportType.EVENT_REPORT);
+        if (report.isPresent()) {
+            throw new BadRequestException("Wydarzenie już zostało zgłoszone");
+        }
+
+        return ReportDtoMapper.map(reportRepository.save(reportDtoMapper.map(reportDto)));
     }
 }

@@ -12,5 +12,6 @@ public class SearchResultsDto {
     private List<ForumDto> forums;
     private List<ArticleDto> articles;
     private List<PostDto> posts;
+    private List<EventDto> events;
 }
 

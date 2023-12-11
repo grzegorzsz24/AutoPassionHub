@@ -46,7 +46,9 @@ public class SecurityConfiguration {
                                     antMatcher("/chat"))
                             .permitAll();
                     requests.requestMatchers(new AntPathRequestMatcher("/user/**"), antMatcher("/uploads/**"))
-                            .hasAnyAuthority("USER", "USERTEST")
+                            .hasAnyAuthority("USER", "ADMIN")
+                            .requestMatchers(antMatcher("/admin/**"))
+                            .hasAuthority("ADMIN")
                             .anyRequest()
                             .authenticated();
                 })

@@ -1,6 +1,7 @@
 package com.example.automotiveapp.controller;
 
 import com.example.automotiveapp.dto.ForumDto;
+import com.example.automotiveapp.dto.ReportDto;
 import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.reponse.ForumResponse;
 import com.example.automotiveapp.service.ForumService;
@@ -51,5 +52,16 @@ public class ForumController {
     @GetMapping("/{forumId}")
     public ResponseEntity<ForumDto> getForum(@PathVariable Long forumId) {
         return ResponseEntity.ok(forumService.findForumById(forumId));
+    }
+
+    @DeleteMapping("/{forumId}")
+    public ResponseEntity<?> deleteForum(@PathVariable Long forumId) {
+        forumService.deleteForumById(forumId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/report")
+    public ResponseEntity<ReportDto> reportForum(@RequestBody ReportDto reportDto) {
+        return ResponseEntity.ok(forumService.reportForum(reportDto));
     }
 }

@@ -1,10 +1,17 @@
-import { AnimatePresence, motion } from "framer-motion";
-import { FC, useState } from "react";
+import {
+  NotificationStatus,
+  addNotification,
+} from "../../store/features/notificationSlice";
+import { useAppDispatch, useAppSelector } from "../../store/store";
 
 import { BiDotsHorizontalRounded } from "react-icons/bi";
+import DropdownMenu from "../../ui/DropdownMenu";
+import { FC } from "react";
 import OutlineButton from "../../ui/OutlineButton";
 import UserProfile from "../../ui/UserProfile";
-import { useAppSelector } from "../../store/store";
+import handleError from "../../services/errorHandler";
+import { reportPost } from "../../services/reportService";
+import { useStompClient } from "react-stomp-hooks";
 
 interface PostHeaderProps {
   id: number;
@@ -17,27 +24,6 @@ interface PostHeaderProps {
   setEditMode: (value: boolean) => void;
 }
 
-const dropdownVariants = {
-  hidden: {
-    opacity: 0,
-    scale: 0.75,
-    y: -20,
-    transition: {
-      duration: 0.2,
-      ease: "easeInOut",
-    },
-  },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    y: 0,
-    transition: {
-      duration: 0.2,
-      ease: "easeInOut",
-    },
-  },
-};
-
 const PostHeader: FC<PostHeaderProps> = ({
   id,
   firstName,
@@ -48,16 +34,50 @@ const PostHeader: FC<PostHeaderProps> = ({
   deletePostHandler,
   setEditMode,
 }) => {
-  const { nickname: userNickname } = useAppSelector((state) => state.user);
-  const [optionsAreShown, setOptionsAreShown] = useState(false);
+  const dispatch = useAppDispatch();
+  const stompClient = useStompClient();
+  const {
+    nickname: userNickname,
+    role,
+    userId,
+  } = useAppSelector((state) => state.user);
 
-  const onMouseOverHandler = () => {
-    setOptionsAreShown(true);
+  const reportPostHandler = async () => {
+    try {
+      const response = await reportPost(id);
+      if (response.status !== "ok") {
+        throw new Error(response.message);
+      }
+      dispatch(
+        addNotification({
+          message: response.message,
+          type: NotificationStatus.SUCCESS,
+        })
+      );
+      if (stompClient) {
+        stompClient.publish({
+          destination: `/app/admin/notification`,
+          body: JSON.stringify({
+            userTriggeredId: Number(userId),
+            receiverId: 1,
+            content: "Użytkownik zgłosił post",
+            type: "POST_REPORT",
+            entityId: id,
+          }),
+        });
+      }
+    } catch (error) {
+      const newError = handleError(error);
+      dispatch(
+        addNotification({
+          message: newError.message,
+          type: NotificationStatus.ERROR,
+        })
+      );
+    }
   };
 
-  const onMouseLeaveHandler = () => {
-    setOptionsAreShown(false);
-  };
+  const userIsNotPostAuthor = nickname !== userNickname;
 
   return (
     <div className=" py-4 px-2 sm:px-4 flex items-center justify-between">
@@ -69,52 +89,39 @@ const PostHeader: FC<PostHeaderProps> = ({
         nickname={nickname}
         createdAt={createdAt}
       />
-      <div
-        className="relative cursor-pointer"
-        onMouseOver={onMouseOverHandler}
-        onMouseLeave={onMouseLeaveHandler}
-      >
-        <p className="text-primaryDark dark:text-blue-100">
+      <DropdownMenu
+        triggerElement={
           <BiDotsHorizontalRounded className="text-lg sm:text-2xl" />
-        </p>
-        <AnimatePresence>
-          {optionsAreShown && (
-            <motion.div
-              className="absolute z-40 right-0 bg-white text-primaryDark dark:bg-primaryDark2 dark:text-blue-50 w-44 py-4 px-2 sm:px-8 flex flex-col gap-2 text-md rounded-md shadow-md"
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-              variants={dropdownVariants}
-            >
-              {nickname === userNickname && (
-                <>
-                  <OutlineButton
-                    size="sm"
-                    fullWidth={true}
-                    onClick={() => setEditMode(true)}
-                  >
-                    Edytuj post
-                  </OutlineButton>
-                  <OutlineButton
-                    size="sm"
-                    color="red"
-                    fullWidth={true}
-                    onClick={() => {
-                      deletePostHandler(id);
-                    }}
-                  >
-                    Usuń post
-                  </OutlineButton>
-                </>
-              )}
+        }
+      >
+        {nickname === userNickname && (
+          <OutlineButton
+            size="sm"
+            fullWidth={true}
+            onClick={() => setEditMode(true)}
+          >
+            Edytuj post
+          </OutlineButton>
+        )}
+        {(nickname === userNickname || role === "ADMIN") && (
+          <OutlineButton
+            size="sm"
+            color="red"
+            fullWidth={true}
+            onClick={() => {
+              deletePostHandler(id);
+            }}
+          >
+            Usuń post
+          </OutlineButton>
+        )}
 
-              <OutlineButton size="sm" fullWidth={true} onClick={() => {}}>
-                Zgłoś post
-              </OutlineButton>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+        {userIsNotPostAuthor && role !== "ADMIN" && (
+          <OutlineButton size="sm" fullWidth={true} onClick={reportPostHandler}>
+            Zgłoś post
+          </OutlineButton>
+        )}
+      </DropdownMenu>
     </div>
   );
 };

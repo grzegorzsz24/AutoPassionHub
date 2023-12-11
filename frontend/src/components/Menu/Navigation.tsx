@@ -12,6 +12,8 @@ import { BsFillCalendarEventFill } from "react-icons/bs";
 import MessagesButton from "../../ui/MessagesButton";
 import NavigationLink from "../../ui/NavigationLink";
 import NotificationButton from "../../ui/NotificationButton";
+import { RiAdminFill } from "react-icons/ri";
+import { useAppSelector } from "../../store/store";
 import { useState } from "react";
 
 const menuVariants = {
@@ -58,8 +60,17 @@ const links = [
   },
 ];
 
+const adminLinks = [
+  {
+    to: "/admin",
+    icon: <RiAdminFill className="text-sm lg:text-lg xl:text-xl" />,
+    text: "Admin",
+  },
+];
+
 const Navigation = () => {
   const [menuNavIsOpen, setMenuNavIsOpen] = useState(false);
+  const { role } = useAppSelector((state) => state.user);
 
   const toggleMenuNav = () => setMenuNavIsOpen((prevState) => !prevState);
 
@@ -74,6 +85,15 @@ const Navigation = () => {
             </span>
           </NavigationLink>
         ))}
+        {role === "ADMIN" &&
+          adminLinks.map((link) => (
+            <NavigationLink key={link.text} to={link.to} end={false}>
+              {link.icon}
+              <span className="block text text-sm lg:text-md xl:text-lg">
+                {link.text}
+              </span>
+            </NavigationLink>
+          ))}
       </nav>
       <div className="sm:hidden bg-blue-600 w-full py-2 px-4">
         <div className="flex items-center justify-between">

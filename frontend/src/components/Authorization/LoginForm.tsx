@@ -64,6 +64,7 @@ const LoginForm = () => {
             imageUrl: response.imageUrl,
             cookieExpirationDate: response.cookieExpirationDate,
             publicProfile: response.publicProfile,
+            role: response.role,
           })
         );
         dispatch(
@@ -73,9 +74,12 @@ const LoginForm = () => {
           })
         );
         navigate("/");
+      } else {
+        throw new Error(response.message);
       }
     } catch (error) {
       const newError = handleError(error);
+      console.log(newError);
       dispatch(
         addNotification({
           message: newError.message,

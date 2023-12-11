@@ -14,15 +14,18 @@ import { getPosts } from "../../services/postService";
 import handleError from "../../services/errorHandler";
 import { useAppDispatch } from "../../store/store";
 
+const POSTS_PER_PAGE = import.meta.env.VITE_POSTS_PER_PAGE as number;
 const Posts = () => {
   const dispatch = useAppDispatch();
   const [posts, setPosts] = useState<PostModel[]>([]);
+  const [page, setPage] = useState(1);
+  const [hasMorePosts, setHasMorePosts] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
   const downloadPosts = async () => {
     try {
       setIsLoading(true);
-      const data = await getPosts();
+      const data = await getPosts(page, POSTS_PER_PAGE);
       if (data.status !== "ok") {
         throw new Error(data.message);
       }

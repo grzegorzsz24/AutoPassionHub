@@ -1,7 +1,7 @@
 import Logo from "../../ui/Logo";
 import MessagesButton from "../../ui/MessagesButton";
 import NotificationButton from "../../ui/NotificationButton";
-import SearchBar from "../../ui/SearchBar";
+import SearchBar from "../../ui/SearchBar/SearchBar";
 import SwitchThemeButton from "../../ui/SwitchThemeButton";
 import UserProfileButton from "../../ui/UserProfileButton";
 

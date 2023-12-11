@@ -2,6 +2,7 @@ package com.example.automotiveapp.controller;
 
 import com.example.automotiveapp.domain.request.PostSaveRequest;
 import com.example.automotiveapp.dto.PostDto;
+import com.example.automotiveapp.dto.ReportDto;
 import com.example.automotiveapp.service.PostService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -90,5 +91,10 @@ public class PostController {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<PostDto> paginatedUserPosts = postService.getUserPosts(userId, pageable);
         return ResponseEntity.ok(paginatedUserPosts.getContent());
+    }
+
+    @PostMapping("/report")
+    public ResponseEntity<ReportDto> reportPost(@RequestBody ReportDto reportDto) {
+        return ResponseEntity.ok(postService.reportPost(reportDto));
     }
 }

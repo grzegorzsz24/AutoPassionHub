@@ -27,12 +27,15 @@ const createPost = async (content: string, files: File[]) => {
   }
 };
 
-const getPosts = async () => {
+const getPosts = async (page: number = 1, size: number = 10) => {
   try {
-    const response = await fetch(`${API_URL}/user/posts/friends`, {
-      method: "GET",
-      credentials: "include",
-    });
+    const response = await fetch(
+      `${API_URL}/user/posts/friends?page=${page}&size=${size}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
 
     const data = await response.json();
     if (!response.ok) {
