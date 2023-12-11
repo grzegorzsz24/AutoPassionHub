@@ -62,6 +62,7 @@ const AppLayout = () => {
     `/user/${user.userId}/queue/admin/notifications`,
     (message) => {
       const body = JSON.parse(message.body);
+      console.log(body);
       dispatch(addNotification(body));
     }
   );

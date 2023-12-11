@@ -21,6 +21,7 @@ import MainPageLayout from "../pages/MainPageLayout";
 import MyArticlesPage from "../pages/Articles/MyArticlesPage";
 import MyForumsPage from "../pages/Forums/MyForumsPage";
 import OutletLayout from "../pages/OutletLayout";
+import PendingArticlesPage from "../pages/Admin/PendingArticlesPage";
 import PostPage from "../pages/Posts/PostPage";
 import ProtectedRoute from "./ProtectedRoute";
 import ReceivedInvitationsPage from "../pages/Friends/ReceivedInvitationsPage";
@@ -212,6 +213,10 @@ const router = createBrowserRouter([
             path: "admin",
             element: <AdminRoute element={<AdminPageLayout />} />,
             children: [
+              {
+                path: "pending/articles",
+                element: <PendingArticlesPage />,
+              },
               {
                 path: "posts",
                 element: <ReportedContentPage reportType="POST_REPORT" />,
