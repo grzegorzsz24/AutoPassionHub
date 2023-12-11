@@ -12,9 +12,11 @@ import java.util.Optional;
 public interface ArticleRepository extends JpaRepository<Article, Long> {
     Optional<Article> findByTitle(String title);
 
-    List<Article> findByTitleContainsIgnoreCase(String keyword, Pageable pageable);
+    List<Article> findByTitleContainsIgnoreCaseAndApprovedIsTrue(String title, Pageable pageable);
 
     List<Article> findAllByUserEmail(String userEmail, Pageable pageable);
 
     List<Article> findAllByTitleContainsIgnoreCase(String title);
+
+    List<Article> findAllByApprovedIsFalse(Pageable pageable);
 }
