@@ -32,7 +32,7 @@ const PendingArticlesPage = () => {
     return {
       page: getPageFromParams(),
       size: ARTICLES_PER_PAGE,
-      title: params.get("title") || "",
+      title: "",
     };
   };
 
@@ -87,6 +87,10 @@ const PendingArticlesPage = () => {
           message: "Artykuł został zatwierdzony",
         })
       );
+      if (articles.length <= 1 && page !== 1) {
+        filterDispatch({ type: "SET_PAGE", payload: page - 1 });
+        setParams(buildQueryParams());
+      }
     } catch (error) {
       const newError = handleError(error);
       reduxDispatch(
@@ -109,6 +113,10 @@ const PendingArticlesPage = () => {
           message: "Artykuł został odrzucony",
         })
       );
+      if (articles.length <= 1 && page !== 1) {
+        filterDispatch({ type: "SET_PAGE", payload: page - 1 });
+        setParams(buildQueryParams());
+      }
     } catch (error) {
       const newError = handleError(error);
       reduxDispatch(
@@ -150,7 +158,7 @@ const PendingArticlesPage = () => {
         )}
       </div>
       {!isLoading && articles.length > 0 && (
-        <div className="bg-red-500 flex items-center justify-center my-4">
+        <div className="flex items-center justify-center my-4">
           <Pagination
             currentPage={page}
             totalPages={Math.ceil(totalNumberOfArticles / size)}

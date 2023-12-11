@@ -7,7 +7,7 @@ import UserProfileButton from "../../ui/UserProfileButton";
 
 const Navbar = () => {
   return (
-    <nav className="bg-white dark:bg-primaryDark text-bg-primaryDark dark:text-blue-50 shadow-sm px-2 py-1 md:px-4 md:py-2 xl:px-6 flex items-center justify-between gap-4 dark:border-b-2 border-blue-600">
+    <nav className="bg-white dark:bg-primaryDark text-bg-primaryDark dark:text-blue-50 shadow-sm px-2 py-1 md:px-4 md:py-2 xl:px-6 flex items-center justify-between gap-4">
       <div className="hidden sm:block">
         <Logo />
       </div>

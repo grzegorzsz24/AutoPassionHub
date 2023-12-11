@@ -160,9 +160,9 @@ const Gallery: FC<GalleryProps> = ({ images, onDeleteImage: deleteImage }) => {
       {isOpen && (
         <div
           ref={modalRef}
-          className={`fixed inset-0 z-50 backdrop-blur-sm w-full h-screen bg-black bg-opacity-90 backdrop:blur-sm py-4 px-16  flex items-center justify-center`}
+          className={`fixed inset-0 z-50 backdrop-blur-sm w-full h-screen bg-black bg-opacity-90 backdrop:blur-sm py-4 px-4 md:px-16  flex items-center justify-center`}
         >
-          <img src={imageSrc} alt="" className="max-h-[80%] max-w-[90%]" />
+          <img src={imageSrc} alt="" className="max-h-[80%] " />
 
           <button
             aria-label="Zamknij galerię"
