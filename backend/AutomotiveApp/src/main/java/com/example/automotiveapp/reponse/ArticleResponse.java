@@ -10,5 +10,5 @@ import java.util.List;
 @AllArgsConstructor
 public class ArticleResponse {
     private List<ArticleDto> articles;
-    private Long articlesNumber;
+    private long articlesNumber;
 }

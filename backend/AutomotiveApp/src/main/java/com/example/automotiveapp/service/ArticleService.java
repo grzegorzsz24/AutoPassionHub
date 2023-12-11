@@ -55,10 +55,11 @@ public class ArticleService {
 
     public ArticleResponse findAllApprovedArticles(String title, int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
+        long totalApprovedArticles = articleRepository.countAllByApprovedIsTrue();
         List<Article> articles = articleRepository.findByTitleContainsIgnoreCaseAndApprovedIsTrue(title, pageable);
         List<ArticleDto> articleDtos = new ArrayList<>();
         setArticlesLikesAndSavedStatus(articles, articleDtos);
-        return new ArticleResponse(articleDtos, (long) articles.size());
+        return new ArticleResponse(articleDtos, totalApprovedArticles);
     }
 
     private void setArticlesLikesAndSavedStatus(List<Article> articles, List<ArticleDto> articleDtos) {
@@ -72,18 +73,20 @@ public class ArticleService {
 
     public ArticleResponse findMyArticles(int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
+        long totalApprovedArticles = articleRepository.countAllByApprovedIsTrue();
         List<Article> articles = articleRepository.findAllByUserEmail(SecurityUtils.getCurrentUserEmail(), pageable);
         List<ArticleDto> articleDtos = new ArrayList<>();
         setArticlesLikesAndSavedStatus(articles, articleDtos);
-        return new ArticleResponse(articleDtos, (long) articles.size());
+        return new ArticleResponse(articleDtos, totalApprovedArticles);
     }
 
     public ArticleResponse findAllNotApprovedArticles(int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
+        long totalNotApprovedArticles = articleRepository.countAllByApprovedIsFalse();
         List<Article> articles = articleRepository.findAllByApprovedIsFalse(pageable);
         List<ArticleDto> articleDtos = new ArrayList<>();
         setArticlesLikesAndSavedStatus(articles, articleDtos);
-        return new ArticleResponse(articleDtos, (long) articles.size());
+        return new ArticleResponse(articleDtos, totalNotApprovedArticles);
     }
 
     public void setArticleApproved(Long articleId) {
@@ -97,3 +100,4 @@ public class ArticleService {
         articleRepository.deleteById(articleId);
     }
 }
+
