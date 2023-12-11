@@ -19,4 +19,8 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     List<Article> findAllByTitleContainsIgnoreCase(String title);
 
     List<Article> findAllByApprovedIsFalse(Pageable pageable);
+
+    long countAllByApprovedIsFalse();
+
+    long countAllByApprovedIsTrue();
 }
