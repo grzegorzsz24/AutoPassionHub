@@ -85,7 +85,7 @@ const ForumsPage = () => {
   }, [filterState]);
 
   return (
-    <div className="max-w-4xl h-full flex flex-col justify-between ">
+    <div className="max-w-4xl h-full flex flex-col justify-between">
       <div className="flex flex-col gap-12">
         <ForumFilters
           title={title}

@@ -62,6 +62,7 @@ const PendingArticlesPage = () => {
       if (data.status !== "ok") throw new Error(data.message);
       setArticles(data.data);
       setTotalNumberOfArticles(data.totalNumberOfArticles);
+      console.log(data.data);
     } catch (error) {
       const newError = handleError(error);
       reduxDispatch(
@@ -133,9 +134,10 @@ const PendingArticlesPage = () => {
             <ArticleSkeleton />
           </div>
         ) : (
-          <div>
+          <div className="flex flex-col gap-4 ">
             {articles.map((article) => (
               <PendingArticleItem
+                key={article.id}
                 article={article}
                 approveArticle={aprooveArticleHandler}
                 rejectArticle={rejectArticleHandler}
@@ -148,7 +150,7 @@ const PendingArticlesPage = () => {
         )}
       </div>
       {!isLoading && articles.length > 0 && (
-        <div className=" flex items-center justify-center my-4">
+        <div className="bg-red-500 flex items-center justify-center my-4">
           <Pagination
             currentPage={page}
             totalPages={Math.ceil(totalNumberOfArticles / size)}
