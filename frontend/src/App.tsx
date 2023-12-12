@@ -12,14 +12,14 @@ import { getAllChats } from "./services/chatService";
 import { getNotifications } from "./services/notificationService";
 import router from "./router/routerConfig";
 import { useEffect } from "react";
-import { useErrorNotification } from "./hooks/useErrorNotification";
+import { useNotification } from "./hooks/useNotification";
 
 const SOCKET_URL = import.meta.env.VITE_SOCKET_URL as string;
 
 function App() {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
-  const { showErrorNotification } = useErrorNotification();
+  const { showErrorNotification } = useNotification();
 
   const fetchInitialChats = async () => {
     try {
