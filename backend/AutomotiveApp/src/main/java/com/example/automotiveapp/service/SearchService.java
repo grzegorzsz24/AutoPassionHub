@@ -36,7 +36,7 @@ public class SearchService {
                 .toList();
         searchResultsDto.setArticles(articles);
 
-        List<PostDto> posts = postRepository.findAllByContentContainsIgnoreCase(keyword)
+        List<PostDto> posts = postRepository.findAllByContentContainsIgnoreCaseOrderByPostedAtDesc(keyword)
                 .stream()
                 .map(PostDtoMapper::map)
                 .toList();

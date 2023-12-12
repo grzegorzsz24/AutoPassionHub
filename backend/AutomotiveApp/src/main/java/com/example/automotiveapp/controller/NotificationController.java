@@ -53,4 +53,13 @@ public class NotificationController {
             );
         }
     }
+
+    @MessageMapping("/article/notification")
+    public void sendArticleApprovedStatusNotification(@Payload NotificationDto notificationRequest) {
+        NotificationDto notificationDto = notificationService.saveNotification(notificationRequest);
+        simpMessagingTemplate.convertAndSendToUser(
+                String.valueOf(notificationRequest.getReceiverId()),
+                "/queue/article/notifications", notificationDto
+        );
+    }
 }

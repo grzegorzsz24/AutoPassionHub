@@ -12,13 +12,13 @@ import java.util.Optional;
 public interface ArticleRepository extends JpaRepository<Article, Long> {
     Optional<Article> findByTitle(String title);
 
-    List<Article> findByTitleContainsIgnoreCaseAndApprovedIsTrue(String title, Pageable pageable);
+    List<Article> findByTitleContainsIgnoreCaseAndApprovedIsTrueOrderByPublishedAtDesc(String title, Pageable pageable);
 
     List<Article> findAllByUserEmail(String userEmail, Pageable pageable);
 
     List<Article> findAllByTitleContainsIgnoreCase(String title);
 
-    List<Article> findAllByApprovedIsFalse(Pageable pageable);
+    List<Article> findAllByApprovedIsFalseOrderByPublishedAtDesc(Pageable pageable);
 
     long countAllByApprovedIsFalse();
 

@@ -8,6 +8,7 @@ import com.example.automotiveapp.exception.BadRequestException;
 import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.mapper.PostDtoMapper;
 import com.example.automotiveapp.mapper.ReportDtoMapper;
+import com.example.automotiveapp.reponse.PostResponse;
 import com.example.automotiveapp.repository.*;
 import com.example.automotiveapp.service.utils.SecurityUtils;
 import com.example.automotiveapp.storage.FileStorageService;
@@ -90,40 +91,47 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public Page<PostDto> getFriendsPosts(Pageable pageable) {
+    public PostResponse getFriendsPosts(Pageable pageable) {
         List<User> friends = userRepository.findUserFriends(SecurityUtils.getCurrentUserEmail());
         List<PostDto> friendsPosts = new ArrayList<>();
 
         for (User friend : friends) {
-            List<Post> friendPosts = postRepository.findByUser(friend);
+            List<Post> friendPosts = postRepository.findByUserOrderByPostedAtDesc(friend);
             setPostLikes(friendPosts, friendsPosts);
         }
+
         List<User> publicProfiles = userRepository.findPublicProfiles();
         for (User publicProfile : publicProfiles) {
             if (!friends.contains(publicProfile)) {
-                List<Post> publicProfilePosts = postRepository.findByUser(publicProfile);
+                List<Post> publicProfilePosts = postRepository.findByUserOrderByPostedAtDesc(publicProfile);
                 setPostLikes(publicProfilePosts, friendsPosts);
             }
         }
-        return getPostDtos(pageable, friendsPosts);
+
+        Page<PostDto> paginatedPosts = getPostDtos(pageable, friendsPosts);
+        long totalPosts = friendsPosts.size();
+
+        return new PostResponse(paginatedPosts.getContent(), totalPosts);
     }
 
-    public Page<PostDto> getUserPosts(Long userId, Pageable pageable) {
+    public PostResponse getUserPosts(Long userId, Pageable pageable) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika"));
 
         if (user.isPublicProfile()) {
             List<PostDto> friendsPosts = new ArrayList<>();
-            List<Post> posts = postRepository.findAllByUserId(userId);
+            List<Post> posts = postRepository.findAllByUserIdOrderByPostedAtDesc(userId);
             setPostLikes(posts, friendsPosts);
-            return getPostDtos(pageable, friendsPosts);
+            Page<PostDto> paginatedPosts = getPostDtos(pageable, friendsPosts);
+            long totalPosts = friendsPosts.size();
+
+            return new PostResponse(paginatedPosts.getContent(), totalPosts);
         } else {
             throw new BadRequestException("Użytkownik ma prywatny profil");
         }
-
     }
 
-    private static Page<PostDto> getPostDtos(Pageable pageable, List<PostDto> friendsPosts) {
+    private Page<PostDto> getPostDtos(Pageable pageable, List<PostDto> friendsPosts) {
         int start = (int) pageable.getOffset();
         int end = Math.min(start + pageable.getPageSize(), friendsPosts.size());
         return new PageImpl<>(friendsPosts.subList(start, end), pageable, friendsPosts.size());

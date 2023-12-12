@@ -56,7 +56,7 @@ public class ArticleService {
     public ArticleResponse findAllApprovedArticles(String title, int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         long totalApprovedArticles = articleRepository.countAllByApprovedIsTrue();
-        List<Article> articles = articleRepository.findByTitleContainsIgnoreCaseAndApprovedIsTrue(title, pageable);
+        List<Article> articles = articleRepository.findByTitleContainsIgnoreCaseAndApprovedIsTrueOrderByPublishedAtDesc(title, pageable);
         List<ArticleDto> articleDtos = new ArrayList<>();
         setArticlesLikesAndSavedStatus(articles, articleDtos);
         return new ArticleResponse(articleDtos, totalApprovedArticles);
@@ -83,7 +83,7 @@ public class ArticleService {
     public ArticleResponse findAllNotApprovedArticles(int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         long totalNotApprovedArticles = articleRepository.countAllByApprovedIsFalse();
-        List<Article> articles = articleRepository.findAllByApprovedIsFalse(pageable);
+        List<Article> articles = articleRepository.findAllByApprovedIsFalseOrderByPublishedAtDesc(pageable);
         List<ArticleDto> articleDtos = new ArrayList<>();
         setArticlesLikesAndSavedStatus(articles, articleDtos);
         return new ArticleResponse(articleDtos, totalNotApprovedArticles);

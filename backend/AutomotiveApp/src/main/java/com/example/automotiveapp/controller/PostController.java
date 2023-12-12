@@ -3,6 +3,7 @@ package com.example.automotiveapp.controller;
 import com.example.automotiveapp.domain.request.PostSaveRequest;
 import com.example.automotiveapp.dto.PostDto;
 import com.example.automotiveapp.dto.ReportDto;
+import com.example.automotiveapp.reponse.PostResponse;
 import com.example.automotiveapp.service.PostService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -11,7 +12,6 @@ import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -72,25 +71,23 @@ public class PostController {
     }
 
     @GetMapping("/friends")
-    public ResponseEntity<List<PostDto>> getFriendsPosts(
+    public ResponseEntity<PostResponse> getFriendsPosts(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page - 1, size);
-        Page<PostDto> paginatedFriendsPosts = postService.getFriendsPosts(pageable);
-        return ResponseEntity.ok(paginatedFriendsPosts.getContent());
+        return ResponseEntity.ok(postService.getFriendsPosts(pageable));
     }
 
 
     @GetMapping("/user")
-    public ResponseEntity<List<PostDto>> getUserPosts(
+    public ResponseEntity<PostResponse> getUserPosts(
             @RequestParam Long userId,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page - 1, size);
-        Page<PostDto> paginatedUserPosts = postService.getUserPosts(userId, pageable);
-        return ResponseEntity.ok(paginatedUserPosts.getContent());
+        return ResponseEntity.ok(postService.getUserPosts(userId, pageable));
     }
 
     @PostMapping("/report")
