@@ -34,7 +34,7 @@ const getPosts = async (page: number = 1, size: number = 10) => {
       {
         method: "GET",
         credentials: "include",
-      }
+      },
     );
 
     const data = await response.json();
@@ -44,7 +44,8 @@ const getPosts = async (page: number = 1, size: number = 10) => {
     return {
       status: "ok",
       message: "Pobrano posty.",
-      posts: data,
+      posts: data.posts,
+      totalPostsNumber: data.postsNumber,
     };
   } catch (error) {
     return createErrorResponse(error);
