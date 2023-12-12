@@ -1,6 +1,6 @@
 import AdminRoutes from "./routes/AdminRoutes";
 import AppLayout from "../pages/AppLayout";
-import ArticlesRoutes from "./routes/articlesRoutes";
+import ArticlesRoutes from "./routes/ArticlesRoutes";
 import AuthRoutes from "./routes/AuthRoutes";
 import BookmarksRoutes from "./routes/BookmarksRoutes";
 import ChatsRoutes from "./routes/ChatsRoutes";

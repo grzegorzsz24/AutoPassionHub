@@ -15,14 +15,14 @@ const Posts = () => {
   const dispatch = useAppDispatch();
   const { showErrorNotification, showSuccessNotification } = useNotification();
   const [posts, setPosts] = useState<PostModel[]>([]);
-  const [page, setPage] = useState(1);
-  const [hasMorePosts, setHasMorePosts] = useState(true);
+  // const [page, setPage] = useState(1);
+  // const [hasMorePosts, setHasMorePosts] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
   const downloadPosts = async () => {
     try {
       setIsLoading(true);
-      const data = await getPosts(page, POSTS_PER_PAGE);
+      const data = await getPosts(1, POSTS_PER_PAGE);
       if (data.status !== "ok") {
         throw new Error(data.message);
       }
