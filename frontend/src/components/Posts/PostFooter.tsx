@@ -18,11 +18,11 @@ const PostFooter: FC<PostFooterProps> = ({
   toogleCommentsVisibilityHandler,
 }) => {
   return (
-    <div className="px-2 sm:px-4 py-2 sm:py-4 flex gap-4 sm:gap-8 text-blue-700 dark:text-blue-200">
+    <div className="flex gap-4 px-2 py-2 text-blue-700 dark:text-blue-200 sm:gap-8 sm:px-4 sm:py-4">
       <div className="flex items-center gap-2 ">
         <button
           onClick={toogleLikeHandler}
-          className="active:animate-ping transition-all"
+          className="transition-all active:animate-ping"
         >
           {" "}
           {liked ? <FaHeart /> : <FaRegHeart />}

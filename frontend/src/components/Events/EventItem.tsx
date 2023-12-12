@@ -16,11 +16,11 @@ const EventItem: FC<EventItemProps> = ({ event }) => {
 
   return (
     <div
-      className="bg-white dark:bg-primaryDark2 shadow-md rounded-md p-4 flex items-center gap-6 hover:cursor-pointer group"
+      className="group flex items-center gap-6 rounded-md bg-white p-4 shadow-md hover:cursor-pointer dark:bg-primaryDark2"
       onClick={goToEventPage}
     >
-      <div className="bg-blue-600 text-blue-50 rounded-md p-1 flex flex-col items-center group-hover:bg-blue-700 transition-all w-24 h-22">
-        <p className="font-bold text-xl">
+      <div className="h-22 flex w-24 flex-col items-center rounded-md bg-blue-600 p-1 text-blue-50 transition-all group-hover:bg-blue-700">
+        <p className="text-xl font-bold">
           {DateFormatter.getDayNumber(event.eventDate)}
         </p>
         <p className="text-sm">{DateFormatter.getMonthName(event.eventDate)}</p>

@@ -1,7 +1,3 @@
-import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 
@@ -9,8 +5,8 @@ import { FC } from "react";
 import PrimaryButton from "../../ui/PrimaryButton";
 import UserModel from "../../models/UserModel";
 import UserProfile from "../../ui/UserProfile";
-import handleError from "../../services/errorHandler";
 import { sendFriendRequest } from "../../services/friendService";
+import { useNotification } from "../../hooks/useNotification";
 import { useStompClient } from "react-stomp-hooks";
 
 interface AddFriendElementProps {
@@ -23,6 +19,7 @@ const AddFriendElement: FC<AddFriendElementProps> = ({
   deleteUserFromList,
 }) => {
   const stompClient = useStompClient();
+  const { showSuccessNotification, showErrorNotification } = useNotification();
   const dispatch = useAppDispatch();
   const { userId: loggedInUserId } = useAppSelector((state) => state.user);
 
@@ -45,28 +42,17 @@ const AddFriendElement: FC<AddFriendElementProps> = ({
           }),
         });
       }
-      dispatch(
-        addNotification({
-          message: data.message,
-          type: NotificationStatus.SUCCESS,
-        })
-      );
+      showSuccessNotification(data.message);
       deleteUserFromList(user.id);
-    } catch (err) {
-      const newError = handleError(err);
-      dispatch(
-        addNotification({
-          message: newError.message,
-          type: NotificationStatus.ERROR,
-        })
-      );
+    } catch (error) {
+      showErrorNotification(error);
     } finally {
       dispatch(stopLoading());
     }
   };
 
   return (
-    <div className="flex items-center justify-between gap-2 sm:gap-4 w-full 2xl:w-2/3 overflow-y-auto py-2 sm:py-4 px-4 sm:px-6  sm:rounded-md bg-white dark:bg-primaryDark2 shadow-md">
+    <div className="flex w-full items-center justify-between gap-2 overflow-y-auto bg-white px-4 py-2 shadow-md dark:bg-primaryDark2 sm:gap-4  sm:rounded-md sm:px-6 sm:py-4 2xl:w-2/3">
       <UserProfile
         size="medium"
         imageUrl={user.imageUrl}

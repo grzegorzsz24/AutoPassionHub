@@ -17,7 +17,7 @@ const Messages: FC<MessagesProps> = ({ messages }) => {
   }, [messages]);
 
   return (
-    <div className="px-4 flex flex-col gap-2 ">
+    <div className="flex flex-col gap-2 px-4 ">
       {messages.map((message, index) => (
         <div ref={scroll} key={index}>
           <Message

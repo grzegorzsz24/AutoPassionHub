@@ -1,8 +1,4 @@
 import { FC, useCallback, useState } from "react";
-import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 
@@ -13,7 +9,7 @@ import PostModel from "../../models/PostModel";
 import PrimaryButton from "../../ui/PrimaryButton";
 import TextareaAutosize from "react-textarea-autosize";
 import { createPost } from "../../services/postService";
-import handleError from "../../services/errorHandler";
+import { useNotification } from "../../hooks/useNotification";
 
 interface AddPostProps {
   addPostToList: (post: PostModel) => void;
@@ -21,6 +17,7 @@ interface AddPostProps {
 
 const AddPost: FC<AddPostProps> = ({ addPostToList }) => {
   const dispatch = useAppDispatch();
+  const { showErrorNotification, showSuccessNotification } = useNotification();
   const { imageUrl, firstName } = useAppSelector((state) => state.user);
   const [postText, setPostText] = useState<string>("");
   const [selectedImages, setSelectedImages] = useState<
@@ -67,42 +64,35 @@ const AddPost: FC<AddPostProps> = ({ addPostToList }) => {
       dispatch(startLoading());
       const resizedImages = await Promise.all(
         selectedImages.map((img) =>
-          ImageResizer.scaleDownAndReduceImageQuality(img.file, 1920, 1080, 0.8)
-        )
+          ImageResizer.scaleDownAndReduceImageQuality(
+            img.file,
+            1920,
+            1080,
+            0.8,
+          ),
+        ),
       );
       const data = await createPost(postText, resizedImages);
       if (data.status !== "ok") {
         throw new Error(data.message);
       }
-
-      dispatch(
-        addNotification({
-          type: NotificationStatus.SUCCESS,
-          message: "Dodano post",
-        })
-      );
+      showSuccessNotification(data.message);
       addPostToList(data.post);
       clearForm();
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       dispatch(stopLoading());
     }
   };
 
   return (
-    <div className="bg-white dark:bg-primaryDark2 text-primaryDark dark:text-blue-50 sm:rounded-md  py-4 max-w-2xl w-full shadow-md ">
-      <div className="flex gap-2 sm:gap-6 px-2 sm:px-4">
+    <div className="w-full max-w-2xl bg-white py-4 text-primaryDark  shadow-md dark:bg-primaryDark2 dark:text-blue-50 sm:rounded-md ">
+      <div className="flex gap-2 px-2 sm:gap-6 sm:px-4">
         <img
           src={imageUrl}
           alt="Your profile picture"
-          className="w-8 h-8 sm:w-12 sm:h-12 rounded-full shadow-md"
+          className="h-8 w-8 rounded-full shadow-md sm:h-12 sm:w-12"
         />
         <TextareaAutosize
           value={postText}
@@ -110,12 +100,12 @@ const AddPost: FC<AddPostProps> = ({ addPostToList }) => {
           //   maxLength={300}
           minRows={2}
           placeholder={`Co słychać, ${firstName}?`}
-          className="bg-transparent resize-none w-full outline-none border-none rounded-md overflow-auto p-2 mb-2 focus:ring-2 focus:ring-blue-600 text-sm sm:text-md"
+          className="sm:text-md mb-2 w-full resize-none overflow-auto rounded-md border-none bg-transparent p-2 text-sm outline-none focus:ring-2 focus:ring-blue-600"
         />
       </div>
 
       {selectedImages.length > 0 && (
-        <div className="h-96 border-t-2 pt-2 border-blue-600">
+        <div className="h-96 border-t-2 border-blue-600 pt-2">
           <Gallery
             images={selectedImages.map((img) => img.url)}
             onDeleteImage={deleteImage}
@@ -123,10 +113,10 @@ const AddPost: FC<AddPostProps> = ({ addPostToList }) => {
         </div>
       )}
       <div className="px-2 sm:px-4">
-        <label className=" flex flex-col items-center gap-6 py-2 border-2 border-blue-600 my-2 sm:my-4 rounded-md cursor-pointer">
+        <label className=" my-2 flex cursor-pointer flex-col items-center gap-6 rounded-md border-2 border-blue-600 py-2 sm:my-4">
           <div className="flex flex-col items-center">
-            <MdPhoto className="text-lg sm:text-2xl mb-2" />
-            <span className="text-xs sm:text-sm font-bold">Dodaj zdjęcia</span>
+            <MdPhoto className="mb-2 text-lg sm:text-2xl" />
+            <span className="text-xs font-bold sm:text-sm">Dodaj zdjęcia</span>
             <span className="text-xs">(Maksymalnie 5 zdjęć)</span>
             {selectedImages.length > 0 && (
               <span className="my-4 text-xs sm:text-sm">
@@ -134,8 +124,8 @@ const AddPost: FC<AddPostProps> = ({ addPostToList }) => {
                 {selectedImages.length === 1
                   ? "zdjęcie"
                   : selectedImages.length === 5
-                  ? "zdjęć"
-                  : "zdjęcia"}
+                    ? "zdjęć"
+                    : "zdjęcia"}
               </span>
             )}
           </div>

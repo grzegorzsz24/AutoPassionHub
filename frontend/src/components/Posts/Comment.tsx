@@ -31,7 +31,7 @@ const Comment: FC<CommentProps> = ({
   };
 
   return (
-    <div className="flex flex-col gap-4 bg-grayLight dark:bg-primaryDark rounded-md p-4">
+    <div className="flex flex-col gap-4 rounded-md bg-grayLight p-4 dark:bg-primaryDark">
       <div className="flex justify-between">
         <UserProfile
           size="small"
@@ -52,7 +52,7 @@ const Comment: FC<CommentProps> = ({
               <BiDotsHorizontalRounded className="text-2xl" />
             </p>
             {optionsAreShown && (
-              <div className="absolute z-40 right-0 bg-grayLight text-primaryDark dark:bg-grayDark dark:text-blue-50  py-2 px-4 flex flex-col gap-2 text-sm rounded-md shadow-md">
+              <div className="absolute right-0 z-40 flex flex-col gap-2 rounded-md  bg-grayLight px-4 py-2 text-sm text-primaryDark shadow-md dark:bg-grayDark dark:text-blue-50">
                 <OutlineButton
                   size="xs"
                   fullWidth={true}

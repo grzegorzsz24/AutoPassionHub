@@ -1,9 +1,5 @@
 import { FC, useEffect, useState } from "react";
 import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
-import {
   acceptFriendRequest,
   rejectFriendRequest,
 } from "../../services/friendService";
@@ -16,8 +12,8 @@ import UserModel from "../../models/UserModel";
 import UserProfile from "../../ui/UserProfile";
 import { getAllChats } from "../../services/chatService";
 import { getUserById } from "../../services/userService";
-import handleError from "../../services/errorHandler";
 import { setChats } from "../../store/features/socketSlice";
+import { useNotification } from "../../hooks/useNotification";
 import { useStompClient } from "react-stomp-hooks";
 
 interface PendingInvitationProps {
@@ -31,6 +27,7 @@ const FriendInvitation: FC<PendingInvitationProps> = ({
 }) => {
   const stompClient = useStompClient();
   const dispatch = useAppDispatch();
+  const { showErrorNotification, showSuccessNotification } = useNotification();
   const { userId: loggedInUserId } = useAppSelector((state) => state.user);
 
   const [user, setUser] = useState<UserModel>();
@@ -41,10 +38,9 @@ const FriendInvitation: FC<PendingInvitationProps> = ({
       if (response.status !== "ok") {
         throw new Error(response.message);
       }
-      console.log(response);
       dispatch(setChats(response.data));
     } catch (error) {
-      handleError(error);
+      showErrorNotification(error);
     }
   };
 
@@ -68,21 +64,10 @@ const FriendInvitation: FC<PendingInvitationProps> = ({
         });
       }
       fetchAllChats();
-      dispatch(
-        addNotification({
-          message: data.message,
-          type: NotificationStatus.SUCCESS,
-        })
-      );
+      showSuccessNotification(data.message);
       removeInvitationFromList(invitation.id);
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          message: newError.message,
-          type: NotificationStatus.ERROR,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       dispatch(stopLoading());
     }
@@ -95,21 +80,10 @@ const FriendInvitation: FC<PendingInvitationProps> = ({
       if (data.status !== "ok") {
         throw new Error(data.message);
       }
-      dispatch(
-        addNotification({
-          message: data.message,
-          type: NotificationStatus.SUCCESS,
-        })
-      );
+      showSuccessNotification(data.message);
       removeInvitationFromList(invitation.id);
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          message: newError.message,
-          type: NotificationStatus.ERROR,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       dispatch(stopLoading());
     }
@@ -123,13 +97,7 @@ const FriendInvitation: FC<PendingInvitationProps> = ({
       }
       setUser(data.user);
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          message: newError.message,
-          type: NotificationStatus.ERROR,
-        })
-      );
+      showErrorNotification(error);
     }
   };
 
@@ -141,7 +109,7 @@ const FriendInvitation: FC<PendingInvitationProps> = ({
     <div className="text-darkPrimary dark:text-blue-50">
       {user && (
         <div
-          className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4 w-full 2xl:w-2/3 overflow-y-auto py-2 sm:py-4 px-4 sm:px-6  sm:rounded-md bg-white dark:bg-primaryDark2 shadow-md"
+          className="flex w-full flex-col items-center justify-between gap-2 overflow-y-auto bg-white px-4 py-2 shadow-md dark:bg-primaryDark2 sm:flex-row sm:gap-4  sm:rounded-md sm:px-6 sm:py-4 2xl:w-2/3"
           key={user.id}
         >
           <UserProfile

@@ -19,14 +19,14 @@ const Pagination: FC<PaginationProps> = ({
     pageButtons.push(
       <button
         key={i}
-        className={`px-4 py-2 rounded-md text-center bg-transparent text-primaryDark2 dark:text-blue-50 hover:bg-blue-600 hover:text-blue-50  transition-all cursor-pointe outline-none 
-        ${currentPage === i ? "border-2 border-blue-600 cursor-default" : ""}
+        className={`cursor-pointe rounded-md bg-transparent px-4 py-2 text-center text-primaryDark2 outline-none transition-all  hover:bg-blue-600 hover:text-blue-50 dark:text-blue-50 
+        ${currentPage === i ? "cursor-default border-2 border-blue-600" : ""}
         `}
         onClick={() => goToPage(i)}
         disabled={currentPage === i}
       >
         {i}
-      </button>
+      </button>,
     );
   }
   if (totalPages <= 1) return <></>;
@@ -34,7 +34,7 @@ const Pagination: FC<PaginationProps> = ({
   return (
     <div className="flex items-center gap-4">
       <button
-        className={`bg-blue-600 text-white  p-2 rounded-md text-center hover:bg-blue-900 transition-all cursor-pointer ${
+        className={`cursor-pointer rounded-md  bg-blue-600 p-2 text-center text-white transition-all hover:bg-blue-900 ${
           currentPage === 1 ? "invisible" : ""
         }`}
         onClick={() => goToPage(currentPage - 1)}
@@ -46,7 +46,7 @@ const Pagination: FC<PaginationProps> = ({
       {pageButtons}
 
       <button
-        className={`bg-blue-600 text-white p-2 rounded-md text-center hover:bg-blue-900 transition-all cursor-pointer  ${
+        className={`cursor-pointer rounded-md bg-blue-600 p-2 text-center text-white transition-all hover:bg-blue-900  ${
           currentPage === totalPages ? "invisible" : ""
         }`}
         onClick={() => goToPage(currentPage + 1)}

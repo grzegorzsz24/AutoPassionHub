@@ -24,11 +24,11 @@ const PendingArticleItem: FC<PendingArticleItemProps> = ({
   };
 
   return (
-    <div className="p-4 bg-white dark:bg-primaryDark2 rounded-md flex flex-col justify-between gap-2 shadow-md">
-      <div className="flex  justify-between items-center gap-12">
+    <div className="flex flex-col justify-between gap-2 rounded-md bg-white p-4 shadow-md dark:bg-primaryDark2">
+      <div className="flex  items-center justify-between gap-12">
         <div>
-          <p className="font-bold text-xl ">{article.title}</p>
-          <div className="flex gap-4 items-center text-sm ">
+          <p className="text-xl font-bold ">{article.title}</p>
+          <div className="flex items-center gap-4 text-sm ">
             <p>
               {article.firstName} {article.lastName}
             </p>
@@ -56,7 +56,7 @@ const PendingArticleItem: FC<PendingArticleItemProps> = ({
         </div>
       </div>
       <button
-        className="cursor-pointer text-xl hover:text-blue-600 transition-all mx-auto"
+        className="mx-auto cursor-pointer text-xl transition-all hover:text-blue-600"
         onClick={toggleExpandHandler}
       >
         {isExpanded ? <FaArrowAltCircleUp /> : <FaArrowCircleDown />}

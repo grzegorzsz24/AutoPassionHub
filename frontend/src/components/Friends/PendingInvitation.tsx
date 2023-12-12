@@ -1,22 +1,17 @@
 import { FC, useEffect, useState } from "react";
-import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
 
 import PendingInvitationModel from "../../models/PendingInvitationModel";
 import UserModel from "../../models/UserModel";
 import UserProfile from "../../ui/UserProfile";
 import { getUserById } from "../../services/userService";
-import handleError from "../../services/errorHandler";
-import { useAppDispatch } from "../../store/store";
+import { useNotification } from "../../hooks/useNotification";
 
 interface PendingInvitationProps {
   invitation: PendingInvitationModel;
 }
 
 const PendingInvitation: FC<PendingInvitationProps> = ({ invitation }) => {
-  const dispatch = useAppDispatch();
+  const { showErrorNotification } = useNotification();
   const [user, setUser] = useState<UserModel>();
 
   const getUser = async () => {
@@ -27,13 +22,7 @@ const PendingInvitation: FC<PendingInvitationProps> = ({ invitation }) => {
       }
       setUser(data.user);
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          message: newError.message,
-          type: NotificationStatus.ERROR,
-        })
-      );
+      showErrorNotification(error);
     }
   };
 
@@ -45,7 +34,7 @@ const PendingInvitation: FC<PendingInvitationProps> = ({ invitation }) => {
     <div className="text-darkPrimary dark:text-blue-50">
       {user && (
         <div
-          className="flex items-center justify-between gap-2 sm:gap-4 w-full 2xl:w-2/3 overflow-y-auto py-2 sm:py-4 px-4 sm:px-6  sm:rounded-md bg-white dark:bg-primaryDark2 shadow-md"
+          className="flex w-full items-center justify-between gap-2 overflow-y-auto bg-white px-4 py-2 shadow-md dark:bg-primaryDark2 sm:gap-4  sm:rounded-md sm:px-6 sm:py-4 2xl:w-2/3"
           key={user.id}
         >
           <UserProfile

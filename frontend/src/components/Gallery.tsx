@@ -73,7 +73,7 @@ const Gallery: FC<GalleryProps> = ({ images, onDeleteImage: deleteImage }) => {
 
   const prevPhoto = () => {
     setCurrentPhotoIndex(
-      (prevIndex) => (prevIndex - 1 + images.length) % images.length
+      (prevIndex) => (prevIndex - 1 + images.length) % images.length,
     );
   };
 
@@ -123,7 +123,7 @@ const Gallery: FC<GalleryProps> = ({ images, onDeleteImage: deleteImage }) => {
 
   return (
     <div
-      className={`grid gap-2 h-full w-full ${
+      className={`grid h-full w-full gap-2 ${
         images.length > 5
           ? layout[5].containerClassName
           : layout[images.length - 1].containerClassName
@@ -142,14 +142,14 @@ const Gallery: FC<GalleryProps> = ({ images, onDeleteImage: deleteImage }) => {
             src={image instanceof File ? URL.createObjectURL(image) : image}
             alt={`Zdjęcie ${index} galerii`}
             loading="lazy"
-            className="absolute inset-0 w-full h-full object-cover cursor-pointer"
+            className="absolute inset-0 h-full w-full cursor-pointer object-cover"
             onClick={() => openPhoto(index)}
           />
 
           {deleteImage && (
             <button
               aria-label="Usuń zdjęcie"
-              className="absolute top-4 right-4 text-2xl text-blue-50 hover:text-red-600 transition-all"
+              className="absolute right-4 top-4 text-2xl text-blue-50 transition-all hover:text-red-600"
               onClick={() => deleteImage(index)}
             >
               <IoMdCloseCircle />
@@ -160,23 +160,23 @@ const Gallery: FC<GalleryProps> = ({ images, onDeleteImage: deleteImage }) => {
       {isOpen && (
         <div
           ref={modalRef}
-          className={`fixed inset-0 z-50 backdrop-blur-sm w-full h-screen bg-black bg-opacity-90 backdrop:blur-sm py-4 px-4 md:px-16  flex items-center justify-center`}
+          className={`fixed inset-0 z-50 flex h-screen w-full items-center justify-center bg-black bg-opacity-90 px-4 py-4  backdrop-blur-sm backdrop:blur-sm md:px-16`}
         >
           <img src={imageSrc} alt="" className="max-h-[80%] " />
 
           <button
             aria-label="Zamknij galerię"
             onClick={closePhoto}
-            className="absolute top-8 right-8 text-4xl text-blue-50 hover:text-blue-600 transition-all"
+            className="absolute right-8 top-8 text-4xl text-blue-50 transition-all hover:text-blue-600"
           >
             <IoMdCloseCircle />
           </button>
           {images.length > 1 && (
-            <div className="absolute bottom-8 right-1/2 translate-x-1/2 flex items-center gap-8">
+            <div className="absolute bottom-8 right-1/2 flex translate-x-1/2 items-center gap-8">
               <button
                 aria-label="Poprzednie zdjęcie"
                 onClick={prevPhoto}
-                className="text-4xl text-blue-50 hover:text-blue-600 transition-all"
+                className="text-4xl text-blue-50 transition-all hover:text-blue-600"
               >
                 <FaArrowAltCircleLeft />
               </button>
@@ -186,7 +186,7 @@ const Gallery: FC<GalleryProps> = ({ images, onDeleteImage: deleteImage }) => {
               <button
                 aria-label="Następne zdjęcie"
                 onClick={nextPhoto}
-                className="text-4xl text-blue-50 hover:text-blue-600 transition-all"
+                className="text-4xl text-blue-50 transition-all hover:text-blue-600"
               >
                 <FaArrowAltCircleRight />
               </button>

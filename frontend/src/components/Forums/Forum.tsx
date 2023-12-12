@@ -1,9 +1,5 @@
 import { FC, useEffect, useState } from "react";
 import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
-import {
   addCommentToForum,
   addForumToSaved,
   deleteForum,
@@ -11,7 +7,6 @@ import {
   getForumComments,
   updateForumComment,
 } from "../../services/forumService";
-import { useAppDispatch, useAppSelector } from "../../store/store";
 
 import AddComment from "./AddComment";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
@@ -23,9 +18,10 @@ import ForumModel from "../../models/ForumModel";
 import OutlineButton from "../../ui/OutlineButton";
 import ToogleBookmarkButton from "../../ui/ToogleBookmarkButton";
 import UserProfile from "../../ui/UserProfile";
-import handleError from "../../services/errorHandler";
 import { reportForum } from "../../services/reportService";
+import { useAppSelector } from "../../store/store";
 import { useNavigate } from "react-router-dom";
+import { useNotification } from "../../hooks/useNotification";
 import { useStompClient } from "react-stomp-hooks";
 
 interface ForumProps {
@@ -35,9 +31,13 @@ interface ForumProps {
 const Forum: FC<ForumProps> = ({ forum }) => {
   const navigate = useNavigate();
   const stompClient = useStompClient();
-  const dispatch = useAppDispatch();
+  const {
+    showErrorNotification,
+    showSuccessNotification,
+    showInfoNotification,
+  } = useNotification();
   const { userId: loggedInUserId, role } = useAppSelector(
-    (state) => state.user
+    (state) => state.user,
   );
 
   const [comments, setComments] = useState<CommentModel[]>([]);
@@ -53,22 +53,10 @@ const Forum: FC<ForumProps> = ({ forum }) => {
       if (data.status !== "ok") {
         throw new Error(data.message);
       }
-      dispatch(
-        addNotification({
-          type: NotificationStatus.SUCCESS,
-          message: data.message,
-        })
-      );
-
+      showSuccessNotification(data.message);
       navigate(-1);
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
+      showErrorNotification(error);
     }
   };
 
@@ -93,13 +81,7 @@ const Forum: FC<ForumProps> = ({ forum }) => {
       }
       setComments((prevState) => [data.data, ...prevState]);
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       setIsLoadingAddComment(false);
     }
@@ -112,22 +94,11 @@ const Forum: FC<ForumProps> = ({ forum }) => {
         throw new Error(data.message);
       }
       setComments((prevState) =>
-        prevState.filter((comment) => comment.id !== id)
+        prevState.filter((comment) => comment.id !== id),
       );
-      dispatch(
-        addNotification({
-          type: NotificationStatus.SUCCESS,
-          message: data.message,
-        })
-      );
+      showSuccessNotification(data.message);
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
+      showErrorNotification(error);
     }
   };
 
@@ -139,23 +110,12 @@ const Forum: FC<ForumProps> = ({ forum }) => {
       }
       setComments((prevState) =>
         prevState.map((comment) =>
-          comment.id === id ? { ...comment, content } : comment
-        )
+          comment.id === id ? { ...comment, content } : comment,
+        ),
       );
-      dispatch(
-        addNotification({
-          type: NotificationStatus.SUCCESS,
-          message: data.message,
-        })
-      );
+      showSuccessNotification(data.message);
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
+      showErrorNotification(error);
     }
   };
 
@@ -167,13 +127,7 @@ const Forum: FC<ForumProps> = ({ forum }) => {
       }
       setComments(data.data);
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
+      showErrorNotification(error);
     }
   };
 
@@ -184,29 +138,13 @@ const Forum: FC<ForumProps> = ({ forum }) => {
         throw new Error(data.message);
       }
       if (isBookmarked) {
-        dispatch(
-          addNotification({
-            type: NotificationStatus.INFO,
-            message: "Usunięto z zapisanych",
-          })
-        );
+        showInfoNotification("Usunięto z zapisanych");
       } else {
-        dispatch(
-          addNotification({
-            type: NotificationStatus.SUCCESS,
-            message: data.message,
-          })
-        );
+        showSuccessNotification(data.message);
       }
       setIsBookmarked((prev) => !prev);
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
+      showErrorNotification(error);
     }
   };
 
@@ -216,12 +154,7 @@ const Forum: FC<ForumProps> = ({ forum }) => {
       if (data.status !== "ok") {
         throw new Error(data.message);
       }
-      dispatch(
-        addNotification({
-          type: NotificationStatus.SUCCESS,
-          message: data.message,
-        })
-      );
+      showSuccessNotification(data.message);
       if (stompClient) {
         stompClient.publish({
           destination: `/app/admin/notification`,
@@ -235,13 +168,7 @@ const Forum: FC<ForumProps> = ({ forum }) => {
         });
       }
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
+      showErrorNotification(error);
     }
   };
 
@@ -250,11 +177,11 @@ const Forum: FC<ForumProps> = ({ forum }) => {
   }, []);
 
   return (
-    <div className="bg-white dark:bg-primaryDark2 p-6 rounded-md shadow-md ">
-      <div className="flex items-start justify-between gap-8  my-6">
+    <div className="rounded-md bg-white p-6 shadow-md dark:bg-primaryDark2 ">
+      <div className="my-6 flex items-start justify-between  gap-8">
         <div className="">
-          <h1 className="font-bold text-2xl text-wrap">{forum.title}</h1>
-          <p className="text-xs text-gray-500 dark:text-gray-300 mb-4">
+          <h1 className="text-wrap text-2xl font-bold">{forum.title}</h1>
+          <p className="mb-4 text-xs text-gray-500 dark:text-gray-300">
             {DateFormatter.formatDate(forum.createdAt)}
           </p>
           <ToogleBookmarkButton
@@ -298,8 +225,8 @@ const Forum: FC<ForumProps> = ({ forum }) => {
           </DropdownMenu>
         )}
       </div>
-      <p className="leading-10 mb-12 text-justify">{forum.content}</p>
-      <div className="w-full mx-auto p-6 flex flex-col gap-6">
+      <p className="mb-12 text-justify leading-10">{forum.content}</p>
+      <div className="mx-auto flex w-full flex-col gap-6 p-6">
         <AddComment
           addCommentHandler={addCommentHandler}
           isLoading={isLoadingAddComment}

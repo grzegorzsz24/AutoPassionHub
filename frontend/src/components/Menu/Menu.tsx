@@ -21,7 +21,7 @@ const menuVariants = {
 const Menu: FC<MenuProps> = ({ links }) => {
   return (
     <motion.nav
-      className="bg-white sm:rounded-md sm:py-6 text-primaryDark2 dark:bg-primaryDark2 dark:text-white sticky top-0 md:w-96"
+      className="sticky top-0 bg-white text-primaryDark2 dark:bg-primaryDark2 dark:text-white sm:rounded-md sm:py-6 md:w-96"
       initial="hidden"
       animate="visible"
       variants={menuVariants}
@@ -33,13 +33,13 @@ const Menu: FC<MenuProps> = ({ links }) => {
           to={link}
           className={({ isActive }) =>
             isActive
-              ? "bg-blue-600 text-blue-50 px-6 sm:px-6 md:px-12 py-2  flex items-center gap-2 "
-              : "px-6 sm:px-6 md:px-12 py-2 flex  items-center gap-2 hover:bg-blue-900 hover:text-white transition-all "
+              ? "flex items-center gap-2 bg-blue-600 px-6 py-2  text-blue-50 sm:px-6 md:px-12 "
+              : "flex items-center gap-2 px-6 py-2  transition-all hover:bg-blue-900 hover:text-white sm:px-6 md:px-12 "
           }
           end={true}
         >
           {icon}
-          <span className="block text text-sm lg:text-xl">{text}</span>
+          <span className="text block text-sm lg:text-xl">{text}</span>
         </NavLink>
       ))}
     </motion.nav>

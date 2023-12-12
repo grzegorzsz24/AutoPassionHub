@@ -25,7 +25,7 @@ const ChatConversation: FC<ChatConversationProps> = ({ currentChat }) => {
   const [user, setUser] = useState<UserModel | null>(null);
   const [messages, setMessages] = useState<MessageModel[]>([]);
   useSubscription(`/user/${loggedInUserId}/queue/messages`, (message) =>
-    setMessages((prev) => [...prev, JSON.parse(message.body)])
+    setMessages((prev) => [...prev, JSON.parse(message.body)]),
   );
   const [isLoading, setIsLoading] = useState(true);
 
@@ -49,7 +49,7 @@ const ChatConversation: FC<ChatConversationProps> = ({ currentChat }) => {
 
   const fetchUser = async () => {
     const userId = currentChat?.users.find(
-      (user) => user !== Number(loggedInUserId)
+      (user) => user !== Number(loggedInUserId),
     );
     if (!currentChat) return;
     try {
@@ -66,7 +66,7 @@ const ChatConversation: FC<ChatConversationProps> = ({ currentChat }) => {
 
   const sendMessage = (text: string) => {
     const userId = currentChat?.users.find(
-      (user) => user !== Number(loggedInUserId)
+      (user) => user !== Number(loggedInUserId),
     );
     if (stompClient) {
       console.log("wysyłam");
@@ -100,15 +100,15 @@ const ChatConversation: FC<ChatConversationProps> = ({ currentChat }) => {
   }, [currentChat]);
 
   return (
-    <div className="p-2 md:p-4 flex flex-col h-96 md:h-full ">
+    <div className="flex h-96 flex-col p-2 md:h-full md:p-4 ">
       {!currentChat && (
-        <div className=" h-full flex items-center justify-center md:text-lg">
+        <div className=" flex h-full items-center justify-center md:text-lg">
           Kliknij czat aby rozpocząć
         </div>
       )}
       {currentChat && (
         <>
-          <div className="px-2 md:px-4 pb-4 border-b-2 dark:border-blue-600">
+          <div className="border-b-2 px-2 pb-4 dark:border-blue-600 md:px-4">
             {user && (
               <UserProfile
                 imageUrl={user.imageUrl}
@@ -122,7 +122,7 @@ const ChatConversation: FC<ChatConversationProps> = ({ currentChat }) => {
           <div className="grow overflow-y-auto py-4">
             {isLoading && <LoadingSpinner small />}
             {!isLoading && messages.length === 0 && (
-              <div className="h-full flex flex-col items-center justify-end gap-4 text-md">
+              <div className="text-md flex h-full flex-col items-center justify-end gap-4">
                 <p>Brak wiadomości.</p>
                 <OutlineButton
                   onClick={() => {

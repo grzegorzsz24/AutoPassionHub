@@ -17,17 +17,17 @@ const Event: FC<EventProps> = ({ event }) => {
   return (
     <div
       onClick={onClickHandler}
-      className="flex gap-2 cursor-pointer group  items-center"
+      className="group flex cursor-pointer items-center  gap-2"
     >
-      <div className="flex flex-col bg-blue-600 text-blue-50 rounded-md items-center justify-center w-16   py-1 group-hover:bg-blue-800 transition-all">
+      <div className="flex w-16 flex-col items-center justify-center rounded-md bg-blue-600 py-1   text-blue-50 transition-all group-hover:bg-blue-800">
         <p className="font-bold">
           {DateFormatter.getDayNumber(event.eventDate)}
         </p>
         <p className="text-xs">{DateFormatter.getMonthName(event.eventDate)}</p>
         <p className="text-xs">{DateFormatter.getYear(event.eventDate)}</p>
       </div>
-      <div className="flex flex-col px-2 max-w-[14rem]">
-        <p className="truncate overflow-hidden">{event.title}</p>
+      <div className="flex max-w-[14rem] flex-col px-2">
+        <p className="overflow-hidden truncate">{event.title}</p>
         <p className="text-xs">{event.city}</p>
       </div>
     </div>

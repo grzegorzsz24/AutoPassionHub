@@ -1,16 +1,11 @@
-import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
-import { useAppDispatch, useAppSelector } from "../../store/store";
-
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import DropdownMenu from "../../ui/DropdownMenu";
 import { FC } from "react";
 import OutlineButton from "../../ui/OutlineButton";
 import UserProfile from "../../ui/UserProfile";
-import handleError from "../../services/errorHandler";
 import { reportPost } from "../../services/reportService";
+import { useAppSelector } from "../../store/store";
+import { useNotification } from "../../hooks/useNotification";
 import { useStompClient } from "react-stomp-hooks";
 
 interface PostHeaderProps {
@@ -34,7 +29,7 @@ const PostHeader: FC<PostHeaderProps> = ({
   deletePostHandler,
   setEditMode,
 }) => {
-  const dispatch = useAppDispatch();
+  const { showSuccessNotification, showErrorNotification } = useNotification();
   const stompClient = useStompClient();
   const {
     nickname: userNickname,
@@ -48,12 +43,7 @@ const PostHeader: FC<PostHeaderProps> = ({
       if (response.status !== "ok") {
         throw new Error(response.message);
       }
-      dispatch(
-        addNotification({
-          message: response.message,
-          type: NotificationStatus.SUCCESS,
-        })
-      );
+      showSuccessNotification(response.message);
       if (stompClient) {
         stompClient.publish({
           destination: `/app/admin/notification`,
@@ -67,20 +57,14 @@ const PostHeader: FC<PostHeaderProps> = ({
         });
       }
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          message: newError.message,
-          type: NotificationStatus.ERROR,
-        })
-      );
+      showErrorNotification(error);
     }
   };
 
   const userIsNotPostAuthor = nickname !== userNickname;
 
   return (
-    <div className=" py-4 px-2 sm:px-4 flex items-center justify-between">
+    <div className=" flex items-center justify-between px-2 py-4 sm:px-4">
       <UserProfile
         size="medium"
         imageUrl={avatar}

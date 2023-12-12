@@ -1,16 +1,11 @@
 import { FC, useEffect } from "react";
-import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
 
 import AddComment from "./AddComment";
 import Comment from "./Comment";
 import CommentModel from "../../models/CommentModel";
 import LoadingSpinner from "../../ui/LoadingSpinner";
 import { getPostComments } from "../../services/commentService";
-import handleError from "../../services/errorHandler";
-import { useAppDispatch } from "../../store/store";
+import { useNotification } from "../../hooks/useNotification";
 
 interface CommentsProps {
   id: number;
@@ -33,7 +28,7 @@ const Comments: FC<CommentsProps> = ({
   editCommentHandler,
   addCommentHandler,
 }) => {
-  const dispatch = useAppDispatch();
+  const { showErrorNotification } = useNotification();
   const getCommentsHandler = async () => {
     try {
       setCommentsAreLoading(true);
@@ -41,16 +36,9 @@ const Comments: FC<CommentsProps> = ({
       if (data.status !== "ok") {
         throw new Error(data.message);
       }
-      console.log(data);
       setComments(data.comments);
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          message: newError.message,
-          type: NotificationStatus.ERROR,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       setCommentsAreLoading(false);
     }
@@ -61,7 +49,7 @@ const Comments: FC<CommentsProps> = ({
   }, []);
 
   return (
-    <div className="p-4 flex flex-col gap-4">
+    <div className="flex flex-col gap-4 p-4">
       {!commentsAreLoading && (
         <AddComment addCommentHandler={addCommentHandler} />
       )}
