@@ -1,8 +1,3 @@
-import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
-import { useAppDispatch, useAppSelector } from "../../store/store";
 import { useEffect, useState } from "react";
 
 import DeleteFriendElement from "../../components/Friends/DeleteFriendElement";
@@ -10,10 +5,11 @@ import FriendSkeleton from "../../components/Friends/FriendSkeleton";
 import NoContent from "../../ui/NoContent";
 import UserModel from "../../models/UserModel";
 import { getUserFriends } from "../../services/friendService";
-import handleError from "../../services/errorHandler";
+import { useAppSelector } from "../../store/store";
+import { useNotification } from "../../hooks/useNotification";
 
 const UserFriendsPage = () => {
-  const dispatch = useAppDispatch();
+  const { showErrorNotification } = useNotification();
   const [friends, setFriends] = useState<UserModel[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { userId } = useAppSelector((state) => state.user);
@@ -27,13 +23,7 @@ const UserFriendsPage = () => {
       }
       setFriends(response.friends);
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          message: newError.message,
-          type: NotificationStatus.ERROR,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       setIsLoading(false);
     }
@@ -48,7 +38,7 @@ const UserFriendsPage = () => {
   }, []);
 
   return (
-    <div className="text-primaryDark dark:text-blue-50  flex flex-col gap-6">
+    <div className="flex flex-col  gap-6 text-primaryDark dark:text-blue-50">
       {isLoading && (
         <>
           <FriendSkeleton />

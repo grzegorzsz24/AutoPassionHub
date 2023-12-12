@@ -1,7 +1,3 @@
-import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
 import { useEffect, useState } from "react";
 
 import Article from "../../components/Articles/Article";
@@ -9,12 +5,11 @@ import ArticleModel from "../../models/ArticleModel";
 import LoadingSpinner from "../../ui/LoadingSpinner";
 import NoContent from "../../ui/NoContent";
 import { getArticleById } from "../../services/articleService";
-import handleError from "../../services/errorHandler";
-import { useAppDispatch } from "../../store/store";
+import { useNotification } from "../../hooks/useNotification";
 import { useParams } from "react-router-dom";
 
 const ArticlePage = () => {
-  const dispatch = useAppDispatch();
+  const { showErrorNotification } = useNotification();
   const { article: articleID } = useParams<{ article: string }>();
   const [article, setArticle] = useState<ArticleModel | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -27,15 +22,8 @@ const ArticlePage = () => {
         throw new Error(data.message);
       }
       setArticle(data.data);
-      console.log(data.data);
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       setIsLoading(false);
     }

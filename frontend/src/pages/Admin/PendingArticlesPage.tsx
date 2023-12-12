@@ -1,10 +1,6 @@
 const ARTICLES_PER_PAGE = import.meta.env.VITE_ARTICLES_PER_PAGE as number;
 
 import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
-import {
   approveArticle,
   getArticlesWaitingForApproval,
   rejectArticle,
@@ -17,12 +13,11 @@ import NoContent from "../../ui/NoContent";
 import Pagination from "../../components/Pagination";
 import PendingArticleItem from "../../components/Articles/PendingArticleItem";
 import articleFilterReducer from "../../reducers/ArticlePaginationReducer";
-import handleError from "../../services/errorHandler";
-import { useAppDispatch } from "../../store/store";
+import { useNotification } from "../../hooks/useNotification";
 import { useSearchParams } from "react-router-dom";
 
 const PendingArticlesPage = () => {
-  const reduxDispatch = useAppDispatch();
+  const { showErrorNotification, showSuccessNotification } = useNotification();
   const [params, setParams] = useSearchParams();
   const [articles, setArticles] = useState<ArticleModel[]>([]);
   const [totalNumberOfArticles, setTotalNumberOfArticles] = useState(0);
@@ -44,7 +39,7 @@ const PendingArticlesPage = () => {
 
   const [filterState, filterDispatch] = useReducer(
     articleFilterReducer,
-    setFiltersFromParams()
+    setFiltersFromParams(),
   );
   const { page, size } = filterState;
 
@@ -62,15 +57,8 @@ const PendingArticlesPage = () => {
       if (data.status !== "ok") throw new Error(data.message);
       setArticles(data.data);
       setTotalNumberOfArticles(data.totalNumberOfArticles);
-      console.log(data.data);
     } catch (error) {
-      const newError = handleError(error);
-      reduxDispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       setIsLoading(false);
     }
@@ -81,24 +69,13 @@ const PendingArticlesPage = () => {
       const data = await approveArticle(id);
       if (data.status !== "ok") throw new Error(data.message);
       setArticles((prev) => prev.filter((article) => article.id !== id));
-      reduxDispatch(
-        addNotification({
-          type: NotificationStatus.SUCCESS,
-          message: "Artykuł został zatwierdzony",
-        })
-      );
+      showSuccessNotification("Artykuł został zatwierdzony");
       if (articles.length <= 1 && page !== 1) {
         filterDispatch({ type: "SET_PAGE", payload: page - 1 });
         setParams(buildQueryParams());
       }
     } catch (error) {
-      const newError = handleError(error);
-      reduxDispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
+      showErrorNotification(error);
     }
   };
 
@@ -107,24 +84,13 @@ const PendingArticlesPage = () => {
       const data = await rejectArticle(id);
       if (data.status !== "ok") throw new Error(data.message);
       setArticles((prev) => prev.filter((article) => article.id !== id));
-      reduxDispatch(
-        addNotification({
-          type: NotificationStatus.SUCCESS,
-          message: "Artykuł został odrzucony",
-        })
-      );
+      showSuccessNotification("Artykuł został odrzucony");
       if (articles.length <= 1 && page !== 1) {
         filterDispatch({ type: "SET_PAGE", payload: page - 1 });
         setParams(buildQueryParams());
       }
     } catch (error) {
-      const newError = handleError(error);
-      reduxDispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
+      showErrorNotification(error);
     }
   };
 
@@ -133,10 +99,10 @@ const PendingArticlesPage = () => {
   }, [filterState]);
 
   return (
-    <div className="max-w-4xl h-full flex flex-col justify-between">
+    <div className="flex h-full max-w-4xl flex-col justify-between">
       <div className="flex flex-col  gap-12">
         {isLoading ? (
-          <div className="flex flex-col gap-4 max-w-4xl">
+          <div className="flex max-w-4xl flex-col gap-4">
             <ArticleSkeleton />
             <ArticleSkeleton />
             <ArticleSkeleton />
@@ -158,7 +124,7 @@ const PendingArticlesPage = () => {
         )}
       </div>
       {!isLoading && articles.length > 0 && (
-        <div className="flex items-center justify-center my-4">
+        <div className="my-4 flex items-center justify-center">
           <Pagination
             currentPage={page}
             totalPages={Math.ceil(totalNumberOfArticles / size)}

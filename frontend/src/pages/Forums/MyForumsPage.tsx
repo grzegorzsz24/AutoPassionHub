@@ -1,8 +1,3 @@
-import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
-import { useAppDispatch, useAppSelector } from "../../store/store";
 import { useEffect, useState } from "react";
 
 import ForumModel from "../../models/ForumModel";
@@ -10,10 +5,11 @@ import ForumSkeleton from "../../components/Forums/ForumSkeleton";
 import ForumsLits from "../../components/Forums/ForumsLits";
 import NoContent from "../../ui/NoContent";
 import { getUserForums } from "../../services/forumService";
-import handleError from "../../services/errorHandler";
+import { useAppSelector } from "../../store/store";
+import { useNotification } from "../../hooks/useNotification";
 
 const MyForumsPage = () => {
-  const dispatch = useAppDispatch();
+  const { showErrorNotification } = useNotification();
   const { nickname } = useAppSelector((state) => state.user);
   const [forums, setForums] = useState<ForumModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -25,13 +21,7 @@ const MyForumsPage = () => {
       console.log(data.data);
       setForums(data.data);
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       setIsLoading(false);
     }
@@ -45,7 +35,7 @@ const MyForumsPage = () => {
     <div>
       {!isLoading && forums.length === 0 && <NoContent>Brak forów</NoContent>}
       {isLoading && (
-        <div className="flex flex-col gap-4 w-full max-w-4xl">
+        <div className="flex w-full max-w-4xl flex-col gap-4">
           <ForumSkeleton />
           <ForumSkeleton />
           <ForumSkeleton />

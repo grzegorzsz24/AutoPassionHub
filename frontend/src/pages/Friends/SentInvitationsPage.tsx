@@ -1,7 +1,3 @@
-import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
 import { useEffect, useState } from "react";
 
 import FriendSkeleton from "../../components/Friends/FriendSkeleton";
@@ -9,11 +5,10 @@ import NoContent from "../../ui/NoContent";
 import PendingInvitation from "../../components/Friends/PendingInvitation";
 import PendingInvitationModel from "../../models/PendingInvitationModel";
 import { getSentInvitations } from "../../services/friendService";
-import handleError from "../../services/errorHandler";
-import { useAppDispatch } from "../../store/store";
+import { useNotification } from "../../hooks/useNotification";
 
 const SentInvitationsPage = () => {
-  const dispatch = useAppDispatch();
+  const { showErrorNotification } = useNotification();
   const [pendingInvitations, setPendingInvitations] = useState<
     PendingInvitationModel[]
   >([]);
@@ -28,13 +23,7 @@ const SentInvitationsPage = () => {
       }
       setPendingInvitations(data.invitations);
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          message: newError.message,
-          type: NotificationStatus.ERROR,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       setIsLoading(false);
     }
@@ -45,7 +34,7 @@ const SentInvitationsPage = () => {
   }, []);
 
   return (
-    <div className="text-primaryDark dark:text-blue-50 w-full flex flex-col gap-6 ">
+    <div className="flex w-full flex-col gap-6 text-primaryDark dark:text-blue-50 ">
       {isLoading && (
         <>
           <FriendSkeleton />

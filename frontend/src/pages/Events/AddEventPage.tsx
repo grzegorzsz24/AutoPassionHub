@@ -1,7 +1,3 @@
-import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 
 import DatePicker from "react-date-picker";
@@ -12,8 +8,8 @@ import PrimaryButton from "../../ui/PrimaryButton";
 import TextareaAutosize from "react-textarea-autosize";
 import Validator from "../../utils/Validator";
 import { createEvent } from "../../services/eventService";
-import handleError from "../../services/errorHandler";
 import { useAppDispatch } from "../../store/store";
+import { useNotification } from "../../hooks/useNotification";
 import { useState } from "react";
 
 type DatePiece = Date | null;
@@ -25,8 +21,9 @@ const AddEventPage = () => {
   const defaultDate = new Date(
     currentDate.getFullYear(),
     currentDate.getMonth(),
-    currentDate.getDate()
+    currentDate.getDate(),
   );
+  const { showErrorNotification, showSuccessNotification } = useNotification();
   const dispatch = useAppDispatch();
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -54,9 +51,13 @@ const AddEventPage = () => {
   };
 
   const deleteImage = () => {
-    URL.revokeObjectURL(imageURL!);
-    setImageURL(null);
-    setSelectedFile(null);
+    try {
+      URL.revokeObjectURL(imageURL!);
+      setImageURL(null);
+      setSelectedFile(null);
+    } catch (error) {
+      showErrorNotification(error);
+    }
   };
 
   const formIsValid =
@@ -67,14 +68,13 @@ const AddEventPage = () => {
 
   const onFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(JSON.stringify(date));
     if (!selectedFile) return;
 
     const resizedFile = await ImageResizer.scaleDownAndReduceImageQuality(
       selectedFile,
       1920,
       1080,
-      0.8
+      0.8,
     );
     if (!date) return;
 
@@ -85,27 +85,16 @@ const AddEventPage = () => {
         city,
         date,
         description,
-        resizedFile
+        resizedFile,
       );
 
       if (data.status !== "ok") {
         throw new Error(data.message);
       }
-      dispatch(
-        addNotification({
-          message: data.message,
-          type: NotificationStatus.SUCCESS,
-        })
-      );
+      showSuccessNotification(data.message);
       clearForm();
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          message: newError.message,
-          type: NotificationStatus.ERROR,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       dispatch(stopLoading());
     }
@@ -113,17 +102,17 @@ const AddEventPage = () => {
 
   return (
     <div className="max-w-3xl ">
-      <h2 className="font-bold text-lg mb-6 dark:text-blue-50">
+      <h2 className="mb-6 text-lg font-bold dark:text-blue-50">
         Dodaj wydarzenie
       </h2>
       {selectedFile && imageURL && (
-        <div className=" h-36 relative overflow-hidden  mx-auto mb-4 md-rounded">
+        <div className=" md-rounded relative mx-auto  mb-4 h-36 overflow-hidden">
           <Gallery images={[imageURL]} onDeleteImage={deleteImage} />
         </div>
       )}
       <form
         encType="multipart/form-data"
-        className="text-primaryDark dark:text-blue-50 w-full flex flex-col gap-4"
+        className="flex w-full flex-col gap-4 text-primaryDark dark:text-blue-50"
         onSubmit={onFormSubmit}
       >
         <TextareaAutosize
@@ -131,12 +120,12 @@ const AddEventPage = () => {
           onChange={(e) => setTitle(e.target.value)}
           minRows={1}
           placeholder="Tytuł"
-          className="bg-white dark:bg-grayDark resize-none w-full outline-none rounded-md overflow-auto py-2 px-2 focus:ring-2 focus:ring-blue-600"
+          className="w-full resize-none overflow-auto rounded-md bg-white px-2 py-2 outline-none focus:ring-2 focus:ring-blue-600 dark:bg-grayDark"
         />
         <div>
           <DatePicker
             className={
-              "bg-white dark:bg-grayDark text-primaryDark dark:text-blue-600 border-none px-2 outline-none py-1 rounded-md w-full"
+              "w-full rounded-md border-none bg-white px-2 py-1 text-primaryDark outline-none dark:bg-grayDark dark:text-blue-600"
             }
             value={date}
             onChange={setDate}
@@ -152,18 +141,18 @@ const AddEventPage = () => {
           onChange={(e) => setCity(e.target.value)}
           minRows={1}
           placeholder="Miejsce wydarzenia"
-          className="bg-white dark:bg-grayDark resize-none w-full outline-none rounded-md overflow-auto py-2 px-2 focus:ring-2 focus:ring-blue-600"
+          className="w-full resize-none overflow-auto rounded-md bg-white px-2 py-2 outline-none focus:ring-2 focus:ring-blue-600 dark:bg-grayDark"
         />
         <TextareaAutosize
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           minRows={5}
           placeholder="Szczegóły wydarzenia"
-          className="bg-white dark:bg-grayDark resize-none w-full outline-none rounded-md overflow-auto py-2 px-2 focus:ring-2 focus:ring-blue-600"
+          className="w-full resize-none overflow-auto rounded-md bg-white px-2 py-2 outline-none focus:ring-2 focus:ring-blue-600 dark:bg-grayDark"
         />
-        <label className=" flex flex-col items-center gap-6 py-2 border-2 border-blue-600 my-4 rounded-md cursor-pointer">
+        <label className=" my-4 flex cursor-pointer flex-col items-center gap-6 rounded-md border-2 border-blue-600 py-2">
           <div className="flex flex-col items-center">
-            <MdPhoto className="text-2xl mb-2" />
+            <MdPhoto className="mb-2 text-2xl" />
             <span className="text-sm font-bold">
               {selectedFile ? "Zmień zdjęcie" : "Dodaj zdjęcie"}
             </span>
@@ -184,7 +173,7 @@ const AddEventPage = () => {
           accept="image/*"
           placeholder="Wybierz zdjęcie"
           onChange={onFileChange}
-          className="bg-red-500 p-4 rounded-md outline-none border-none hidden"
+          className="hidden rounded-md border-none bg-red-500 p-4 outline-none"
         />
         <PrimaryButton
           size="sm"

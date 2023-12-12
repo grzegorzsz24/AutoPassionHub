@@ -1,7 +1,3 @@
-import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
 import { useEffect, useState } from "react";
 
 import ArticleList from "../../components/Articles/ArticleList";
@@ -9,13 +5,12 @@ import ArticleModel from "../../models/ArticleModel";
 import ArticleSkeleton from "../../components/Articles/ArticleSkeleton";
 import NoContent from "../../ui/NoContent";
 import { getSavedArticles } from "../../services/articleService";
-import handleError from "../../services/errorHandler";
-import { useAppDispatch } from "../../store/store";
+import { useNotification } from "../../hooks/useNotification";
 
 const ARTICLES_PER_PAGE = 100;
 
 const SavedArticlesPage = () => {
-  const reduxDispatch = useAppDispatch();
+  const { showErrorNotification } = useNotification();
   const [articles, setArticles] = useState<ArticleModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -28,13 +23,7 @@ const SavedArticlesPage = () => {
       }
       setArticles(data.data);
     } catch (error) {
-      const newError = handleError(error);
-      reduxDispatch(
-        addNotification({
-          message: newError.message,
-          type: NotificationStatus.ERROR,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       setIsLoading(false);
     }
@@ -45,12 +34,12 @@ const SavedArticlesPage = () => {
   }, []);
 
   return (
-    <div className="max-w-4xl h-full flex flex-col justify-between">
+    <div className="flex h-full max-w-4xl flex-col justify-between">
       {!isLoading && articles.length === 0 && (
         <NoContent>Brak zapisanych artykułów</NoContent>
       )}
       {isLoading ? (
-        <div className="flex flex-col gap-4 max-w-4xl">
+        <div className="flex max-w-4xl flex-col gap-4">
           <ArticleSkeleton />
           <ArticleSkeleton />
           <ArticleSkeleton />

@@ -1,7 +1,3 @@
-import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
 import { useEffect, useState } from "react";
 
 import LoadingSpinner from "../../ui/LoadingSpinner";
@@ -9,15 +5,14 @@ import PrimaryButton from "../../ui/PrimaryButton";
 import TextareaAutosize from "react-textarea-autosize";
 import { createForum } from "../../services/forumService";
 import { getAllCarsWithModels } from "../../services/carService";
-import handleError from "../../services/errorHandler";
-import { useAppDispatch } from "../../store/store";
+import { useNotification } from "../../hooks/useNotification";
 
 type CarsData = {
   [brand: string]: string[];
 };
 
 const AddForumPage = () => {
-  const reduxDispatch = useAppDispatch();
+  const { showErrorNotification, showSuccessNotification } = useNotification();
   const [isLoading, setIsLoading] = useState(true);
   const [cars, setCars] = useState<CarsData>({});
   const [title, setTitle] = useState<string>("");
@@ -30,7 +25,7 @@ const AddForumPage = () => {
   };
 
   const onContentChangeHandler = (
-    e: React.ChangeEvent<HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
     setContent(e.target.value);
   };
@@ -42,13 +37,7 @@ const AddForumPage = () => {
       if (data.status !== "ok") throw new Error(data.message);
       setCars(data.cars);
     } catch (error) {
-      const newError = handleError(error);
-      reduxDispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       setIsLoading(false);
     }
@@ -69,37 +58,20 @@ const AddForumPage = () => {
   const onFormSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateForm()) {
-      reduxDispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: "Uzupełnij tytuł i treść",
-        })
-      );
+      showErrorNotification("Wypełnij wszystkie pola");
       return;
     }
     try {
       setIsLoading(true);
       const data = await createForum(title, content, carBrand, carModel);
       if (data.status !== "ok") throw new Error(data.message);
-      reduxDispatch(
-        addNotification({
-          type: NotificationStatus.SUCCESS,
-          message: "Utworzono forum",
-        })
-      );
+      showSuccessNotification("Forum zostało utworzone");
       clearInputs();
     } catch (error) {
-      const newError = handleError(error);
-      reduxDispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       setIsLoading(false);
     }
-    return;
   };
 
   useEffect(() => {
@@ -110,12 +82,12 @@ const AddForumPage = () => {
 
   return (
     <div>
-      <h2 className="font-bold text-lg mb-4">Otwórz nowe forum</h2>
+      <h2 className="mb-4 text-lg font-bold">Otwórz nowe forum</h2>
       <form className="max-w-3xl" onSubmit={onFormSubmitHandler}>
         <TextareaAutosize
           value={title}
           onChange={onTitleChangeHandler}
-          className="bg-white dark:bg-grayDark resize-none w-full outline-none border-none rounded-md overflow-auto py-2 px-2 mb-2 focus:ring-2 focus:ring-blue-600"
+          className="mb-2 w-full resize-none overflow-auto rounded-md border-none bg-white px-2 py-2 outline-none focus:ring-2 focus:ring-blue-600 dark:bg-grayDark"
           placeholder="Tytuł"
           minRows={1}
           maxRows={3}
@@ -123,14 +95,14 @@ const AddForumPage = () => {
         <TextareaAutosize
           value={content}
           onChange={onContentChangeHandler}
-          className="bg-white dark:bg-grayDark resize-none w-full outline-none border-none rounded-md overflow-auto py-2 px-2 mb-2 focus:ring-2 focus:ring-blue-600"
+          className="mb-2 w-full resize-none overflow-auto rounded-md border-none bg-white px-2 py-2 outline-none focus:ring-2 focus:ring-blue-600 dark:bg-grayDark"
           placeholder="Treść"
           minRows={10}
           maxRows={20}
         />
-        <div className="flex gap-6 mb-6">
+        <div className="mb-6 flex gap-6">
           <select
-            className="p-2 rounded-md cursor-pointer focus:ring-2 ring-blue-600 bg-white dark:bg-grayDark w-36"
+            className="w-36 cursor-pointer rounded-md bg-white p-2 ring-blue-600 focus:ring-2 dark:bg-grayDark"
             value={carBrand}
             onChange={(e) => setCarBrand(e.target.value)}
           >
@@ -142,7 +114,7 @@ const AddForumPage = () => {
             ))}
           </select>
           <select
-            className="p-2 rounded-md cursor-pointer focus:ring-2 ring-blue-600 bg-white dark:bg-grayDark w-36"
+            className="w-36 cursor-pointer rounded-md bg-white p-2 ring-blue-600 focus:ring-2 dark:bg-grayDark"
             disabled={!carBrand}
             value={carModel}
             onChange={(e) => setCarModel(e.target.value)}

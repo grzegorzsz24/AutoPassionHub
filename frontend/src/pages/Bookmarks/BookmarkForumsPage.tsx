@@ -1,18 +1,13 @@
-import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
 import { useEffect, useState } from "react";
 
 import ForumModel from "../../models/ForumModel";
 import ForumsLits from "../../components/Forums/ForumsLits";
 import LoadingSpinner from "../../ui/LoadingSpinner";
 import { getSavedForums } from "../../services/forumService";
-import handleError from "../../services/errorHandler";
-import { useAppDispatch } from "../../store/store";
+import { useNotification } from "../../hooks/useNotification";
 
 const BookmarkForumsPage = () => {
-  const dispatch = useAppDispatch();
+  const { showErrorNotification } = useNotification();
   const [forums, setForums] = useState<ForumModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -25,13 +20,7 @@ const BookmarkForumsPage = () => {
       }
       setForums(data.data);
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          message: newError.message,
-          type: NotificationStatus.ERROR,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       setIsLoading(false);
     }
