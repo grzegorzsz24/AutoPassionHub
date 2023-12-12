@@ -1,7 +1,3 @@
-import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
 import { useEffect, useReducer, useState } from "react";
 
 import ForumFilters from "../../components/Forums/ForumFilters";
@@ -12,15 +8,14 @@ import NoContent from "../../ui/NoContent";
 import Pagination from "../../components/Pagination";
 import forumFilterReducer from "../../reducers/ForumFilterReducer";
 import { getForums } from "../../services/forumService";
-import handleError from "../../services/errorHandler";
-import { useAppDispatch } from "../../store/store";
+import { useNotification } from "../../hooks/useNotification";
 import { useSearchParams } from "react-router-dom";
 
 const FORUMS_PER_PAGE = import.meta.env.VITE_FORUMS_PER_PAGE as number;
 
 const ForumsPage = () => {
-  const reduxDispatch = useAppDispatch();
   const [params, setParams] = useSearchParams();
+  const { showErrorNotification } = useNotification();
   const [forums, setForums] = useState<ForumModel[]>([]);
   const [isFetchingCars, setIsFetchingCars] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
@@ -44,7 +39,7 @@ const ForumsPage = () => {
 
   const [filterState, filterDispatch] = useReducer(
     forumFilterReducer,
-    setFiltersFromParams()
+    setFiltersFromParams(),
   );
   const { page, size, title, carBrand, carModel } = filterState;
 
@@ -68,13 +63,7 @@ const ForumsPage = () => {
       setForums(data.data);
       setTotalNumberOfForums(data.totalNumberOfForums);
     } catch (error) {
-      const newError = handleError(error);
-      reduxDispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       setIsLoading(false);
     }
@@ -85,7 +74,7 @@ const ForumsPage = () => {
   }, [filterState]);
 
   return (
-    <div className="max-w-4xl h-full flex flex-col justify-between ">
+    <div className="flex h-full max-w-4xl flex-col justify-between">
       <div className="flex flex-col gap-12">
         <ForumFilters
           title={title}
@@ -99,7 +88,7 @@ const ForumsPage = () => {
           <NoContent>Brak forów</NoContent>
         )}
         {(isLoading || isFetchingCars) && (
-          <div className="flex flex-col gap-4 max-w-4xl">
+          <div className="flex max-w-4xl flex-col gap-4">
             <ForumSkeleton />
             <ForumSkeleton />
             <ForumSkeleton />
@@ -110,7 +99,7 @@ const ForumsPage = () => {
         )}
       </div>
       {forums.length > 0 && !isFetchingCars && !isLoading && (
-        <div className=" flex items-center justify-center my-4">
+        <div className=" my-4 flex items-center justify-center">
           <Pagination
             currentPage={page}
             totalPages={Math.ceil(totalNumberOfForums / size)}

@@ -4,7 +4,7 @@ import PageWithAsideMenuLayout from "../PageWithAsideMenuLayout";
 
 const AdminPageLayout = () => {
   return (
-    <div>
+    <div className="h-full overflow-y-auto">
       <PageWithAsideMenuLayout menu={<AdminMenu />} content={<Outlet />} />
     </div>
   );

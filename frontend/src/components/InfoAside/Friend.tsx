@@ -6,6 +6,7 @@ import UserModel from "../../models/UserModel";
 import { getUserById } from "../../services/userService";
 import { useAppSelector } from "../../store/store";
 import { useNavigate } from "react-router-dom";
+import { useNotification } from "../../hooks/useNotification";
 
 interface FriendProps {
   chat: ChatModel;
@@ -13,11 +14,10 @@ interface FriendProps {
 
 const Friend: FC<FriendProps> = ({ chat }) => {
   const navigate = useNavigate();
+  const { showErrorNotification } = useNotification();
   const { userId: loggedInUserId } = useAppSelector((state) => state.user);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<UserModel | null>(null);
-
-  // const active = true;
 
   const fetchUser = async () => {
     const userId = chat.users.find((id) => id !== Number(loggedInUserId));
@@ -32,7 +32,7 @@ const Friend: FC<FriendProps> = ({ chat }) => {
       }
       setUser(data.user);
     } catch (error) {
-      console.log(error);
+      showErrorNotification(error);
     } finally {
       setIsLoading(false);
     }
@@ -52,20 +52,17 @@ const Friend: FC<FriendProps> = ({ chat }) => {
       {!isLoading && user && (
         <div
           onClick={goToUserChat}
-          className={`p-2  w-full  dark:border-primaryDark flex gap-6 items-center  group  transition-all rounded-md hover:bg-blue-600 cursor-pointer`}
+          className={`group  flex  w-full cursor-pointer items-center gap-6  rounded-md  p-2 transition-all hover:bg-blue-600 dark:border-primaryDark`}
         >
           <div className="relative">
             <img
               src={user.imageUrl}
               alt="profile"
-              className="rounded-full h-10 w-10"
+              className="h-10 w-10 rounded-full"
             />
-            {/* {active && (
-              <div className="absolute top-[-4px] right-[-4px] w-4 h-4 rounded-full bg-green-500"></div>
-            )} */}
           </div>
           <div className="py-1">
-            <div className="font-bold  rounded text-sm ">
+            <div className="rounded  text-sm font-bold ">
               {user.firstName} {user.lastName}
             </div>
             <div className={`rounded  text-xs `}>{user.nickname}</div>

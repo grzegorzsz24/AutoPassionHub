@@ -68,20 +68,20 @@ const InvitationNotification: FC<InvitationNotificationProps> = ({
       {isLoading && <NotificationSkeleton />}
       {!isLoading && user && (
         <div
-          className="flex items-center justify-between gap-2 w-full  hover:bg-blue-600 hover:text-blue-50 p-2 rounded-md transition-all cursor-pointer"
+          className="flex w-full cursor-pointer items-center justify-between  gap-2 rounded-md p-2 transition-all hover:bg-blue-600 hover:text-blue-50"
           onClick={handleNotificationClick}
         >
-          <div className="flex items-center justify-start gap-4 w-max grow">
-            <div className=" flex items-center justify-center  relative w-10 h-10 shrink-0">
+          <div className="flex w-max grow items-center justify-start gap-4">
+            <div className=" relative flex h-10  w-10 shrink-0 items-center justify-center">
               <img
                 src={user?.imageUrl}
                 alt="user image"
-                className=" rounded-full w-full"
+                className=" w-full rounded-full"
               />
               <div
                 className={`absolute bottom-[-4px] right-[-4px] ${
                   typeOfContent === "SENT" ? "bg-indigo-500" : "bg-green-500"
-                } text-white rounded-full p-1`}
+                } rounded-full p-1 text-white`}
               >
                 {typeOfContent === "SENT" ? (
                   <FaUserPlus className="text-md" />
@@ -106,7 +106,7 @@ const InvitationNotification: FC<InvitationNotificationProps> = ({
             </div>
           </div>
           {!notification.read && (
-            <div className="p-2 bg-green-600 rounded-full animate-pulse"></div>
+            <div className="animate-pulse rounded-full bg-green-600 p-2"></div>
           )}
         </div>
       )}

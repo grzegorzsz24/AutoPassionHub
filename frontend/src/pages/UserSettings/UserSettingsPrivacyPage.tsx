@@ -1,20 +1,18 @@
-import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 
 import PrimaryButton from "../../ui/PrimaryButton";
 import { updateUserPrivacy } from "../../store/features/userSlice";
 import { updateUserPrivacy as updateUserPrivacyService } from "../../services/userService";
+import { useNotification } from "../../hooks/useNotification";
 import { useState } from "react";
 
 const UserSettingsPrivacyPage = () => {
   const dispatch = useAppDispatch();
+  const { showErrorNotification, showSuccessNotification } = useNotification();
   const { publicProfile } = useAppSelector((state) => state.user);
   const [newPrivacy, setNewPrivacy] = useState(
-    publicProfile ? "true" : "false"
+    publicProfile ? "true" : "false",
   );
 
   const userHasChangedPrivacy = newPrivacy !== publicProfile.toString();
@@ -29,19 +27,9 @@ const UserSettingsPrivacyPage = () => {
       const response = await updateUserPrivacyService(newPrivacy === "true");
       if (response.status !== "ok") throw new Error(response.message);
       dispatch(updateUserPrivacy(newPrivacy === "true"));
-      dispatch(
-        addNotification({
-          message: response.message,
-          type: NotificationStatus.SUCCESS,
-        })
-      );
+      showSuccessNotification(response.message);
     } catch {
-      dispatch(
-        addNotification({
-          message: "Nie udało się zmienić ustawień prywatności",
-          type: NotificationStatus.ERROR,
-        })
-      );
+      showErrorNotification("Nie udało się zmienić ustawień prywatności");
     } finally {
       dispatch(stopLoading());
     }
@@ -49,12 +37,12 @@ const UserSettingsPrivacyPage = () => {
 
   return (
     <div className="max-w-xl">
-      <h2 className="font-bold text-lg mb-6 dark:text-blue-50">
+      <h2 className="mb-6 text-lg font-bold dark:text-blue-50">
         Kto zobaczy twoje treści?
       </h2>
       <div className="ml-4">
         <select
-          className="bg-white text-grayDark rounded-md py-2 px-8 mb-6  leading-tight  focus:outline-none  focus:ring-2 focus:ring-blue-600 cursor-pointer w-full"
+          className="mb-6 w-full cursor-pointer rounded-md bg-white px-8 py-2 leading-tight text-grayDark focus:outline-none focus:ring-2 focus:ring-blue-600"
           value={newPrivacy.toString()}
           onChange={(event) => changePrivacy(event.target.value)}
         >

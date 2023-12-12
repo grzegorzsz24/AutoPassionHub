@@ -69,17 +69,17 @@ const CommentNotification: FC<CommentNotificationProps> = ({
       {isLoading && <NotificationSkeleton />}
       {!isLoading && user && (
         <div
-          className="flex items-center justify-between gap-2 w-full  hover:bg-blue-600 hover:text-blue-50 p-2 rounded-md transition-all cursor-pointer"
+          className="flex w-full cursor-pointer items-center justify-between  gap-2 rounded-md p-2 transition-all hover:bg-blue-600 hover:text-blue-50"
           onClick={handleNotificationClick}
         >
-          <div className="flex items-center justify-start gap-4 w-max grow">
-            <div className=" flex items-center justify-center relative w-10 h-10 shrink-0">
+          <div className="flex w-max grow items-center justify-start gap-4">
+            <div className=" relative flex h-10 w-10 shrink-0 items-center justify-center">
               <img
                 src={user?.imageUrl}
                 alt="user image"
                 className=" rounded-full"
               />
-              <div className="absolute bottom-[-4px] right-[-4px] bg-orange-500 text-white rounded-full p-1">
+              <div className="absolute bottom-[-4px] right-[-4px] rounded-full bg-orange-500 p-1 text-white">
                 {typeOfContent === "POST" ? (
                   <FaComment className="text-md" />
                 ) : (
@@ -88,7 +88,7 @@ const CommentNotification: FC<CommentNotificationProps> = ({
               </div>
             </div>
             <div className="flex flex-col gap-1">
-              <p className="text-sm text-wrap">
+              <p className="text-wrap text-sm">
                 <span className="font-bold">
                   {user?.firstName} {user?.lastName}
                 </span>{" "}
@@ -101,7 +101,7 @@ const CommentNotification: FC<CommentNotificationProps> = ({
             </div>
           </div>
           {!notification.read && (
-            <div className="justify-self-end p-2 bg-green-600 rounded-full animate-pulse"></div>
+            <div className="animate-pulse justify-self-end rounded-full bg-green-600 p-2"></div>
           )}
         </div>
       )}

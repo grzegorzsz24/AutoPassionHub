@@ -1,7 +1,3 @@
-import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
 import { useEffect, useState } from "react";
 
 import ForumModel from "../../models/ForumModel";
@@ -9,12 +5,11 @@ import ForumSkeleton from "../../components/Forums/ForumSkeleton";
 import ForumsLits from "../../components/Forums/ForumsLits";
 import NoContent from "../../ui/NoContent";
 import { getSavedForums } from "../../services/forumService";
-import handleError from "../../services/errorHandler";
-import { useAppDispatch } from "../../store/store";
+import { useNotification } from "../../hooks/useNotification";
 
 const FORUMS_PER_PAGE = 100;
 const SavedForumsPage = () => {
-  const reduxDispatch = useAppDispatch();
+  const { showErrorNotification } = useNotification();
   const [forums, setForums] = useState<ForumModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -27,13 +22,7 @@ const SavedForumsPage = () => {
       }
       setForums(data.data);
     } catch (error) {
-      const newError = handleError(error);
-      reduxDispatch(
-        addNotification({
-          message: newError.message,
-          type: NotificationStatus.ERROR,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       setIsLoading(false);
     }
@@ -44,9 +33,9 @@ const SavedForumsPage = () => {
   }, []);
 
   return (
-    <div className="max-w-4xl h-full flex flex-col justify-between">
+    <div className="flex h-full max-w-4xl flex-col justify-between">
       {isLoading && (
-        <div className="flex flex-col gap-4 max-w-4xl">
+        <div className="flex max-w-4xl flex-col gap-4">
           <ForumSkeleton />
           <ForumSkeleton />
           <ForumSkeleton />

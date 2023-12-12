@@ -1,7 +1,3 @@
-import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
 import { useEffect, useState } from "react";
 
 import AddFriendElement from "../../components/Friends/AddFriendElement";
@@ -9,11 +5,10 @@ import FriendSkeleton from "../../components/Friends/FriendSkeleton";
 import NoContent from "../../ui/NoContent";
 import UserModel from "../../models/UserModel";
 import { getUserNonFriends } from "../../services/friendService";
-import handleError from "../../services/errorHandler";
-import { useAppDispatch } from "../../store/store";
+import { useNotification } from "../../hooks/useNotification";
 
 const UserFriendsSuggestionsPage = () => {
-  const dispatch = useAppDispatch();
+  const { showErrorNotification } = useNotification();
   const [nonFriends, setNonFriends] = useState<UserModel[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -26,13 +21,7 @@ const UserFriendsSuggestionsPage = () => {
       }
       setNonFriends(data.nonFriends);
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          message: newError.message,
-          type: NotificationStatus.ERROR,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       setIsLoading(false);
     }
@@ -47,7 +36,7 @@ const UserFriendsSuggestionsPage = () => {
   }, []);
 
   return (
-    <div className="text-primaryDark dark:text-blue-50 w-full ">
+    <div className="w-full text-primaryDark dark:text-blue-50 ">
       <div className="flex flex-col gap-6 ">
         {isLoading && (
           <>

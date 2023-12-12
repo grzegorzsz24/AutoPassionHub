@@ -1,9 +1,5 @@
 import { FC, useEffect, useState } from "react";
 import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
-import {
   checkReportAsSeen,
   deleteReport,
   getReports,
@@ -11,14 +7,14 @@ import {
 
 import { Report } from "../../services/reportService";
 import ReportItem from "../../components/Reports/ReportItem";
-import { useAppDispatch } from "../../store/store";
+import { useNotification } from "../../hooks/useNotification";
 
 interface ReportedContentPageProps {
   reportType: "POST_REPORT" | "FORUM_REPORT" | "EVENT_REPORT";
 }
 
 const ReportedContentPage: FC<ReportedContentPageProps> = ({ reportType }) => {
-  const dispatch = useAppDispatch();
+  const { showErrorNotification } = useNotification();
   const [reports, setReports] = useState<Report[]>([]);
 
   const fetchReports = async () => {
@@ -29,12 +25,7 @@ const ReportedContentPage: FC<ReportedContentPageProps> = ({ reportType }) => {
       }
       setReports(data.reports);
     } catch (error) {
-      dispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: "Nie udało się pobrać zgłoszeń",
-        })
-      );
+      showErrorNotification(new Error("Nie udało się pobrać zgłoszeń"));
     }
   };
 
@@ -46,15 +37,12 @@ const ReportedContentPage: FC<ReportedContentPageProps> = ({ reportType }) => {
       }
       setReports((prev) =>
         prev.map((report) =>
-          report.id === reportId ? { ...report, read: true } : report
-        )
+          report.id === reportId ? { ...report, read: true } : report,
+        ),
       );
     } catch (error) {
-      dispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: "Nie udało się oznaczyć zgłoszenia jako przeczytane",
-        })
+      showErrorNotification(
+        new Error("Nie udało się oznaczyć zgłoszenia jako przeczytane"),
       );
     }
   };
@@ -67,12 +55,7 @@ const ReportedContentPage: FC<ReportedContentPageProps> = ({ reportType }) => {
       }
       setReports((prev) => prev.filter((report) => report.id !== reportId));
     } catch (error) {
-      dispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: "Nie udało się usunąć zgłoszenia",
-        })
-      );
+      showErrorNotification(new Error("Nie udało się usunąć zgłoszenia"));
     }
   };
 

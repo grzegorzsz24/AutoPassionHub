@@ -2,21 +2,17 @@ import "react-date-picker/dist/DatePicker.css";
 import "react-calendar/dist/Calendar.css";
 import "./RegisterForm.css";
 
-import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 
 import DatePicker from "react-date-picker";
 import FormInput from "../../ui/FormInput";
 import PrimaryButton from "../../ui/PrimaryButton";
 import Validator from "../../utils/Validator";
-import handleError from "../../services/errorHandler";
 import { registerUser } from "../../services/userService";
 import { useAppDispatch } from "../../store/store";
 import useInput from "../../hooks/useInput";
 import { useNavigate } from "react-router-dom";
+import { useNotification } from "../../hooks/useNotification";
 import { useState } from "react";
 
 type DatePiece = Date | null;
@@ -28,17 +24,21 @@ const RegiserForm = () => {
   const defaultDate = new Date(
     currentDate.getFullYear() - 16,
     currentDate.getMonth(),
-    currentDate.getDate()
+    currentDate.getDate(),
   );
   const [date, setDate] = useState<DateValue>(defaultDate);
-
+  const {
+    showErrorNotification,
+    showSuccessNotification,
+    showInfoNotification,
+  } = useNotification();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const minDate = new Date(
     currentDate.getFullYear() - 100,
     currentDate.getMonth(),
-    currentDate.getDate()
+    currentDate.getDate(),
   );
   const maxDate = defaultDate;
 
@@ -120,12 +120,7 @@ const RegiserForm = () => {
     event.preventDefault();
     if (!formIsValid) {
       setInputsAsTouched();
-      dispatch(
-        addNotification({
-          message: "Uzupełnij poprawnie wszystkie dane",
-          type: NotificationStatus.ERROR,
-        })
-      );
+      showInfoNotification("Uzupełnij poprawnie wszystkie dane");
       return;
     }
 
@@ -140,24 +135,13 @@ const RegiserForm = () => {
         password,
       });
       if (response.status === "ok") {
-        dispatch(
-          addNotification({
-            message: response.message,
-            type: NotificationStatus.SUCCESS,
-          })
-        );
+        showSuccessNotification(response.message);
         navigate("/login");
       } else {
         throw new Error(response.message);
       }
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          message: newError.message,
-          type: NotificationStatus.ERROR,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       dispatch(stopLoading());
     }
@@ -165,7 +149,7 @@ const RegiserForm = () => {
 
   return (
     <form
-      className="flex flex-col gap-6 max-w-[25rem] w-full text-primaryDark"
+      className="flex w-full max-w-[25rem] flex-col gap-6 text-primaryDark"
       onSubmit={submitFormHandler}
     >
       <FormInput
@@ -226,7 +210,7 @@ const RegiserForm = () => {
         onBlur={confirmPasswordBlurHandler}
       />
       <DatePicker
-        className={"bg-white border-none px-2 outline-none py-1 rounded-md"}
+        className={"rounded-md border-none bg-white px-2 py-1 outline-none"}
         value={date}
         onChange={setDate}
         clearIcon={null}

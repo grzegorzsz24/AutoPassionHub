@@ -1,6 +1,6 @@
 import AuthorizationLayout from "./AuthorizationLayout";
-import LoginForm from "../components/Authorization/LoginForm";
-import OutlineButton from "../ui/OutlineButton";
+import LoginForm from "../../components/Authorization/LoginForm";
+import OutlineButton from "../../ui/OutlineButton";
 import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
@@ -8,9 +8,9 @@ const LoginPage = () => {
 
   return (
     <AuthorizationLayout title="Logowanie">
-      <div className=" w-full flex flex-col gap-12 items-center">
+      <div className=" flex w-full flex-col items-center gap-12">
         <LoginForm />
-        <hr className="w-[100%]  border-1 border-inherit"></hr>
+        <hr className="border-1  w-[100%] border-inherit"></hr>
         <OutlineButton
           onClick={() => {
             navigate("/register");

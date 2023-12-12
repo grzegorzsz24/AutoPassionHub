@@ -39,7 +39,7 @@ const registerUser = async ({
       throw new Error(data.message);
     }
     return createSuccessResponse(
-      "Rejestracja przebiegła pomyślnie. Możesz się teraz zalogować."
+      "Rejestracja przebiegła pomyślnie. Możesz się teraz zalogować.",
     );
   } catch (error) {
     return createErrorResponse(error);
@@ -77,7 +77,7 @@ const updateUserData = async (
   firstName?: string,
   lastName?: string,
   nickname?: string,
-  email?: string
+  email?: string,
 ) => {
   try {
     const payload: { [key: string]: string } = {};
@@ -107,7 +107,7 @@ const updateUserData = async (
 
 const updateUserPassword = async (
   currentPassword: string,
-  newPassword: string
+  newPassword: string,
 ) => {
   try {
     const response = await fetch(
@@ -118,7 +118,7 @@ const updateUserPassword = async (
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     const data = await response.json();
@@ -163,7 +163,7 @@ const updateUserPrivacy = async (publicProfile: boolean) => {
       {
         method: "POST",
         credentials: "include",
-      }
+      },
     );
 
     const data = await response.json();
@@ -183,10 +183,9 @@ const deleteUserAccount = async () => {
       method: "DELETE",
       credentials: "include",
     });
-    const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.message);
+      throw new Error("Nie udało się usunąć konta.");
     }
     return createSuccessResponse("Konto zostało usunięte.");
   } catch (error) {
@@ -219,7 +218,7 @@ const findUserBySearchQuery = async (
   searchQuery: string,
   page: number,
   perPage: number,
-  abortController: AbortController
+  abortController: AbortController,
 ) => {
   try {
     const response = await fetch(
@@ -228,7 +227,7 @@ const findUserBySearchQuery = async (
         method: "GET",
         credentials: "include",
         signal: abortController.signal,
-      }
+      },
     );
     const data = await response.json();
 

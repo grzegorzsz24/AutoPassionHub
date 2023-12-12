@@ -1,17 +1,12 @@
 import { FC, useEffect, useState } from "react";
-import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
 
 import { IoClose } from "react-icons/io5";
 import OutlineButton from "../../ui/OutlineButton";
 import { Report } from "../../services/reportService";
 import UserModel from "../../models/UserModel";
 import { getUserById } from "../../services/userService";
-import handleError from "../../services/errorHandler";
-import { useAppDispatch } from "../../store/store";
 import { useNavigate } from "react-router-dom";
+import { useNotification } from "../../hooks/useNotification";
 
 interface ReportItemProps {
   report: Report;
@@ -24,7 +19,7 @@ const ReportItem: FC<ReportItemProps> = ({
   checkReportAsSeenHandler,
   deleteReportHandler,
 }) => {
-  const dispatch = useAppDispatch();
+  const { showErrorNotification } = useNotification();
   const navigate = useNavigate();
   const [user, setUser] = useState<UserModel | null>(null);
 
@@ -36,13 +31,7 @@ const ReportItem: FC<ReportItemProps> = ({
       }
       setUser(data.user);
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
+      showErrorNotification(error);
     }
   };
 
@@ -70,15 +59,15 @@ const ReportItem: FC<ReportItemProps> = ({
   }, []);
 
   return (
-    <div className="flex gap-4 items-center">
+    <div className="flex items-center gap-4">
       <div
-        className="bg-white dark:bg-primaryDark2 p-4 rounded-md shadow-md flex gap-4 cursor-pointer max-w-xl w-full"
+        className="flex w-full max-w-xl cursor-pointer gap-4 rounded-md bg-white p-4 shadow-md dark:bg-primaryDark2"
         onClick={clickReportHandler}
       >
         {user && (
           <>
             {!report.read && (
-              <div className="w-6 h-6 bg-green-500 rounded-full"></div>
+              <div className="h-6 w-6 rounded-full bg-green-500"></div>
             )}
             <span>
               Użytkownik{" "}
@@ -89,10 +78,10 @@ const ReportItem: FC<ReportItemProps> = ({
               {report.reportType === "POST_REPORT"
                 ? "post"
                 : report.reportType === "FORUM_REPORT"
-                ? "forum"
-                : report.reportType === "EVENT_REPORT"
-                ? "wydarzenie"
-                : ""}{" "}
+                  ? "forum"
+                  : report.reportType === "EVENT_REPORT"
+                    ? "wydarzenie"
+                    : ""}{" "}
               o id: {report.reportTypeId}
             </span>
           </>

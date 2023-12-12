@@ -1,7 +1,3 @@
-import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
 import { useEffect, useReducer, useState } from "react";
 
 import EventItem from "../../components/Events/EventItem";
@@ -10,14 +6,13 @@ import EventSkeleton from "../../components/Events/EventSkeleton";
 import Pagination from "../../components/Pagination";
 import articleFilterReducer from "../../reducers/ArticlePaginationReducer";
 import { getEvents } from "../../services/eventService";
-import handleError from "../../services/errorHandler";
-import { useAppDispatch } from "../../store/store";
+import { useNotification } from "../../hooks/useNotification";
 import { useSearchParams } from "react-router-dom";
 
 const EVENTS_PER_PAGE = import.meta.env.VITE_EVENTS_PER_PAGE as number;
 
 const EventsPage = () => {
-  const reduxDispatch = useAppDispatch();
+  const { showErrorNotification } = useNotification();
   const [params, setParams] = useSearchParams();
   const [events, setEvents] = useState<EventModel[]>([]);
   const [totalNumberOfEvents, setTotalNumberOfEvents] = useState(0);
@@ -39,7 +34,7 @@ const EventsPage = () => {
 
   const [filterState, filterDispatch] = useReducer(
     articleFilterReducer,
-    setFiltersFromParams()
+    setFiltersFromParams(),
   );
 
   const { page, size } = filterState;
@@ -59,13 +54,7 @@ const EventsPage = () => {
       setEvents(data.events);
       setTotalNumberOfEvents(data.eventsNumber);
     } catch (error) {
-      const newError = handleError(error);
-      reduxDispatch(
-        addNotification({
-          message: newError.message,
-          type: NotificationStatus.ERROR,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       setLoading(false);
     }
@@ -89,7 +78,7 @@ const EventsPage = () => {
         )}
       </div>
       {!loading && events.length > 0 && (
-        <div className=" flex items-center justify-center my-4">
+        <div className=" my-4 flex items-center justify-center">
           <Pagination
             currentPage={page}
             totalPages={Math.ceil(totalNumberOfEvents / size)}

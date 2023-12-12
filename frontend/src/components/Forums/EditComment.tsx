@@ -26,10 +26,10 @@ const EditComment: FC<EditCommentProps> = ({
       <TextareaAutosize
         value={content}
         onChange={onChangeHandler}
-        className="bg-transparent resize-none w-full outline-none border-none rounded-md h-32  overflow-auto py-2 px-2 mb-2 focus:ring-2 focus:ring-blue-600"
+        className="mb-2 h-32 w-full resize-none overflow-auto rounded-md border-none  bg-transparent px-2 py-2 outline-none focus:ring-2 focus:ring-blue-600"
       />
 
-      <div className="flex flex-col gap-2 mb-2">
+      <div className="mb-2 flex flex-col gap-2">
         <PrimaryButton
           onClick={() => {
             editCommentHandler(id, content);

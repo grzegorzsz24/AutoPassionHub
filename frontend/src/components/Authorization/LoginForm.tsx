@@ -1,21 +1,18 @@
-import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 
 import FormInput from "../../ui/FormInput";
 import PrimaryButton from "../../ui/PrimaryButton";
 import Validator from "../../utils/Validator";
-import handleError from "../../services/errorHandler";
 import { loginUser } from "../../services/userService";
 import { setUser } from "../../store/features/userSlice";
 import { useAppDispatch } from "../../store/store";
 import useInput from "../../hooks/useInput";
 import { useNavigate } from "react-router-dom";
+import { useNotification } from "../../hooks/useNotification";
 
 const LoginForm = () => {
   const dispatch = useAppDispatch();
+  const { showErrorNotification, showSuccessNotification } = useNotification();
   const navigate = useNavigate();
 
   const {
@@ -65,27 +62,15 @@ const LoginForm = () => {
             cookieExpirationDate: response.cookieExpirationDate,
             publicProfile: response.publicProfile,
             role: response.role,
-          })
+          }),
         );
-        dispatch(
-          addNotification({
-            message: response.message,
-            type: NotificationStatus.SUCCESS,
-          })
-        );
+        showSuccessNotification(response.message);
         navigate("/");
       } else {
         throw new Error(response.message);
       }
     } catch (error) {
-      const newError = handleError(error);
-      console.log(newError);
-      dispatch(
-        addNotification({
-          message: newError.message,
-          type: NotificationStatus.ERROR,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       dispatch(stopLoading());
     }
@@ -93,7 +78,7 @@ const LoginForm = () => {
 
   return (
     <form
-      className="flex flex-col gap-6 max-w-[25rem] w-full"
+      className="flex w-full max-w-[25rem] flex-col gap-6"
       onSubmit={submitFormHandler}
     >
       <FormInput

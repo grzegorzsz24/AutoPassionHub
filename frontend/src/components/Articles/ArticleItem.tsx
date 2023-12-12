@@ -1,10 +1,6 @@
 import { FC, useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
-import {
   toggleLike,
   toogleArticleBookmark,
 } from "../../services/articleService";
@@ -14,19 +10,22 @@ import DateFormatter from "../../utils/DateFormatter";
 import { RiArrowRightDoubleFill } from "react-icons/ri";
 import ToogleBookmarkButton from "../../ui/ToogleBookmarkButton";
 import { debounce } from "lodash";
-import handleError from "../../services/errorHandler";
-import { useAppDispatch } from "../../store/store";
 import { useNavigate } from "react-router-dom";
+import { useNotification } from "../../hooks/useNotification";
 
 interface ForumItemProps {
   article: ArticleModel;
 }
 
 const ArticleItem: FC<ForumItemProps> = ({ article }) => {
-  const dispatch = useAppDispatch();
+  const {
+    showErrorNotification,
+    showInfoNotification,
+    showSuccessNotification,
+  } = useNotification();
   const navigate = useNavigate();
   const navigateToArticlePage = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
   ) => {
     if ((event.target as HTMLElement).closest("button")) {
       event.stopPropagation();
@@ -36,7 +35,7 @@ const ArticleItem: FC<ForumItemProps> = ({ article }) => {
   };
   const [isBookmarked, setIsBookmarked] = useState<boolean>(article.saved);
   const [numberOfLikes, setNumberOfLikes] = useState<number>(
-    article.likesNumber
+    article.likesNumber,
   );
   const [isLiked, setIsLiked] = useState<boolean>(article.liked);
 
@@ -47,13 +46,7 @@ const ArticleItem: FC<ForumItemProps> = ({ article }) => {
         throw new Error(data.message);
       }
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
+      showErrorNotification(error);
       setIsLiked((prev) => !prev);
       setNumberOfLikes((prev) => (isLiked ? prev - 1 : prev + 1));
     }
@@ -73,39 +66,23 @@ const ArticleItem: FC<ForumItemProps> = ({ article }) => {
         throw new Error(data.message);
       }
       if (isBookmarked) {
-        dispatch(
-          addNotification({
-            type: NotificationStatus.INFO,
-            message: "Usunięto z zapisanych",
-          })
-        );
+        showInfoNotification("Usunięto z zapisanych");
       } else {
-        dispatch(
-          addNotification({
-            type: NotificationStatus.SUCCESS,
-            message: "Dodano do zapisanych",
-          })
-        );
+        showSuccessNotification("Dodano do zapisanych");
       }
       setIsBookmarked((prev) => !prev);
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
+      showErrorNotification(error);
     }
   };
   return (
     <div
-      className="p-4 bg-white dark:bg-primaryDark2 rounded-md flex  justify-between gap-12 cursor-pointer shadow-md"
+      className="flex cursor-pointer justify-between gap-12 rounded-md  bg-white p-4 shadow-md dark:bg-primaryDark2"
       onClick={(event) => navigateToArticlePage(event)}
     >
       <div>
-        <p className="font-bold text-xl ">{article.title}</p>
-        <div className="flex gap-4 items-center text-sm ">
+        <p className="text-xl font-bold ">{article.title}</p>
+        <div className="flex items-center gap-4 text-sm ">
           <p>
             {article.firstName} {article.lastName}
           </p>
@@ -115,9 +92,9 @@ const ArticleItem: FC<ForumItemProps> = ({ article }) => {
           </p>
         </div>
       </div>
-      <div className="flex items-center gap-8 mr-16">
+      <div className="mr-16 flex items-center gap-8">
         <button
-          className="flex items-center gap-2 active:animate-ping transition-all hover:text-blue-600"
+          className="flex items-center gap-2 transition-all hover:text-blue-600 active:animate-ping"
           onClick={toggleLikeHandler}
         >
           <p className="font-bold">{numberOfLikes}</p>

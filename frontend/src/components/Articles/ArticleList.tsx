@@ -8,7 +8,7 @@ interface ForumListProps {
 
 const ArticleList: FC<ForumListProps> = ({ articles }) => {
   return (
-    <div className="flex flex-col gap-4 max-w-4xl">
+    <div className="flex max-w-4xl flex-col gap-4">
       {articles.map((article) => (
         <ArticleItem key={article.id} article={article} />
       ))}

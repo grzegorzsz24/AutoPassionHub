@@ -49,13 +49,13 @@ const Chat: FC<ChatProps> = ({ chat, currentChat, setCurrentChat }) => {
             onClick={() => {
               setCurrentChat(chat);
             }}
-            className={`px-2 py-1 md:py-4 w-32 sm:w-full h-full dark:border-primaryDark flex flex-col md:flex-row items-center md:items-start  gap-2 md:gap-6  group  transition-all rounded-md shrink-0 ${
+            className={`group flex h-full w-32 shrink-0 flex-col items-center gap-2 rounded-md px-2 py-1 transition-all  dark:border-primaryDark sm:w-full  md:flex-row  md:items-start md:gap-6 md:py-4 ${
               currentChat && currentChat.id === chat.id
-                ? "bg-blue-600 text-blue-50 cursor-default"
+                ? "cursor-default bg-blue-600 text-blue-50"
                 : "cursor-pointer hover:bg-blue-600 hover:text-blue-50"
             }`}
           >
-            <div className="relative w-8 h-8 md:h-12 md:w-12 shrink-0">
+            <div className="relative h-8 w-8 shrink-0 md:h-12 md:w-12">
               <img
                 src={user.imageUrl}
                 alt="profile"
@@ -66,7 +66,7 @@ const Chat: FC<ChatProps> = ({ chat, currentChat, setCurrentChat }) => {
               )} */}
             </div>
             <div className="py-1 text-center md:text-left">
-              <div className="font-bold  rounded text-xs sm:text-base">
+              <div className="rounded  text-xs font-bold sm:text-base">
                 {user.firstName} {user.lastName}
               </div>
               <div className={`rounded text-[0.5rem] md:text-sm `}>

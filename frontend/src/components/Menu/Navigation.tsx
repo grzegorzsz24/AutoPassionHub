@@ -76,11 +76,11 @@ const Navigation = () => {
 
   return (
     <>
-      <nav className=" bg-blue-600 w-full md:w-min justify-between text-blue-50 md:rounded-ee-md overflow-hidden hidden sm:flex">
+      <nav className=" hidden w-full justify-between overflow-hidden bg-blue-600 text-blue-50 sm:flex md:w-min md:rounded-ee-md">
         {links.map((link) => (
           <NavigationLink key={link.text} to={link.to} end={false}>
             {link.icon}
-            <span className="block text text-sm lg:text-md xl:text-lg">
+            <span className="text lg:text-md block text-sm xl:text-lg">
               {link.text}
             </span>
           </NavigationLink>
@@ -89,16 +89,16 @@ const Navigation = () => {
           adminLinks.map((link) => (
             <NavigationLink key={link.text} to={link.to} end={false}>
               {link.icon}
-              <span className="block text text-sm lg:text-md xl:text-lg">
+              <span className="text lg:text-md block text-sm xl:text-lg">
                 {link.text}
               </span>
             </NavigationLink>
           ))}
       </nav>
-      <div className="sm:hidden bg-blue-600 w-full py-2 px-4">
+      <div className="w-full bg-blue-600 px-4 py-2 sm:hidden">
         <div className="flex items-center justify-between">
           <button
-            className="text-blue-50 text-2xl hover:scale-125 transition-all cursor-pointer"
+            className="cursor-pointer text-2xl text-blue-50 transition-all hover:scale-125"
             onClick={toggleMenuNav}
           >
             {menuNavIsOpen ? <CgClose /> : <CgMenu />}
@@ -112,7 +112,7 @@ const Navigation = () => {
         <AnimatePresence>
           {menuNavIsOpen && (
             <motion.nav
-              className=" bg-blue-600 w-full md:w-min justify-between flex flex-col gap-2 text-blue-50 md:rounded-ee-md overflow-hidden mt-4"
+              className=" mt-4 flex w-full flex-col justify-between gap-2 overflow-hidden bg-blue-600 text-blue-50 md:w-min md:rounded-ee-md"
               initial="hidden"
               animate="visible"
               exit="hidden"
@@ -123,7 +123,7 @@ const Navigation = () => {
                 <div key={link.text} onClick={toggleMenuNav}>
                   <NavigationLink to={link.to} end={false}>
                     {link.icon}
-                    <span className="block text text-sm lg:text-md xl:text-lg">
+                    <span className="text lg:text-md block text-sm xl:text-lg">
                       {link.text}
                     </span>
                   </NavigationLink>

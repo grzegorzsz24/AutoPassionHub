@@ -1,50 +1,33 @@
 import "./Notification.css";
 
-import {
-  NotificationStatus,
-  removeNotification,
-  setInvisible,
-} from "../store/features/notificationSlice";
-import { useAppDispatch, useAppSelector } from "../store/store";
-
 import { AiOutlineClose } from "react-icons/ai";
-import { useEffect } from "react";
+import { FC } from "react";
+import { NotificationStatus } from "../store/features/notificationSlice";
+import { useAppNotification } from "../hooks/useAppNotification";
 
-const Notification = () => {
-  const dispatch = useAppDispatch();
+const SUCCESS_COLOR = "bg-green-500";
+const ERROR_COLOR = "bg-red-500";
+const WARNING_COLOR = "bg-yellow-500";
 
-  const { notifications } = useAppSelector((state) => state.notification);
+interface NotificationProps {
+  clearTime: number;
+}
 
-  const closeNotificationHandler = (id: string) => {
-    dispatch(setInvisible({ id }));
-    setTimeout(() => {
-      dispatch(removeNotification({ id }));
-    }, 300);
-  };
-
-  useEffect(() => {
-    notifications.forEach((notification) => {
-      const timer = setTimeout(() => {
-        closeNotificationHandler(notification.id);
-      }, 10000);
-
-      return () => {
-        clearTimeout(timer);
-      };
-    });
-  }, [notifications]);
+const Notification: FC<NotificationProps> = ({ clearTime }) => {
+  const { notifications, closeNotificationHandler } =
+    useAppNotification(clearTime);
 
   return (
     <div className="fixed bottom-6 right-6 flex flex-col space-y-4 ">
       {notifications.map((notification) => (
         <div
           key={notification.id}
-          className={` py-4 px-4 md:px-16 rounded-md text-lg 2xl:text-xl shadow-md transition-all duration-300 ease-in-out transform fade-in shadow-lg ${
+          className={`fade-in transform rounded-md px-4 py-4 text-lg shadow-lg transition-all duration-300 ease-in-out md:px-16 2xl:text-xl ${
             notification.type === NotificationStatus.SUCCESS
-              ? "bg-green-500"
+              ? SUCCESS_COLOR
               : notification.type === NotificationStatus.ERROR
-              ? "bg-red-500"
-              : "bg-yellow-500"
+                ? ERROR_COLOR
+                : WARNING_COLOR
           } 	${
             notification.visible
               ? "translate-x-0 opacity-100"
@@ -53,7 +36,8 @@ const Notification = () => {
         >
           <p className="font-medium">{notification.message}</p>
           <button
-            className="0 absolute top-1 right-1 text-2xl hover:scale-110 transition-all"
+            aria-label="Zamknij powiadomienie"
+            className="0 absolute right-1 top-1 text-2xl transition-all hover:scale-110"
             onClick={() => closeNotificationHandler(notification.id)}
           >
             <AiOutlineClose />

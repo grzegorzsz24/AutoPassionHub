@@ -1,18 +1,19 @@
-import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 
 import PrimaryButton from "../../ui/PrimaryButton";
 import TextareaAutosize from "react-textarea-autosize";
 import { createArticle } from "../../services/articleService";
-import handleError from "../../services/errorHandler";
 import { useAppDispatch } from "../../store/store";
+import { useNotification } from "../../hooks/useNotification";
 import { useState } from "react";
 
 const AddArticlePage = () => {
   const reduxDispatch = useAppDispatch();
+  const {
+    showErrorNotification,
+    showSuccessNotification,
+    showInfoNotification,
+  } = useNotification();
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
 
@@ -21,7 +22,7 @@ const AddArticlePage = () => {
   };
 
   const onContentChangeHandler = (
-    e: React.ChangeEvent<HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
     setContent(e.target.value);
   };
@@ -39,33 +40,16 @@ const AddArticlePage = () => {
   const onFormSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateForm()) {
-      reduxDispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: "Uzupełnij tytuł i treść",
-        })
-      );
-      return;
+      return showInfoNotification("Wypełnij wszystkie pola");
     }
     try {
       reduxDispatch(startLoading());
       const data = await createArticle(title, content);
       if (data.status !== "ok") throw new Error(data.message);
-      reduxDispatch(
-        addNotification({
-          type: NotificationStatus.SUCCESS,
-          message: data.message,
-        })
-      );
+      showSuccessNotification(data.message);
       clearInputs();
     } catch (error) {
-      const newError = handleError(error);
-      reduxDispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       reduxDispatch(stopLoading());
     }
@@ -74,12 +58,12 @@ const AddArticlePage = () => {
 
   return (
     <div>
-      <h2 className="font-bold text-lg mb-4">Otwórz nowe artykuł</h2>
+      <h2 className="mb-4 text-lg font-bold">Otwórz nowe artykuł</h2>
       <form className="max-w-3xl" onSubmit={onFormSubmitHandler}>
         <TextareaAutosize
           value={title}
           onChange={onTitleChangeHandler}
-          className="bg-white dark:bg-grayDark resize-none w-full outline-none border-none rounded-md overflow-auto py-2 px-2 mb-2 focus:ring-2 focus:ring-blue-600"
+          className="mb-2 w-full resize-none overflow-auto rounded-md border-none bg-white px-2 py-2 outline-none focus:ring-2 focus:ring-blue-600 dark:bg-grayDark"
           placeholder="Tytuł"
           minRows={1}
           maxRows={3}
@@ -87,7 +71,7 @@ const AddArticlePage = () => {
         <TextareaAutosize
           value={content}
           onChange={onContentChangeHandler}
-          className="bg-white dark:bg-grayDark resize-none w-full outline-none border-none rounded-md overflow-auto py-2 px-2 mb-2 focus:ring-2 focus:ring-blue-600"
+          className="mb-2 w-full resize-none overflow-auto rounded-md border-none bg-white px-2 py-2 outline-none focus:ring-2 focus:ring-blue-600 dark:bg-grayDark"
           placeholder="Treść"
           minRows={10}
           maxRows={20}

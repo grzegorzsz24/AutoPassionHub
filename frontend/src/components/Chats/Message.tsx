@@ -15,7 +15,7 @@ const Message: FC<MessageProps> = ({ message, my, date }) => {
       }`}
     >
       <div
-        className={`py-2 px-4 rounded md text-lg  ${
+        className={`md rounded px-4 py-2 text-lg  ${
           my ? "bg-grayLight text-primaryDark" : "bg-blue-600 text-blue-50"
         }`}
       >

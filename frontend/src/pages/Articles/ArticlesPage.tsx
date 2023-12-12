@@ -1,7 +1,3 @@
-import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
 import { useEffect, useReducer, useState } from "react";
 
 import ArticleFilterSkeleton from "../../components/Articles/ArticleFilterSkeleton";
@@ -13,14 +9,13 @@ import NoContent from "../../ui/NoContent";
 import Pagination from "../../components/Pagination";
 import articleFilterReducer from "../../reducers/ArticlePaginationReducer";
 import { getArticles } from "../../services/articleService";
-import handleError from "../../services/errorHandler";
-import { useAppDispatch } from "../../store/store";
+import { useNotification } from "../../hooks/useNotification";
 import { useSearchParams } from "react-router-dom";
 
 const ARTICLES_PER_PAGE = import.meta.env.VITE_ARTICLES_PER_PAGE as number;
 
 const ArticlesPage = () => {
-  const reduxDispatch = useAppDispatch();
+  const { showErrorNotification } = useNotification();
   const [params, setParams] = useSearchParams();
   const [articles, setArticles] = useState<ArticleModel[]>([]);
   const [totalNumberOfArticles, setTotalNumberOfArticles] = useState(0);
@@ -42,7 +37,7 @@ const ArticlesPage = () => {
 
   const [filterState, filterDispatch] = useReducer(
     articleFilterReducer,
-    setFiltersFromParams()
+    setFiltersFromParams(),
   );
   const { page, size, title } = filterState;
 
@@ -62,13 +57,7 @@ const ArticlesPage = () => {
       setArticles(data.data);
       setTotalNumberOfArticles(data.totalNumberOfArticles);
     } catch (error) {
-      const newError = handleError(error);
-      reduxDispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       setIsLoading(false);
     }
@@ -79,12 +68,12 @@ const ArticlesPage = () => {
   }, [filterState]);
 
   return (
-    <div className="max-w-4xl h-full flex flex-col justify-between">
+    <div className="flex h-full max-w-4xl flex-col justify-between">
       <div className="flex flex-col  gap-12">
         {isLoading ? (
           <>
             <ArticleFilterSkeleton />
-            <div className="flex flex-col gap-4 max-w-4xl">
+            <div className="flex max-w-4xl flex-col gap-4">
               <ArticleSkeleton />
               <ArticleSkeleton />
               <ArticleSkeleton />
@@ -101,7 +90,7 @@ const ArticlesPage = () => {
         )}
       </div>
       {!isLoading && articles.length > 0 && (
-        <div className=" flex items-center justify-center my-4">
+        <div className=" my-4 flex items-center justify-center">
           <Pagination
             currentPage={page}
             totalPages={Math.ceil(totalNumberOfArticles / size)}

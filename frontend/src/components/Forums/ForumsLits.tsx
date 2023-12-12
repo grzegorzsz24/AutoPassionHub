@@ -8,7 +8,7 @@ interface ForumListProps {
 
 const ForumsLits: FC<ForumListProps> = ({ forums }) => {
   return (
-    <div className="flex flex-col gap-4 max-w-4xl">
+    <div className="flex max-w-4xl flex-col gap-4">
       {forums.map((forum) => (
         <ForumItem key={forum.id} forum={forum} />
       ))}

@@ -4,18 +4,15 @@ import {
   addNotification,
 } from "../../store/features/notificationSlice";
 
-import ArticleMenu from "../../components/Menu/ArticleMenu";
 import ArticleModel from "../../models/ArticleModel";
 import ArticleResults from "./ArticleResults";
 import { FaSearch } from "react-icons/fa";
 import ForumModel from "../../models/ForumModel";
 import ForumResults from "./ForumResults";
-import { NavLink } from "react-router-dom";
 import PostModel from "../../models/PostModel";
 import PostsResults from "./PostsResults";
 import UserModel from "../../models/UserModel";
 import UserResults from "./UserResults";
-import { findUserBySearchQuery } from "../../services/userService";
 import { getSearchResults } from "../../services/searchService";
 import handleError from "../../services/errorHandler";
 import { useAppDispatch } from "../../store/store";
@@ -35,7 +32,6 @@ const SearchBar: FC<SearchBarProps> = ({ placeholder = "Szukaj" }) => {
   const dispatch = useAppDispatch();
   const searchInputRef = useRef<HTMLInputElement>(null);
   const resultsDivRef = useRef<HTMLDivElement | null>(null);
-  // const [searchResults, setSearchResults] = useState<UserModel[]>([]);
   const [searchResults, setSearchResults] = useState<SearchResults>({
     users: [],
     posts: [],
@@ -50,7 +46,7 @@ const SearchBar: FC<SearchBarProps> = ({ placeholder = "Szukaj" }) => {
     users: UserModel[],
     forums: ForumModel[],
     articles: ArticleModel[],
-    posts: PostModel[]
+    posts: PostModel[],
   ) => {
     setSearchResults((prev) => ({
       ...prev,
@@ -82,12 +78,6 @@ const SearchBar: FC<SearchBarProps> = ({ placeholder = "Szukaj" }) => {
       const newAbortController = new AbortController();
       setAbortController(newAbortController);
       try {
-        // const data = await findUserBySearchQuery(
-        //   searchQuery,
-        //   1,
-        //   20,
-        //   newAbortController
-        // );
         const data = await getSearchResults(searchQuery, newAbortController);
         console.log(data);
         if (data.status !== "ok") {
@@ -95,24 +85,19 @@ const SearchBar: FC<SearchBarProps> = ({ placeholder = "Szukaj" }) => {
         }
 
         updateSearchResults(data.users, data.forums, data.articles, data.posts);
-        // if (data.users.length === 0) {
-        //   setSearchResults([]);
-        // } else {
-        //   setSearchResults(data.users);
-        // }
       } catch (error) {
         const newError = handleError(error);
         if (
           newError.message === "Brak wyników wyszukiwań" ||
           newError.message === "The user aborted a request."
         ) {
-          setSearchResults([]);
+          clearSearchResults();
         } else {
           dispatch(
             addNotification({
               type: NotificationStatus.ERROR,
               message: newError.message,
-            })
+            }),
           );
         }
       }
@@ -152,20 +137,20 @@ const SearchBar: FC<SearchBarProps> = ({ placeholder = "Szukaj" }) => {
 
   return (
     <div
-      className=" bg-grayLight dark:bg-grayDark flex items-center grow max-w-md rounded-md text-sm xl:text-md 2xl:text-lg min-w-12 relative cursor-text focus-within:ring-2 focus-within:ring-blue-600 "
+      className=" xl:text-md min-w-12 relative flex max-w-md grow cursor-text items-center rounded-md bg-grayLight text-sm focus-within:ring-2 focus-within:ring-blue-600 dark:bg-grayDark 2xl:text-lg "
       onClick={setFocusOnInput}
     >
       <input
         type="text"
         placeholder={placeholder}
-        className="bg-grayLight dark:bg-grayDark px-2 xl:px-4 py-2 focus:outline-none  rounded-md w-full"
+        className="w-full rounded-md bg-grayLight px-2 py-2 focus:outline-none  dark:bg-grayDark xl:px-4"
         ref={searchInputRef}
         onChange={changeHandler}
         onFocus={focusHandler}
         onBlur={blurHandler}
       />
       <span
-        className={`block px-2 xl:px-4 text-gray-400 transition-all text-2xl ${
+        className={`block px-2 text-2xl text-gray-400 transition-all xl:px-4 ${
           isFocused ? "translate-x-[-20px]" : ""
         }`}
       >
@@ -173,7 +158,7 @@ const SearchBar: FC<SearchBarProps> = ({ placeholder = "Szukaj" }) => {
       </span>
       {isFocused && (
         <div
-          className="absolute top-12 bg-grayLight dark:bg-grayDark py-4 px-2 rounded-md w-full z-50 max-h-96 overflow-y-auto"
+          className="absolute top-12 z-50 max-h-96 w-full overflow-y-auto rounded-md bg-grayLight px-2 py-4 dark:bg-grayDark"
           ref={resultsDivRef}
         >
           <UserResults users={searchResults.users} />

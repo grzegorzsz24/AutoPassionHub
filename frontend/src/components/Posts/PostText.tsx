@@ -8,7 +8,7 @@ const PostText: FC<PostTextProps> = ({ text }) => {
   return (
     <div
       style={{ overflowWrap: "anywhere" }}
-      className="px-2 sm:px-4 py-2 sm:py-4 text-justify text-sm sm:text-md xl:text-lg"
+      className="sm:text-md px-2 py-2 text-justify text-sm sm:px-4 sm:py-4 xl:text-lg"
     >
       {text}
     </div>

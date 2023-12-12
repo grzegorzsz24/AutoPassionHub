@@ -1,19 +1,15 @@
 import { FC, useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
-import { useAppDispatch, useAppSelector } from "../../store/store";
 
 import ArticleModel from "../../models/ArticleModel";
 import DateFormatter from "../../utils/DateFormatter";
 import ToogleBookmarkButton from "../../ui/ToogleBookmarkButton";
 import { debounce } from "lodash";
-import handleError from "../../services/errorHandler";
 import { toggleLike } from "../../services/articleService";
 import { toogleArticleBookmark } from "../../services/articleService";
+import { useAppSelector } from "../../store/store";
 import { useNavigate } from "react-router-dom";
+import { useNotification } from "../../hooks/useNotification";
 import { useStompClient } from "react-stomp-hooks";
 
 interface ArticleProps {
@@ -22,12 +18,16 @@ interface ArticleProps {
 
 const Article: FC<ArticleProps> = ({ article }) => {
   const stompClient = useStompClient();
+  const {
+    showErrorNotification,
+    showSuccessNotification,
+    showInfoNotification,
+  } = useNotification();
   const { userId: loggedInUserId } = useAppSelector((state) => state.user);
 
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const [numberOfLikes, setNumberOfLikes] = useState<number>(
-    article.likesNumber
+    article.likesNumber,
   );
   const [isBookmarked, setIsBookmarked] = useState<boolean>(article.saved);
   const [isLiked, setIsLiked] = useState<boolean>(article.liked);
@@ -55,13 +55,7 @@ const Article: FC<ArticleProps> = ({ article }) => {
         });
       }
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
+      showErrorNotification(error);
       setIsLiked((prev) => !prev);
       setNumberOfLikes((prev) => (isLiked ? prev - 1 : prev + 1));
     }
@@ -80,29 +74,13 @@ const Article: FC<ArticleProps> = ({ article }) => {
         throw new Error(data.message);
       }
       if (isBookmarked) {
-        dispatch(
-          addNotification({
-            type: NotificationStatus.INFO,
-            message: "Usunięto z zapisanych",
-          })
-        );
+        showInfoNotification("Usunięto z zapisanych");
       } else {
-        dispatch(
-          addNotification({
-            type: NotificationStatus.SUCCESS,
-            message: "Dodano do zapisanych",
-          })
-        );
+        showSuccessNotification("Dodano do zapisanych");
       }
       setIsBookmarked((prev) => !prev);
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
+      showErrorNotification(error);
     }
   };
 
@@ -111,11 +89,11 @@ const Article: FC<ArticleProps> = ({ article }) => {
   };
 
   return (
-    <div className="bg-white dark:bg-primaryDark2 p-6 rounded-md shadow-md ">
-      <div className="flex items-center justify-between gap-8  my-6">
+    <div className="rounded-md bg-white p-6 shadow-md dark:bg-primaryDark2 ">
+      <div className="my-6 flex items-center justify-between  gap-8">
         <div className="">
-          <h1 className="font-bold text-2xl text-wrap">{article.title}</h1>
-          <p className="text-xs text-gray-500 dark:text-gray-300 mb-4">
+          <h1 className="text-wrap text-2xl font-bold">{article.title}</h1>
+          <p className="mb-4 text-xs text-gray-500 dark:text-gray-300">
             {DateFormatter.formatDate(article.publishedAt)}
           </p>
           <ToogleBookmarkButton
@@ -125,31 +103,31 @@ const Article: FC<ArticleProps> = ({ article }) => {
           />
         </div>
         <div
-          className="flex items-center gap-2 cursor-pointer group "
+          className="group flex cursor-pointer items-center gap-2 "
           onClick={goToUserPage}
         >
           <img
             src={article.userImageUrl}
             alt={`${article.firstName} ${article.lastName} komentarz`}
-            className="w-8 h-8 rounded-full"
+            className="h-8 w-8 rounded-full"
           />
           <div className="flex flex-col text-sm">
             <div className="flex ">
               <p>{article.firstName}</p>
               <p>{article.lastName}</p>
             </div>
-            <p className="text-blue-600 text-xs group-hover:font-bold transition-all">
+            <p className="text-xs text-blue-600 transition-all group-hover:font-bold">
               {article.user}
             </p>
           </div>
         </div>
       </div>
-      <p className="leading-10 mb-6 text-justify">{article.content}</p>
+      <p className="mb-6 text-justify leading-10">{article.content}</p>
 
       <div className="flex items-center gap-2 ">
         <button
           onClick={toggleLikeHandler}
-          className="active:animate-ping transition-all hover:text-blue-600"
+          className="transition-all hover:text-blue-600 active:animate-ping"
         >
           {isLiked ? <FaHeart /> : <FaRegHeart />}
         </button>

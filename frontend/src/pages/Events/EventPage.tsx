@@ -1,7 +1,3 @@
-import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
 import { deleteEvent, getEventById } from "../../services/eventService";
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 import { useEffect, useState } from "react";
@@ -10,11 +6,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import Event from "../../components/Events/Event";
 import EventModel from "../../models/EventModel";
 import NoContent from "../../ui/NoContent";
-import handleError from "../../services/errorHandler";
 import { useAppDispatch } from "../../store/store";
+import { useNotification } from "../../hooks/useNotification";
 
 const EventPage = () => {
   const dispatch = useAppDispatch();
+  const { showErrorNotification, showSuccessNotification } = useNotification();
   const navigate = useNavigate();
   const { id: eventID } = useParams<{ id: string }>();
   const [event, setEvent] = useState<EventModel | null>(null);
@@ -28,15 +25,8 @@ const EventPage = () => {
         throw new Error(data.message);
       }
       setEvent(data.event);
-      console.log(data.event);
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       setIsLoading(false);
     }
@@ -49,22 +39,11 @@ const EventPage = () => {
       if (data.status !== "ok") {
         throw new Error(data.message);
       }
-      dispatch(
-        addNotification({
-          message: data.message,
-          type: NotificationStatus.SUCCESS,
-        })
-      );
+      showSuccessNotification(data.message);
       navigate("/events");
       setEvent(null);
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          message: newError.message,
-          type: NotificationStatus.ERROR,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       dispatch(stopLoading());
     }

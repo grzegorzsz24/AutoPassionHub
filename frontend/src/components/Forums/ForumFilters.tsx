@@ -1,14 +1,9 @@
 import { Dispatch, FC, useEffect, useState } from "react";
-import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
 
 import ForumFiltersSkeleton from "./ForumFiltersSkeleton";
 import PrimaryButton from "../../ui/PrimaryButton";
 import { getAllCarsWithModels } from "../../services/carService";
-import handleError from "../../services/errorHandler";
-import { useAppDispatch } from "../../store/store";
+import { useNotification } from "../../hooks/useNotification";
 
 interface FilterAction {
   type: string;
@@ -36,7 +31,7 @@ const ForumFilters: FC<ForumFiltersProps> = ({
   isLoading,
   setIsLoading,
 }) => {
-  const reduxDispatch = useAppDispatch();
+  const { showErrorNotification } = useNotification();
   const [cars, setCars] = useState<CarsData>({});
   const [typedTitle, setTypedTitle] = useState(title);
 
@@ -47,13 +42,7 @@ const ForumFilters: FC<ForumFiltersProps> = ({
       if (data.status !== "ok") throw new Error(data.message);
       setCars(data.cars);
     } catch (error) {
-      const newError = handleError(error);
-      reduxDispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       setIsLoading(false);
     }
@@ -89,7 +78,7 @@ const ForumFilters: FC<ForumFiltersProps> = ({
   if (isLoading) return <ForumFiltersSkeleton />;
 
   return (
-    <div className="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
+    <div className="flex flex-col items-stretch gap-4 lg:flex-row lg:items-center">
       <form onSubmit={onSubmitTitleForm}>
         <input
           value={typedTitle}
@@ -98,12 +87,12 @@ const ForumFilters: FC<ForumFiltersProps> = ({
           }}
           type="text"
           placeholder="Szukaj po nazwie"
-          className="p-2 rounded-md focus:ring-2 ring-blue-600 bg-white dark:bg-grayDark outline-none w-full lg:w-72"
+          className="w-full rounded-md bg-white p-2 outline-none ring-blue-600 focus:ring-2 dark:bg-grayDark lg:w-72"
         />
       </form>
       <form className="flex gap-4">
         <select
-          className="p-2 rounded-md cursor-pointer focus:ring-2 ring-blue-600 bg-white dark:bg-grayDark w-full lg:w-36"
+          className="w-full cursor-pointer rounded-md bg-white p-2 ring-blue-600 focus:ring-2 dark:bg-grayDark lg:w-36"
           value={carBrand}
           onChange={(e) => setCarBrand(e.target.value)}
         >
@@ -115,7 +104,7 @@ const ForumFilters: FC<ForumFiltersProps> = ({
           ))}
         </select>
         <select
-          className="p-2 rounded-md cursor-pointer focus:ring-2 ring-blue-600 bg-white dark:bg-grayDark w-full lg:w-36"
+          className="w-full cursor-pointer rounded-md bg-white p-2 ring-blue-600 focus:ring-2 dark:bg-grayDark lg:w-36"
           disabled={!carBrand}
           value={carModel}
           onChange={(e) => setCarModel(e.target.value)}

@@ -1,7 +1,3 @@
-import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
 import { useEffect, useState } from "react";
 
 import FriendInvitation from "../../components/Friends/FriendInvitation";
@@ -9,11 +5,10 @@ import FriendSkeleton from "../../components/Friends/FriendSkeleton";
 import NoContent from "../../ui/NoContent";
 import PendingInvitationModel from "../../models/PendingInvitationModel";
 import { getReceivedInvitations } from "../../services/friendService";
-import handleError from "../../services/errorHandler";
-import { useAppDispatch } from "../../store/store";
+import { useNotification } from "../../hooks/useNotification";
 
 const ReceivedInvitationsPage = () => {
-  const dispatch = useAppDispatch();
+  const { showErrorNotification } = useNotification();
   const [pendingInvitations, setPendingInvitations] = useState<
     PendingInvitationModel[]
   >([]);
@@ -28,13 +23,7 @@ const ReceivedInvitationsPage = () => {
       }
       setPendingInvitations(data.invitations);
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          message: newError.message,
-          type: NotificationStatus.ERROR,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       setIsLoading(false);
     }
@@ -42,7 +31,7 @@ const ReceivedInvitationsPage = () => {
 
   const removeInvitationFromList = (invitationId: number) => {
     setPendingInvitations((prev) =>
-      prev.filter((invitation) => invitation.id !== invitationId)
+      prev.filter((invitation) => invitation.id !== invitationId),
     );
   };
 
@@ -51,7 +40,7 @@ const ReceivedInvitationsPage = () => {
   }, []);
 
   return (
-    <div className="text-primaryDark dark:text-blue-50 w-full  flex flex-col gap-6 ">
+    <div className="flex w-full flex-col  gap-6 text-primaryDark dark:text-blue-50 ">
       {isLoading && (
         <>
           <FriendSkeleton />

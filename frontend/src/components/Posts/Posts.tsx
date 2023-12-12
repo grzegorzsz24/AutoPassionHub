@@ -1,7 +1,3 @@
-import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
 import { deletePost, editPost } from "../../services/postService";
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 import { useEffect, useState } from "react";
@@ -11,33 +7,28 @@ import LoadingPost from "./LoadingPost";
 import Post from "./Post";
 import PostModel from "../../models/PostModel";
 import { getPosts } from "../../services/postService";
-import handleError from "../../services/errorHandler";
 import { useAppDispatch } from "../../store/store";
+import { useNotification } from "../../hooks/useNotification";
 
 const POSTS_PER_PAGE = import.meta.env.VITE_POSTS_PER_PAGE as number;
 const Posts = () => {
   const dispatch = useAppDispatch();
+  const { showErrorNotification, showSuccessNotification } = useNotification();
   const [posts, setPosts] = useState<PostModel[]>([]);
-  const [page, setPage] = useState(1);
-  const [hasMorePosts, setHasMorePosts] = useState(true);
+  // const [page, setPage] = useState(1);
+  // const [hasMorePosts, setHasMorePosts] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
   const downloadPosts = async () => {
     try {
       setIsLoading(true);
-      const data = await getPosts(page, POSTS_PER_PAGE);
+      const data = await getPosts(1, POSTS_PER_PAGE);
       if (data.status !== "ok") {
         throw new Error(data.message);
       }
       setPosts(data.posts);
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       setIsLoading(false);
     }
@@ -54,21 +45,10 @@ const Posts = () => {
       if (data.status !== "ok") {
         throw new Error(data.message);
       }
-      dispatch(
-        addNotification({
-          type: NotificationStatus.SUCCESS,
-          message: data.message,
-        })
-      );
+      showSuccessNotification(data.message);
       setPosts((prev) => prev.filter((post) => post.id !== id));
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       dispatch(stopLoading());
     }
@@ -81,28 +61,17 @@ const Posts = () => {
       if (data.status !== "ok") {
         throw new Error(data.message);
       }
-      dispatch(
-        addNotification({
-          type: NotificationStatus.SUCCESS,
-          message: data.message,
-        })
-      );
+      showSuccessNotification(data.message);
       setPosts((prev) =>
         prev.map((post) => {
           if (post.id === id) {
             return { ...post, content };
           }
           return post;
-        })
+        }),
       );
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       dispatch(stopLoading());
     }
@@ -113,8 +82,8 @@ const Posts = () => {
   }, []);
 
   return (
-    <div className="bg-gears-light dark:bg-gears-dark bg-no-repeat bg-contain bg-center gap-8 items-center overflow-y-auto h-full flex-grow ">
-      <div className="flex flex-col items-center gap-6 sm:gap-12 py-6 sm:py-12">
+    <div className="h-full flex-grow items-center gap-8 overflow-y-auto bg-gears-light bg-contain bg-center bg-no-repeat dark:bg-gears-dark ">
+      <div className="flex flex-col items-center gap-6 py-6 sm:gap-12 sm:py-12">
         {!isLoading && <AddPost addPostToList={addPostToList} />}
         {isLoading && (
           <>

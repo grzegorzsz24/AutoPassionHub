@@ -12,7 +12,7 @@ const getUserFriends = async (userId: string) => {
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     const data = await response.json();
@@ -110,7 +110,7 @@ const sendFriendRequest = async (userId: number) => {
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
     );
     const data = await response.json();
     if (!response.ok) {
@@ -132,7 +132,7 @@ const acceptFriendRequest = async (invitationId: number) => {
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
     );
     const data = await response.json();
     if (!response.ok) {
@@ -154,7 +154,7 @@ const rejectFriendRequest = async (invitationId: number) => {
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
     );
     const data = await response.json();
     if (!response.ok) {
@@ -176,7 +176,7 @@ const deleteFriend = async (friendId: number) => {
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
     );
     const data = await response.json();
     if (!response.ok) {

@@ -1,7 +1,3 @@
-import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
 import { useEffect, useState } from "react";
 
 import Forum from "../../components/Forums/Forum";
@@ -9,12 +5,11 @@ import ForumModel from "../../models/ForumModel";
 import LoadingSpinner from "../../ui/LoadingSpinner";
 import NoContent from "../../ui/NoContent";
 import { getForumById } from "../../services/forumService";
-import handleError from "../../services/errorHandler";
-import { useAppDispatch } from "../../store/store";
+import { useNotification } from "../../hooks/useNotification";
 import { useParams } from "react-router-dom";
 
 const ForumPage = () => {
-  const dispatch = useAppDispatch();
+  const { showErrorNotification } = useNotification();
   const { forum: forumID } = useParams<{ forum: string }>();
   const [forum, setForum] = useState<ForumModel | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -28,13 +23,7 @@ const ForumPage = () => {
       }
       setForum(data.data);
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          type: NotificationStatus.ERROR,
-          message: newError.message,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       setIsLoading(false);
     }

@@ -32,7 +32,7 @@ const PostPage = () => {
         addNotification({
           type: NotificationStatus.ERROR,
           message: newError.message,
-        })
+        }),
       );
     } finally {
       setIsLoading(false);
@@ -50,7 +50,7 @@ const PostPage = () => {
         addNotification({
           type: NotificationStatus.SUCCESS,
           message: data.message,
-        })
+        }),
       );
       setPost(null);
     } catch (error) {
@@ -59,7 +59,7 @@ const PostPage = () => {
         addNotification({
           type: NotificationStatus.ERROR,
           message: newError.message,
-        })
+        }),
       );
     } finally {
       dispatch(stopLoading());
@@ -77,13 +77,13 @@ const PostPage = () => {
         addNotification({
           type: NotificationStatus.SUCCESS,
           message: data.message,
-        })
+        }),
       );
       setPost(
         post && {
           ...post,
           content,
-        }
+        },
       );
     } catch (error) {
       const newError = handleError(error);
@@ -91,7 +91,7 @@ const PostPage = () => {
         addNotification({
           type: NotificationStatus.ERROR,
           message: newError.message,
-        })
+        }),
       );
     } finally {
       dispatch(stopLoading());
@@ -105,11 +105,11 @@ const PostPage = () => {
   }, []);
 
   return (
-    <div className="flex h-full py-2 w-full">
-      <div className="my-4 md:m-6 lg:m-8 flex justify-center gap-4 md:gap-8 grow  text-primaryDark2 dark:text-blue-50 overflow-y-auto">
+    <div className="flex h-full w-full py-2">
+      <div className="my-4 flex grow justify-center gap-4 overflow-y-auto text-primaryDark2 dark:text-blue-50  md:m-6 md:gap-8 lg:m-8">
         {isLoading && <LoadingSpinner />}
         {post && (
-          <div className="mx-auto max-w-2xl w-full">
+          <div className="mx-auto w-full max-w-2xl">
             <Post
               id={post.id}
               content={post.content}

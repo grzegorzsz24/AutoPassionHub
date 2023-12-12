@@ -3,7 +3,7 @@ import Posts from "../components/Posts/Posts";
 
 const MainPage = () => {
   return (
-    <div className="h-full  md:px-4 xl:px-6  flex gap-8">
+    <div className="flex h-full gap-8 md:px-4 xl:px-6">
       <Posts />
       <InfoAside />
     </div>

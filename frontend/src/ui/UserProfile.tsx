@@ -35,12 +35,12 @@ const UserProfile: FC<UserProfileProps> = ({
         <img
           src={imageUrl}
           alt={`${firstName} ${lastName} picture`}
-          className={`rounded-full cursor-pointer ${
+          className={`cursor-pointer rounded-full ${
             size === "small"
-              ? "w-8 h-8"
+              ? "h-8 w-8"
               : size === "medium"
-              ? "w-8 h-8 sm:w-12 sm:h-12"
-              : "w-10 h-10 sm:w-14 sm:h-14"
+                ? "h-8 w-8 sm:h-12 sm:w-12"
+                : "h-10 w-10 sm:h-14 sm:w-14"
           }`}
           onClick={navigateToUserPage}
         />
@@ -50,14 +50,14 @@ const UserProfile: FC<UserProfileProps> = ({
             navigate(`/user/${nickname}`);
           }}
         >
-          <div className="flex gap-2 items-center cursor-pointer">
+          <div className="flex cursor-pointer items-center gap-2">
             <p
               className={`font-bold ${
                 size === "small"
                   ? "text-sm"
                   : size === "medium"
-                  ? "text-sm sm:text-md"
-                  : "text-lg sm:text-xl"
+                    ? "sm:text-md text-sm"
+                    : "text-lg sm:text-xl"
               }`}
               onClick={navigateToUserPage}
             >
@@ -68,21 +68,21 @@ const UserProfile: FC<UserProfileProps> = ({
                 size === "small"
                   ? "text-xs"
                   : size === "medium"
-                  ? "text-xs sm:text-sm"
-                  : "text-sm sm:text-md"
+                    ? "text-xs sm:text-sm"
+                    : "sm:text-md text-sm"
               }`}
             >
               @{nickname}
             </p>
           </div>
-          <div className="flex gap-2 items-center" onClick={navigateToUserPage}>
+          <div className="flex items-center gap-2" onClick={navigateToUserPage}>
             <p
               className={` ${
                 size === "small"
                   ? "text-[0.5rem]"
                   : size === "medium"
-                  ? "text-[0.5rem] sm:text-[0.6rem]"
-                  : "text-[0.8rem]"
+                    ? "text-[0.5rem] sm:text-[0.6rem]"
+                    : "text-[0.8rem]"
               }`}
             >
               {DateFormatter.formatDate(createdAt)}
@@ -95,9 +95,9 @@ const UserProfile: FC<UserProfileProps> = ({
 
   return (
     <div
-      className={`flex items-center w-max ${
+      className={`flex w-max items-center ${
         size === "small" ? "gap-2" : size === "medium" ? "gap-4" : "gap-6"
-      } cursor-pointer group`}
+      } group cursor-pointer`}
       onClick={navigateToUserPage}
     >
       <img
@@ -105,10 +105,10 @@ const UserProfile: FC<UserProfileProps> = ({
         alt={`${firstName} ${lastName} komentarz`}
         className={`rounded-full ${
           size === "small"
-            ? "w-8 h-8"
+            ? "h-8 w-8"
             : size === "medium"
-            ? "w-12 h-12"
-            : "w-10 h-10 sm:w-14 sm:h-14"
+              ? "h-12 w-12"
+              : "h-10 w-10 sm:h-14 sm:w-14"
         }`}
       />
       <div className="flex flex-col text-sm">
@@ -117,8 +117,8 @@ const UserProfile: FC<UserProfileProps> = ({
             size === "small"
               ? "text-sm"
               : size === "medium"
-              ? "text-md"
-              : "text-lg sm:text-xl"
+                ? "text-md"
+                : "text-lg sm:text-xl"
           }`}
         >
           <p>
@@ -126,12 +126,12 @@ const UserProfile: FC<UserProfileProps> = ({
           </p>
         </div>
         <p
-          className={`text-blue-600  group-hover:font-bold transition-all ${
+          className={`text-blue-600  transition-all group-hover:font-bold ${
             size === "small"
               ? "text-xs"
               : size === "medium"
-              ? "text-sm"
-              : "text-sm sm:text-md"
+                ? "text-sm"
+                : "sm:text-md text-sm"
           }`}
         >
           {nickname}

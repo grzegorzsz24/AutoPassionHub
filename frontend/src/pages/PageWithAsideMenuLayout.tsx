@@ -10,9 +10,9 @@ const PageWithAsideMenuLayout: FC<PageWithAsideMenuLayoutProps> = ({
   content,
 }) => {
   return (
-    <div className=" md:px-4 xl:px-6 py-4 sm:py-12 flex flex-col sm:flex-row items-stretch sm:items-start gap-8 xl:gap-32 h-full overflow-y-auto  text-primaryDark2 dark:text-blue-50">
+    <div className="flex h-full flex-col items-stretch gap-8 overflow-y-auto py-4 text-primaryDark2 dark:text-blue-50 sm:flex-row sm:items-start sm:py-12 md:px-4 xl:gap-32 xl:px-6">
       {menu}
-      <div className="flex-grow h-min sm:p-1">{content}</div>
+      <div className="h-min flex-grow sm:p-1">{content}</div>
     </div>
   );
 };

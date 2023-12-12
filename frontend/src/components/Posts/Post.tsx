@@ -1,9 +1,5 @@
 import { FC, useEffect, useRef, useState } from "react";
 import {
-  NotificationStatus,
-  addNotification,
-} from "../../store/features/notificationSlice";
-import {
   addComment,
   deleteComment,
   editComment,
@@ -20,8 +16,8 @@ import PostHeader from "./PostHeader";
 import PostModel from "../../models/PostModel";
 import PostText from "./PostText";
 import { debounce } from "lodash";
-import handleError from "../../services/errorHandler";
 import { toggleLike } from "../../services/likeService";
+import { useNotification } from "../../hooks/useNotification";
 import { useStompClient } from "react-stomp-hooks";
 
 interface PostProps extends PostModel {
@@ -47,6 +43,7 @@ const Post: FC<PostProps> = ({
 }) => {
   const stompClient = useStompClient();
   const dispatch = useAppDispatch();
+  const { showErrorNotification, showSuccessNotification } = useNotification();
   const { userId: loggedInUserId } = useAppSelector((state) => state.user);
   const [editMode, setEditMode] = useState(false);
   const [isLiked, setIsLiked] = useState(liked);
@@ -81,13 +78,7 @@ const Post: FC<PostProps> = ({
         });
       }
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          message: newError.message,
-          type: NotificationStatus.ERROR,
-        })
-      );
+      showErrorNotification(error);
       setIsLiked((prev) => !prev);
       setNumberOfLikes((prev) => (isLiked ? prev - 1 : prev + 1));
     }
@@ -115,20 +106,9 @@ const Post: FC<PostProps> = ({
       }
       setComments((prev) => prev.filter((comment) => comment.id !== commentId));
       setNumberOfComments((prev) => prev - 1);
-      dispatch(
-        addNotification({
-          message: data.message,
-          type: NotificationStatus.SUCCESS,
-        })
-      );
+      showSuccessNotification(data.message);
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          message: newError.message,
-          type: NotificationStatus.ERROR,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       dispatch(stopLoading());
     }
@@ -147,22 +127,11 @@ const Post: FC<PostProps> = ({
             return { ...comment, content };
           }
           return comment;
-        })
+        }),
       );
-      dispatch(
-        addNotification({
-          message: data.message,
-          type: NotificationStatus.SUCCESS,
-        })
-      );
+      showSuccessNotification(data.message);
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          message: newError.message,
-          type: NotificationStatus.ERROR,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       dispatch(stopLoading());
     }
@@ -189,20 +158,9 @@ const Post: FC<PostProps> = ({
       }
       setComments((prev) => [data.comment, ...prev]);
       setNumberOfComments((prev) => prev + 1);
-      dispatch(
-        addNotification({
-          message: data.message,
-          type: NotificationStatus.SUCCESS,
-        })
-      );
+      showSuccessNotification(data.message);
     } catch (error) {
-      const newError = handleError(error);
-      dispatch(
-        addNotification({
-          message: newError.message,
-          type: NotificationStatus.ERROR,
-        })
-      );
+      showErrorNotification(error);
     } finally {
       dispatch(stopLoading());
     }
@@ -216,7 +174,7 @@ const Post: FC<PostProps> = ({
 
   return (
     <div
-      className="bg-white text-primaryDark dark:bg-primaryDark2 dark:text-blue-100 max-w-2xl w-full rounded-md shadow-md"
+      className="w-full max-w-2xl rounded-md bg-white text-primaryDark shadow-md dark:bg-primaryDark2 dark:text-blue-100"
       ref={postRef}
     >
       <PostHeader
