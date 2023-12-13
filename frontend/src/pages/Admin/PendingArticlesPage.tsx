@@ -13,10 +13,14 @@ import NoContent from "../../ui/NoContent";
 import Pagination from "../../components/Pagination";
 import PendingArticleItem from "../../components/Articles/PendingArticleItem";
 import articleFilterReducer from "../../reducers/ArticlePaginationReducer";
+import { useAppSelector } from "../../store/store";
 import { useNotification } from "../../hooks/useNotification";
 import { useSearchParams } from "react-router-dom";
+import { useStompClient } from "react-stomp-hooks";
 
 const PendingArticlesPage = () => {
+  const { userId: loggedInUserId } = useAppSelector((state) => state.user);
+  const stompClient = useStompClient();
   const { showErrorNotification, showSuccessNotification } = useNotification();
   const [params, setParams] = useSearchParams();
   const [articles, setArticles] = useState<ArticleModel[]>([]);
@@ -64,12 +68,24 @@ const PendingArticlesPage = () => {
     }
   };
 
-  const aprooveArticleHandler = async (id: number) => {
+  const aprooveArticleHandler = async (id: number, userId: number) => {
     try {
       const data = await approveArticle(id);
       if (data.status !== "ok") throw new Error(data.message);
       setArticles((prev) => prev.filter((article) => article.id !== id));
       showSuccessNotification("Artykuł został zatwierdzony");
+      if (stompClient) {
+        stompClient.publish({
+          destination: `/app/article/notification`,
+          body: JSON.stringify({
+            userTriggeredId: Number(loggedInUserId),
+            receiverId: userId,
+            content: "Artykuł został zatwierdzony",
+            type: "ARTICLE_APPROVED",
+            entityId: id,
+          }),
+        });
+      }
       if (articles.length <= 1 && page !== 1) {
         filterDispatch({ type: "SET_PAGE", payload: page - 1 });
         setParams(buildQueryParams());
@@ -79,12 +95,24 @@ const PendingArticlesPage = () => {
     }
   };
 
-  const rejectArticleHandler = async (id: number) => {
+  const rejectArticleHandler = async (id: number, userId: number) => {
     try {
       const data = await rejectArticle(id);
       if (data.status !== "ok") throw new Error(data.message);
       setArticles((prev) => prev.filter((article) => article.id !== id));
       showSuccessNotification("Artykuł został odrzucony");
+      if (stompClient) {
+        stompClient.publish({
+          destination: `/app/article/notification`,
+          body: JSON.stringify({
+            userTriggeredId: Number(loggedInUserId),
+            receiverId: userId,
+            content: "Artykuł został odrzucony",
+            type: "ARTICLE_DELETED",
+            entityId: id,
+          }),
+        });
+      }
       if (articles.length <= 1 && page !== 1) {
         filterDispatch({ type: "SET_PAGE", payload: page - 1 });
         setParams(buildQueryParams());

@@ -31,7 +31,7 @@ const ArticlePage = () => {
 
   useEffect(() => {
     getArticle();
-  }, []);
+  }, [articleID]);
 
   if (isLoading) return <LoadingSpinner small />;
 

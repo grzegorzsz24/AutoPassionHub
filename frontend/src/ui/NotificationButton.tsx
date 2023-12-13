@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 
+import ArticleNotification from "../components/Notifications/ArticleNotification";
 import CommentNotification from "../components/Notifications/CommentNotification";
 import InvitationNotification from "../components/Notifications/InvitationNotification";
 import { IoNotifications } from "react-icons/io5";
@@ -40,21 +41,21 @@ const NotificationButton = () => {
   };
 
   const notificationsNotRead = notifications?.filter(
-    (notification) => !notification.read
+    (notification) => !notification.read,
   );
 
   const handleMouseOut = () => setIsHovering(false);
 
   return (
     <div
-      className="relative group"
+      className="group relative"
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
     >
-      <button className="text-2xl xl:text-3xl text-blue-950 dark:text-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded-md relative">
-        <IoNotifications className="group-hover:scale-125 transition-all" />
+      <button className="relative rounded-md text-2xl text-blue-950 focus:outline-none focus:ring-2 focus:ring-blue-600 dark:text-blue-50 xl:text-3xl">
+        <IoNotifications className="transition-all group-hover:scale-125" />
         {notifications && notificationsNotRead.length > 0 && (
-          <div className="bg-green-500 absolute  left-4 bottom-4 text-sm w-4 h-4 xl:w-6 xl:h-6 rounded-full flex items-center justify-center text-blue-50 dark:text-blue-900 font-bold group-hover:ring-4 group-hover:ring-green-300 transition-all">
+          <div className="absolute bottom-4  left-4 flex h-4 w-4 items-center justify-center rounded-full bg-green-500 text-sm font-bold text-blue-50 transition-all group-hover:ring-4 group-hover:ring-green-300 dark:text-blue-900 xl:h-6 xl:w-6">
             {notificationsNotRead.length}
           </div>
         )}
@@ -66,7 +67,7 @@ const NotificationButton = () => {
             animate="visible"
             exit="hidden"
             variants={menuVariants}
-            className="absolute top-full max-h-96 w-[80vw] sm:w-96 overflow-y-auto right-[-10px] bg-grayLight dark:bg-grayDark text-grayDark dark:text-blue-50 rounded-md px-4 py-4 flex flex-col gap-2  shadow-md items-center z-10"
+            className="absolute right-[-10px] top-full z-10 flex max-h-96 w-[80vw] flex-col items-center gap-2 overflow-y-auto rounded-md bg-grayLight px-4 py-4 text-grayDark shadow-md  dark:bg-grayDark dark:text-blue-50 sm:w-96"
           >
             {notifications.map((notification) => {
               switch (notification.type) {
@@ -123,6 +124,14 @@ const NotificationButton = () => {
                 case "EVENT_REPORT":
                   return (
                     <ReportNotification
+                      key={notification.createdAt}
+                      notification={notification}
+                    />
+                  );
+                case "ARTICLE_APPROVED":
+                case "ARTICLE_DELETED":
+                  return (
+                    <ArticleNotification
                       key={notification.createdAt}
                       notification={notification}
                     />

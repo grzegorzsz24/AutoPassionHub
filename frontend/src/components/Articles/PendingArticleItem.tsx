@@ -8,8 +8,8 @@ import { RiArrowRightDoubleFill } from "react-icons/ri";
 
 interface PendingArticleItemProps {
   article: ArticleModel;
-  approveArticle: (id: number) => void;
-  rejectArticle: (id: number) => void;
+  approveArticle: (id: number, userId: number) => void;
+  rejectArticle: (id: number, userId: number) => void;
 }
 
 const PendingArticleItem: FC<PendingArticleItemProps> = ({
@@ -42,14 +42,14 @@ const PendingArticleItem: FC<PendingArticleItemProps> = ({
           <PrimaryButton
             size="sm"
             color="green"
-            onClick={() => approveArticle(article.id)}
+            onClick={() => approveArticle(article.id, article.userId)}
           >
             Zatwierdź
           </PrimaryButton>
           <PrimaryButton
             size="sm"
             color="red"
-            onClick={() => rejectArticle(article.id)}
+            onClick={() => rejectArticle(article.id, article.userId)}
           >
             Odrzuć
           </PrimaryButton>

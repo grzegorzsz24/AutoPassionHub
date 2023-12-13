@@ -41,6 +41,14 @@ const useAppSocketSubscription = () => {
     },
   );
 
+  useSubscription(
+    `/user/${Number(user.userId)}/queue/article/notifications`,
+    (message) => {
+      const body = JSON.parse(message.body);
+      dispatch(addNotification(body));
+    },
+  );
+
   useSubscription(`/user/${user.userId}/queue/messages`, (message) => {
     const body = JSON.parse(message.body);
     const currentUrl = location.pathname;

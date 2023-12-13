@@ -102,7 +102,7 @@ const PostPage = () => {
     if (id) {
       downloadPost(Number(id));
     }
-  }, []);
+  }, [id]);
 
   return (
     <div className="flex h-full w-full py-2">

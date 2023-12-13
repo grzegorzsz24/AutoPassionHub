@@ -7,7 +7,9 @@ type NotificationType =
   | "INVITATION_ACCEPTED"
   | "POST_REPORT"
   | "FORUM_REPORT"
-  | "EVENT_REPORT";
+  | "EVENT_REPORT"
+  | "ARTICLE_APPROVED"
+  | "ARTICLE_DELETED";
 
 interface NotificationModel {
   notificationId: number;

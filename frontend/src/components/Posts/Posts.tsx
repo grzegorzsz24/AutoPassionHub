@@ -117,7 +117,6 @@ const Posts = () => {
       block.current
     )
       return;
-    console.log("scroll");
     if (event.target instanceof Element) {
       const threshold = 0.7;
       const bottom =
