@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ForumRepository extends JpaRepository<Forum, Long> {
     List<Forum> findAllByUser_NicknameIgnoreCase(String nickname);
@@ -25,4 +26,6 @@ public interface ForumRepository extends JpaRepository<Forum, Long> {
             String title, String carBrand, String carModel);
 
     List<Forum> findAllByTitleContainsIgnoreCase(String title);
+
+    Optional<Forum> findByTitle(String title);
 }
