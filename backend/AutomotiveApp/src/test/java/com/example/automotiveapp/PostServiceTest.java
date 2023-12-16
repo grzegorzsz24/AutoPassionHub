@@ -105,14 +105,14 @@ public class PostServiceTest {
     @Test
     void testGetPostsForPrivateUserThrowsException() {
         User privateUser = new User();
-        privateUser.setId(2L);
+        privateUser.setId(1L);
         privateUser.setPublicProfile(false);
 
         Pageable pageable = PageRequest.of(0, 10);
-        when(userRepository.findById(2L)).thenReturn(Optional.of(privateUser));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(privateUser));
 
-        assertThrows(BadRequestException.class, () -> postService.getUserPosts(2L, pageable));
-        verify(userRepository, times(1)).findById(2L);
+        assertThrows(BadRequestException.class, () -> postService.getUserPosts(1L, pageable));
+        verify(userRepository, times(1)).findById(1L);
     }
 
     @Test
