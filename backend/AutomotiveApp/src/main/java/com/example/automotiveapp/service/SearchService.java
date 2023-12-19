@@ -24,7 +24,7 @@ public class SearchService {
                 .toList();
         searchResultsDto.setUsers(users);
 
-        List<ForumDto> forums = forumRepository.findAllByTitleContainsIgnoreCase(keyword)
+        List<ForumDto> forums = forumRepository.findAllByTitleContainsIgnoreCaseOrderByCreatedAtDesc(keyword)
                 .stream()
                 .map(ForumDtoMapper::map)
                 .toList();
@@ -42,7 +42,7 @@ public class SearchService {
                 .toList();
         searchResultsDto.setPosts(posts);
 
-        List<EventDto> events = eventRepository.findAllByTitleContainsIgnoreCase(keyword)
+        List<EventDto> events = eventRepository.findAllByTitleContainsIgnoreCaseOrderByEventDateAsc(keyword)
                 .stream()
                 .map(EventDtoMapper::map)
                 .toList();
