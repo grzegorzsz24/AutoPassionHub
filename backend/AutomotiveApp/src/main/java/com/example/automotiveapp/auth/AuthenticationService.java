@@ -72,8 +72,8 @@ public class AuthenticationService {
         response.addCookie(cookie);
         String cookieValue = "jwt=" + jwtToken + "; Max-Age=" + (7 * 24 * 60 * 60) + "; Secure; HttpOnly; Path=/; SameSite=None";
         response.addHeader("Set-Cookie", cookieValue);
-        response.setHeader("Access-Control-Allow-Headers",
-                "Date, Content-Type, Accept, X-Requested-With, Authorization, From, X-Auth-Token, Request-Id");
+        response.setHeader("Access-Control-Allow-Headers", "Date, Content-Type, Accept, " +
+                "X-Requested-With, Authorization, From, X-Auth-Token, Request-Id");
         response.setHeader("Access-Control-Expose-Headers", "Set-Cookie");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         String userId = String.valueOf(user.getId());

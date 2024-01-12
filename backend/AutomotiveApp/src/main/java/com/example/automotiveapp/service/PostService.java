@@ -107,10 +107,12 @@ public class PostService {
                 setPostLikes(publicProfilePosts, friendsPosts);
             }
         }
+        Comparator<PostDto> postDateComparator = Comparator.comparing(PostDto::getPostedAt).reversed();
+        friendsPosts.sort(postDateComparator);
 
         Page<PostDto> paginatedPosts = getPostDtos(pageable, friendsPosts);
         long totalPosts = friendsPosts.size();
-
+        
         return new PostResponse(paginatedPosts.getContent(), totalPosts);
     }
 
