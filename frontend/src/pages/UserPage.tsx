@@ -44,7 +44,7 @@ const UserPage = () => {
         addNotification({
           type: NotificationStatus.ERROR,
           message: newError.message,
-        })
+        }),
       );
     } finally {
       dispatch(stopLoading());
@@ -66,7 +66,7 @@ const UserPage = () => {
         addNotification({
           type: NotificationStatus.SUCCESS,
           message: data.message,
-        })
+        }),
       );
       setPosts((prev) => prev.filter((post) => post.id !== id));
     } catch (error) {
@@ -75,7 +75,7 @@ const UserPage = () => {
         addNotification({
           type: NotificationStatus.ERROR,
           message: newError.message,
-        })
+        }),
       );
     } finally {
       dispatch(stopLoading());
@@ -93,7 +93,7 @@ const UserPage = () => {
         addNotification({
           type: NotificationStatus.SUCCESS,
           message: data.message,
-        })
+        }),
       );
       setPosts((prev) =>
         prev.map((post) => {
@@ -101,7 +101,7 @@ const UserPage = () => {
             return { ...post, content };
           }
           return post;
-        })
+        }),
       );
     } catch (error) {
       const newError = handleError(error);
@@ -109,7 +109,7 @@ const UserPage = () => {
         addNotification({
           type: NotificationStatus.ERROR,
           message: newError.message,
-        })
+        }),
       );
     } finally {
       dispatch(stopLoading());
@@ -129,7 +129,7 @@ const UserPage = () => {
         addNotification({
           type: NotificationStatus.ERROR,
           message: newError.message,
-        })
+        }),
       );
     }
   };
@@ -151,12 +151,12 @@ const UserPage = () => {
   }, [user]);
 
   return (
-    <div className=" px-6 h-full flex-grow  mx-auto flex justify-center">
-      <div className=" w-full mb-16 py-8  h-full overflow-y-auto">
+    <div className="mx-auto flex h-full  flex-grow justify-center px-6">
+      <div className=" mb-16 h-full w-full  overflow-y-auto py-8">
         <UserHeader user={user} />
-        <div className="py-4  flex items-center justify-center ">
+        <div className="flex items-center justify-center py-4 ">
           {nickname === userNickname && (
-            <div className="flex items-center w-full max-w-2xl">
+            <div className="flex w-full max-w-2xl items-center">
               <OutlineButton
                 size="sm"
                 fullWidth
@@ -167,7 +167,7 @@ const UserPage = () => {
             </div>
           )}
         </div>
-        <div className="flex flex-col gap-4 items-center my-6">
+        <div className="my-6 flex flex-col items-center gap-4">
           {user && userNickname === nickname && (
             <AddPost addPostToList={addPostToList} />
           )}
