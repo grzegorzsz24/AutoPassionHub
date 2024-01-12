@@ -1,13 +1,16 @@
 package com.example.automotiveapp.service;
 
 import com.example.automotiveapp.config.jwt.JwtService;
-import com.example.automotiveapp.domain.File;
-import com.example.automotiveapp.domain.User;
+import com.example.automotiveapp.domain.*;
 import com.example.automotiveapp.dto.UserDto;
+import com.example.automotiveapp.dto.UserProfileDto;
 import com.example.automotiveapp.exception.BadRequestException;
 import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.mapper.UserDtoMapper;
+import com.example.automotiveapp.mapper.UserProfileDtoMapper;
 import com.example.automotiveapp.repository.FileRepository;
+import com.example.automotiveapp.repository.FriendshipRepository;
+import com.example.automotiveapp.repository.InvitationRepository;
 import com.example.automotiveapp.repository.UserRepository;
 import com.example.automotiveapp.service.utils.SecurityUtils;
 import com.example.automotiveapp.storage.FileStorageService;
@@ -37,6 +40,8 @@ UserService {
     private final FileRepository fileRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
+    private final FriendshipRepository friendshipRepository;
+    private final InvitationRepository invitationRepository;
 
     public Optional<UserDto> findUserByNickname(String nickname) {
         return userRepository.findByNicknameIgnoreCase(nickname)
@@ -164,5 +169,29 @@ UserService {
                 .stream()
                 .map(UserDtoMapper::map)
                 .toList();
+    }
+
+    public Optional<UserProfileDto> findUserProfile(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika o podanym id"));
+        User loggedInUser = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail())
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika o podanym emailu"));
+        UserProfileDto userProfileDto = userRepository.findById(userId).map(UserProfileDtoMapper::map)
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika o podanym id"));
+        Optional<Friendship> friendship1 = friendshipRepository.findByUser1AndUser2(user, loggedInUser);
+        Optional<Friendship> friendship2 = friendshipRepository.findByUser1AndUser2(loggedInUser, user);
+        Optional<Invitation> invitation1 = invitationRepository.findBySenderAndReceiverAndStatus(loggedInUser, user, InvitationStatus.PENDING);
+        Optional<Invitation> invitation2 = invitationRepository.findBySenderAndReceiverAndStatus(user, loggedInUser, InvitationStatus.PENDING);
+
+        if (friendship2.isPresent() || friendship1.isPresent()) {
+            userProfileDto.setStatus(UserFriendshipStatus.FRIENDS);
+        } else if (invitation1.isPresent()) {
+            userProfileDto.setStatus(UserFriendshipStatus.INVITATION_SENT);
+        } else if (invitation2.isPresent()) {
+            userProfileDto.setStatus(UserFriendshipStatus.INVITATION_RECEIVED);
+        } else {
+            userProfileDto.setStatus(UserFriendshipStatus.NOT_FRIENDS);
+        }
+        return Optional.of(userProfileDto);
     }
 }

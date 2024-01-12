@@ -112,7 +112,7 @@ public class PostService {
 
         Page<PostDto> paginatedPosts = getPostDtos(pageable, friendsPosts);
         long totalPosts = friendsPosts.size();
-        
+
         return new PostResponse(paginatedPosts.getContent(), totalPosts);
     }
 

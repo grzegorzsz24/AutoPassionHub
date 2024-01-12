@@ -1,6 +1,7 @@
 package com.example.automotiveapp.controller;
 
 import com.example.automotiveapp.dto.UserDto;
+import com.example.automotiveapp.dto.UserProfileDto;
 import com.example.automotiveapp.exception.BadRequestException;
 import com.example.automotiveapp.exception.ResourceNotFoundException;
 import com.example.automotiveapp.reponse.ApiImageResponse;
@@ -73,6 +74,12 @@ public class UserController {
     @GetMapping("/id/{userId}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Long userId) {
         return ResponseEntity.ok(userService.findUserById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika o podanym nickname")));
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika o podanym id")));
+    }
+
+    @GetMapping("/profile/{userId}")
+    public ResponseEntity<UserProfileDto> getUserProfile(@PathVariable Long userId) {
+        return ResponseEntity.ok(userService.findUserProfile(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika o podanym id")));
     }
 }
