@@ -19,7 +19,6 @@ public class CarController {
 
     @GetMapping
     public ResponseEntity<Map<String, List<String>>> getAllCars() {
-
         return ResponseEntity.ok(carService.getBrandsWithModels());
     }
 

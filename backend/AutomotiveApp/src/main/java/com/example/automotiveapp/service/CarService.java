@@ -7,9 +7,7 @@ import com.example.automotiveapp.repository.CarRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +38,9 @@ public class CarService {
             List<String> models = carRepository.findBrandsByModelOrderedAlphabetically(brand);
             brandsWithModels.put(brand, models);
         }
+        Map<String, List<String>> sortedBrandsWithModels = new TreeMap<>(Comparator.naturalOrder());
+        sortedBrandsWithModels.putAll(brandsWithModels);
 
-        return brandsWithModels;
+        return sortedBrandsWithModels;
     }
 }
