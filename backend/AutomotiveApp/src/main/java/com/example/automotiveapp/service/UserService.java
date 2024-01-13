@@ -171,13 +171,13 @@ UserService {
                 .toList();
     }
 
-    public Optional<UserProfileDto> findUserProfile(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika o podanym id"));
+    public Optional<UserProfileDto> findUserProfile(String nickname) {
+        User user = userRepository.findByNicknameIgnoreCase(nickname)
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika o podanym nickname"));
         User loggedInUser = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika o podanym emailu"));
-        UserProfileDto userProfileDto = userRepository.findById(userId).map(UserProfileDtoMapper::map)
-                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika o podanym id"));
+        UserProfileDto userProfileDto = userRepository.findByNicknameIgnoreCase(nickname).map(UserProfileDtoMapper::map)
+                .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika o podanym nickname"));
         Optional<Friendship> friendship1 = friendshipRepository.findByUser1AndUser2(user, loggedInUser);
         Optional<Friendship> friendship2 = friendshipRepository.findByUser1AndUser2(loggedInUser, user);
         Optional<Invitation> invitation1 = invitationRepository.findBySenderAndReceiverAndStatus(loggedInUser, user, InvitationStatus.PENDING);
@@ -187,8 +187,10 @@ UserService {
             userProfileDto.setStatus(UserFriendshipStatus.FRIENDS);
         } else if (invitation1.isPresent()) {
             userProfileDto.setStatus(UserFriendshipStatus.INVITATION_SENT);
+            userProfileDto.setInvitationId(invitation1.get().getId());
         } else if (invitation2.isPresent()) {
             userProfileDto.setStatus(UserFriendshipStatus.INVITATION_RECEIVED);
+            userProfileDto.setInvitationId(invitation2.get().getId());
         } else {
             userProfileDto.setStatus(UserFriendshipStatus.NOT_FRIENDS);
         }

@@ -77,9 +77,9 @@ public class UserController {
                 .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika o podanym id")));
     }
 
-    @GetMapping("/profile/{userId}")
-    public ResponseEntity<UserProfileDto> getUserProfile(@PathVariable Long userId) {
-        return ResponseEntity.ok(userService.findUserProfile(userId)
+    @GetMapping("/profile/{nickname}")
+    public ResponseEntity<UserProfileDto> getUserProfile(@PathVariable String nickname) {
+        return ResponseEntity.ok(userService.findUserProfile(nickname)
                 .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika o podanym id")));
     }
 }

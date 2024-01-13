@@ -9,7 +9,7 @@ import java.util.Date;
 @Getter
 @Setter
 public class UserProfileDto {
-    private Long userId;
+    private Long id;
     private String firstName;
     private String lastName;
     private String nickname;
@@ -18,4 +18,5 @@ public class UserProfileDto {
     private boolean publicProfile;
     private String imageUrl;
     private UserFriendshipStatus status;
+    private Long invitationId;
 }
