@@ -18,7 +18,6 @@ const MyForumsPage = () => {
     try {
       const data = await getUserForums(nickname);
       if (data.status !== "ok") throw new Error(data.message);
-      console.log(data.data);
       setForums(data.data);
     } catch (error) {
       showErrorNotification(error);

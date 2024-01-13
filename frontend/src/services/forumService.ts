@@ -6,7 +6,7 @@ const createForum = async (
   title: string,
   content: string,
   carBrand: string,
-  carModel: string
+  carModel: string,
 ) => {
   try {
     const response = await fetch(`${API_URL}/user/forums`, {
@@ -50,7 +50,7 @@ const getForums = async (
   size: number,
   title?: string,
   carBrand?: string,
-  carModel?: string
+  carModel?: string,
 ) => {
   let queryString = "?";
 
@@ -237,7 +237,7 @@ const getSavedForums = async (page: number = 1, size: number = 10) => {
       {
         method: "GET",
         credentials: "include",
-      }
+      },
     );
 
     const data = await response.json();
@@ -263,14 +263,11 @@ const addForumToSaved = async (forumId: number) => {
       {
         method: "POST",
         credentials: "include",
-      }
+      },
     );
-
-    console.log(response);
     if (response.ok) {
       return createSuccessResponse("Dodano do zapisanych.");
     }
-
     const data = await response.json();
     throw new Error(data.message);
   } catch (error) {

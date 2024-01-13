@@ -2,6 +2,11 @@ import {
   NotificationStatus,
   addNotification,
 } from "../store/features/notificationSlice";
+import {
+  acceptFriendRequest,
+  rejectFriendRequest,
+  sendFriendRequest,
+} from "../services/friendService";
 import { deletePost, editPost } from "../services/postService";
 import { startLoading, stopLoading } from "../store/features/loadingSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
@@ -9,31 +14,43 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import AddPost from "../components/Posts/AddPost";
+import FriendshipActions from "../components/FriendshipActions";
 import OutlineButton from "../ui/OutlineButton";
 import Post from "../components/Posts/Post";
 import PostModel from "../models/PostModel";
 import UserHeader from "../components/UserHeader";
-import UserModel from "../models/UserModel";
-import { getUserByNickname } from "../services/userService";
+import UserWithRelationshipStatusModel from "../models/UserWithRelationshipStatusModel";
+import { getAllChats } from "../services/chatService";
+import { getUserByNicknameWithStatusOfRelationship } from "../services/userService";
 import { getUserPosts } from "../services/postService";
 import handleError from "../services/errorHandler";
+import { setChats } from "../store/features/socketSlice";
+import { useNotification } from "../hooks/useNotification";
+import { useStompClient } from "react-stomp-hooks";
 
 const UserPage = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
+  const { showSuccessNotification, showErrorNotification } = useNotification();
   const navigate = useNavigate();
-  const { nickname: userNickname } = useAppSelector((state) => state.user);
+  const stompClient = useStompClient();
+  const { nickname: userNickname, userId: loggedInUserId } = useAppSelector(
+    (state) => state.user,
+  );
   const { nickname: nicknameFromParams } = useParams();
-  const [user, setUser] = useState<UserModel | null>(null);
+  const [user, setUser] = useState<UserWithRelationshipStatusModel | null>(
+    null,
+  );
   const [posts, setPosts] = useState<PostModel[]>([]);
 
   const nickname =
     location.pathname === "/me" ? userNickname : nicknameFromParams;
 
   const getUserData = async () => {
+    if (!nickname) return;
     try {
       dispatch(startLoading());
-      const data = await getUserByNickname(nickname!);
+      const data = await getUserByNicknameWithStatusOfRelationship(nickname);
       if (data.status !== "ok") {
         throw new Error(data.message);
       }
@@ -134,6 +151,94 @@ const UserPage = () => {
     }
   };
 
+  const acceptInvitation = async () => {
+    if (!user) return;
+    try {
+      dispatch(startLoading());
+      const data = await acceptFriendRequest(user.invitationId);
+      if (data.status !== "ok") {
+        throw new Error(data.message);
+      }
+      setUser((prev) => ({ ...prev!, status: "FRIENDS" }));
+      if (stompClient) {
+        stompClient.publish({
+          destination: `/app/notification`,
+          body: JSON.stringify({
+            userTriggeredId: Number(loggedInUserId),
+            receiverId: user.id,
+            content: "Użytkownik zaakceptował twoje zaproszenie do znajomych",
+            type: "INVITATION_ACCEPTED",
+            entityId: user.invitationId,
+          }),
+        });
+      }
+      fetchAllChats();
+      showSuccessNotification(data.message);
+    } catch (error) {
+      showErrorNotification(error);
+    } finally {
+      dispatch(stopLoading());
+    }
+  };
+
+  const rejectInvitation = async () => {
+    if (!user) return;
+    try {
+      dispatch(startLoading());
+      const data = await rejectFriendRequest(user.invitationId);
+      if (data.status !== "ok") {
+        throw new Error(data.message);
+      }
+      setUser((prev) => ({ ...prev!, status: "NOT_FRIENDS" }));
+      showSuccessNotification(data.message);
+    } catch (error) {
+      showErrorNotification(error);
+    } finally {
+      dispatch(stopLoading());
+    }
+  };
+
+  const sendInvitation = async () => {
+    if (!user) return;
+    try {
+      dispatch(startLoading());
+      const data = await sendFriendRequest(user.id);
+      if (data.status !== "ok") {
+        throw new Error(data.message);
+      }
+      setUser((prev) => ({ ...prev!, status: "INVITATION_SENT" }));
+      if (stompClient) {
+        stompClient.publish({
+          destination: `/app/notification`,
+          body: JSON.stringify({
+            userTriggeredId: Number(loggedInUserId),
+            receiverId: user.id,
+            content: "Użytkownik wysłał ci zaproszenie do znajomych",
+            type: "INVITATION_SENT",
+            entityId: 0,
+          }),
+        });
+      }
+      showSuccessNotification(data.message);
+    } catch (error) {
+      showErrorNotification(error);
+    } finally {
+      dispatch(stopLoading());
+    }
+  };
+
+  const fetchAllChats = async () => {
+    try {
+      const response = await getAllChats();
+      if (response.status !== "ok") {
+        throw new Error(response.message);
+      }
+      dispatch(setChats(response.data));
+    } catch (error) {
+      showErrorNotification(error);
+    }
+  };
+
   const navigateToSettingsPage = () => {
     navigate("/me/settings/data");
   };
@@ -166,6 +271,15 @@ const UserPage = () => {
               </OutlineButton>
             </div>
           )}
+        </div>
+        <div className="mx-auto max-w-2xl">
+          <FriendshipActions
+            nickname={nickname}
+            user={user}
+            sendInvitation={sendInvitation}
+            acceptInvitation={acceptInvitation}
+            rejectInvitation={rejectInvitation}
+          />
         </div>
         <div className="my-6 flex flex-col items-center gap-4">
           {user && userNickname === nickname && (

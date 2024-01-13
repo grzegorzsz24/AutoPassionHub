@@ -88,7 +88,6 @@ const getUserPosts = async (id: number) => {
     if (!response.ok) {
       throw new Error(data.message);
     }
-    console.log(data);
     return {
       status: "ok",
       message: "Pobrano posty.",

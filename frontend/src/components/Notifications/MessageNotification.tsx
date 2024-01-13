@@ -8,6 +8,7 @@ import { changeMessageNotificationStatusAsRead } from "../../store/features/sock
 import { getUserById } from "../../services/userService";
 import { useAppDispatch } from "../../store/store";
 import { useNavigate } from "react-router-dom";
+import { useNotification } from "../../hooks/useNotification";
 
 interface MessageNotificationProps {
   notification: NotificationMessageModel;
@@ -20,6 +21,7 @@ const MessageNotification: FC<MessageNotificationProps> = ({
   const navigate = useNavigate();
   const [user, setUser] = useState<UserModel | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { showErrorNotification } = useNotification();
 
   const fetchUser = async () => {
     if (!notification) return;
@@ -31,7 +33,7 @@ const MessageNotification: FC<MessageNotificationProps> = ({
       }
       setUser(response.user);
     } catch (error) {
-      console.log(error);
+      showErrorNotification(error);
     } finally {
       setIsLoading(false);
     }

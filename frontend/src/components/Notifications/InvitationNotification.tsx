@@ -10,6 +10,7 @@ import { getUserById } from "../../services/userService";
 import { markNotificationAsRead } from "../../services/notificationService";
 import { useAppDispatch } from "../../store/store";
 import { useNavigate } from "react-router-dom";
+import { useNotification } from "../../hooks/useNotification";
 
 interface InvitationNotificationProps {
   notification: NotificationModel;
@@ -24,6 +25,7 @@ const InvitationNotification: FC<InvitationNotificationProps> = ({
   const navigate = useNavigate();
   const [user, setUser] = useState<UserModel | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { showErrorNotification } = useNotification();
 
   const fetchUser = async () => {
     if (!notification) return;
@@ -35,7 +37,7 @@ const InvitationNotification: FC<InvitationNotificationProps> = ({
       }
       setUser(response.user);
     } catch (error) {
-      console.log(error);
+      showErrorNotification(error);
     } finally {
       setIsLoading(false);
     }
@@ -48,14 +50,9 @@ const InvitationNotification: FC<InvitationNotificationProps> = ({
         throw new Error(data.message);
       }
       dispatch(changeNotificationStatusAsRead(notification.notificationId));
-      if (typeOfContent === "SENT") {
-        navigate(`/friends/invitations`);
-      }
-      if (typeOfContent === "ACCEPTED") {
-        navigate(`/friends`);
-      }
+      navigate(`/user/${user?.nickname}`);
     } catch (error) {
-      console.log(error);
+      showErrorNotification(error);
     }
   };
 

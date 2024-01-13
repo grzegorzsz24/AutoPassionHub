@@ -11,6 +11,7 @@ import { getUserById } from "../../services/userService";
 import { markNotificationAsRead } from "../../services/notificationService";
 import { useAppDispatch } from "../../store/store";
 import { useNavigate } from "react-router-dom";
+import { useNotification } from "../../hooks/useNotification";
 
 interface CommentNotificationProps {
   notification: NotificationModel;
@@ -25,6 +26,7 @@ const CommentNotification: FC<CommentNotificationProps> = ({
   const navigate = useNavigate();
   const [user, setUser] = useState<UserModel | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { showErrorNotification } = useNotification();
 
   const fetchUser = async () => {
     if (!notification) return;
@@ -36,7 +38,7 @@ const CommentNotification: FC<CommentNotificationProps> = ({
       }
       setUser(response.user);
     } catch (error) {
-      console.log(error);
+      showErrorNotification(error);
     } finally {
       setIsLoading(false);
     }
@@ -56,7 +58,7 @@ const CommentNotification: FC<CommentNotificationProps> = ({
         navigate(`/posts/${notification.entityId}`);
       }
     } catch (error) {
-      console.log(error);
+      showErrorNotification(error);
     }
   };
 

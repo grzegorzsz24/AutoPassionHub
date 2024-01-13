@@ -5,6 +5,7 @@ import ChatSkeleton from "./ChatSkeleton";
 import UserModel from "../../models/UserModel";
 import { getUserById } from "../../services/userService";
 import { useAppSelector } from "../../store/store";
+import { useNotification } from "../../hooks/useNotification";
 
 interface ChatProps {
   chat: ChatModel;
@@ -16,11 +17,11 @@ const Chat: FC<ChatProps> = ({ chat, currentChat, setCurrentChat }) => {
   const { userId: loggedInUserId } = useAppSelector((state) => state.user);
   const [user, setUser] = useState<UserModel | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { showErrorNotification } = useNotification();
   // const active = true;
 
   const fetchUser = async () => {
     setIsLoading(true);
-    console.log(chat);
     const userId = chat.users.find((user) => user !== Number(loggedInUserId));
     try {
       const data = await getUserById(userId as number);
@@ -29,7 +30,7 @@ const Chat: FC<ChatProps> = ({ chat, currentChat, setCurrentChat }) => {
       }
       setUser(data.user);
     } catch (error) {
-      console.log(error);
+      showErrorNotification(error);
     } finally {
       setIsLoading(false);
     }

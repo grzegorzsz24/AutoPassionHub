@@ -53,7 +53,6 @@ const ArticleItem: FC<ForumItemProps> = ({ article }) => {
   }, 500);
 
   const toggleLikeHandler = () => {
-    console.log("xd");
     setIsLiked((prev) => !prev);
     setNumberOfLikes((prev) => (isLiked ? prev - 1 : prev + 1));
     debouncedToggleLike();
