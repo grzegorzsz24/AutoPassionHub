@@ -1,4 +1,4 @@
-package com.example.automotiveapp.domain;
+package com.example.automotiveapp.dto;
 
 import lombok.Getter;
 import lombok.Setter;
