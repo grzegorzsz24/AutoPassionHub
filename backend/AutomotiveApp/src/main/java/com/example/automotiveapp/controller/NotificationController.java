@@ -1,6 +1,6 @@
 package com.example.automotiveapp.controller;
 
-import com.example.automotiveapp.domain.NotificationDto;
+import com.example.automotiveapp.dto.NotificationDto;
 import com.example.automotiveapp.dto.UserDto;
 import com.example.automotiveapp.service.NotificationService;
 import com.example.automotiveapp.service.UserService;
