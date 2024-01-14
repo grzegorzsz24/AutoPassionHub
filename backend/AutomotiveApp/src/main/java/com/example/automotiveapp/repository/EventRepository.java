@@ -9,7 +9,10 @@ import java.util.Optional;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
+
     List<Event> findAllByTitleContainsIgnoreCase(String title);
 
     Optional<Event> findByTitle(String title);
+  
+    List<Event> findAllByTitleContainsIgnoreCaseOrderByEventDateAsc(String title);
 }

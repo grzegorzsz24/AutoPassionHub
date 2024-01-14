@@ -36,7 +36,6 @@ const getPosts = async (page: number = 1, size: number = 10) => {
         credentials: "include",
       },
     );
-
     const data = await response.json();
     if (!response.ok) {
       throw new Error(data.message);
@@ -89,11 +88,11 @@ const getUserPosts = async (id: number) => {
     if (!response.ok) {
       throw new Error(data.message);
     }
-
     return {
       status: "ok",
       message: "Pobrano posty.",
-      posts: data,
+      posts: data.posts,
+      totalPostsNumber: data.postsNumber,
     };
   } catch (error) {
     return createErrorResponse(error);
@@ -118,14 +117,17 @@ const deletePost = async (id: number) => {
 
 const editPost = async (id: number, content: string) => {
   try {
-    const response = await fetch(`${API_URL}/user/posts/${id}`, {
-      method: "PATCH",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `${API_URL}/user/posts/${id}?page=1&size=100`,
+      {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ content }),
       },
-      body: JSON.stringify({ content }),
-    });
+    );
     if (response.ok) {
       return createSuccessResponse("Edytowano post.");
     }

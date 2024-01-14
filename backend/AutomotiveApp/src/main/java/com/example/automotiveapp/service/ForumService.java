@@ -44,7 +44,7 @@ public class ForumService {
         userRepository.findByNicknameIgnoreCase(nickname)
                 .orElseThrow(() -> new ResourceNotFoundException("Nie znaleziono użytkownika"));
 
-        List<Forum> forums = forumRepository.findAllByUser_NicknameIgnoreCase(nickname);
+        List<Forum> forums = forumRepository.findAllByUser_NicknameIgnoreCaseOrderByCreatedAtDesc(nickname);
         List<ForumDto> forumDtos = new ArrayList<>();
         setForumSavedStatus(forums, forumDtos);
         return forumDtos;
@@ -53,7 +53,7 @@ public class ForumService {
     public ForumResponse findAllByFilters(String title, String carBrand, String carModel, int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Long totalResults = forumRepository.countByTitleAndCarBrandAndCarModel(title, carBrand, carModel);
-        List<Forum> forumList = forumRepository.findAllByTitleAndCarBrandAndCarModel(title, carBrand, carModel, pageable);
+        List<Forum> forumList = forumRepository.findAllByTitleAndCarBrandAndCarModelOrderByCreatedAtDesc(title, carBrand, carModel, pageable);
         List<ForumDto> forumDtos = new ArrayList<>();
         setForumSavedStatus(forumList, forumDtos);
         return new ForumResponse(forumDtos, totalResults);
@@ -71,7 +71,7 @@ public class ForumService {
         for (Forum forum : forums) {
             ForumDto forumDto = ForumDtoMapper.map(forum);
             forumDto.setSaved(savedForumRepository.findByUserEmailAndForum_Id(SecurityUtils.getCurrentUserEmail(), forum.getId()).isPresent());
-            forumDtos.add(forumDto);
+            forumDtos.add(0, forumDto);
         }
     }
 

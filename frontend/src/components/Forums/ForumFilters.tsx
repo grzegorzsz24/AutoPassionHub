@@ -68,7 +68,6 @@ const ForumFilters: FC<ForumFiltersProps> = ({
   const onSubmitTitleForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setTitle(typedTitle);
-    console.log(title);
   };
 
   useEffect(() => {

@@ -79,7 +79,6 @@ const SearchBar: FC<SearchBarProps> = ({ placeholder = "Szukaj" }) => {
       setAbortController(newAbortController);
       try {
         const data = await getSearchResults(searchQuery, newAbortController);
-        console.log(data);
         if (data.status !== "ok") {
           throw new Error(data.message);
         }

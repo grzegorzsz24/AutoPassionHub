@@ -10,6 +10,7 @@ import { getUserById } from "../../services/userService";
 import { markNotificationAsRead } from "../../services/notificationService";
 import { useAppDispatch } from "../../store/store";
 import { useNavigate } from "react-router-dom";
+import { useNotification } from "../../hooks/useNotification";
 
 interface LikeNotificationProps {
   notification: NotificationModel;
@@ -24,6 +25,7 @@ const LikeNotification: FC<LikeNotificationProps> = ({
   const navigate = useNavigate();
   const [user, setUser] = useState<UserModel | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { showErrorNotification } = useNotification();
 
   const fetchUser = async () => {
     if (!notification) return;
@@ -35,7 +37,7 @@ const LikeNotification: FC<LikeNotificationProps> = ({
       }
       setUser(response.user);
     } catch (error) {
-      console.log(error);
+      showErrorNotification(error);
     } finally {
       setIsLoading(false);
     }
@@ -55,7 +57,7 @@ const LikeNotification: FC<LikeNotificationProps> = ({
         navigate(`/posts/${notification.entityId}`);
       }
     } catch (error) {
-      console.log(error);
+      showErrorNotification(error);
     }
   };
 

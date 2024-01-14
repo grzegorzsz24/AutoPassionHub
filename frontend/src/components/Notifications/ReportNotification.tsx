@@ -10,6 +10,7 @@ import { getUserById } from "../../services/userService";
 import { markNotificationAsRead } from "../../services/notificationService";
 import { useAppDispatch } from "../../store/store";
 import { useNavigate } from "react-router-dom";
+import { useNotification } from "../../hooks/useNotification";
 
 interface ReportNotificationProps {
   notification: NotificationModel;
@@ -20,6 +21,7 @@ const ReportNotification: FC<ReportNotificationProps> = ({ notification }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState<UserModel | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { showErrorNotification } = useNotification();
 
   const fetchUser = async () => {
     if (!notification) return;
@@ -31,7 +33,7 @@ const ReportNotification: FC<ReportNotificationProps> = ({ notification }) => {
       }
       setUser(response.user);
     } catch (error) {
-      console.log(error);
+      showErrorNotification(error);
     } finally {
       setIsLoading(false);
     }
@@ -57,7 +59,7 @@ const ReportNotification: FC<ReportNotificationProps> = ({ notification }) => {
         default:
       }
     } catch (error) {
-      console.log(error);
+      showErrorNotification(error);
     }
   };
 

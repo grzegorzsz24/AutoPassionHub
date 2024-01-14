@@ -74,7 +74,7 @@ const AddArticlePage = () => {
           className="mb-2 w-full resize-none overflow-auto rounded-md border-none bg-white px-2 py-2 outline-none focus:ring-2 focus:ring-blue-600 dark:bg-grayDark"
           placeholder="Treść"
           minRows={10}
-          maxRows={20}
+          maxRows={100}
         />
         <PrimaryButton
           fullWidth

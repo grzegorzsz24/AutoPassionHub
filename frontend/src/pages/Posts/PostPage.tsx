@@ -25,7 +25,6 @@ const PostPage = () => {
         throw new Error(data.message);
       }
       setPost(data.post);
-      console.log(data.post);
     } catch (error) {
       const newError = handleError(error);
       dispatch(

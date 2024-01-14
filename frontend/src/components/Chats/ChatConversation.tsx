@@ -12,8 +12,8 @@ import UserModel from "../../models/UserModel";
 import UserProfile from "../../ui/UserProfile";
 import { getChatMessages } from "../../services/chatService";
 import { getUserById } from "../../services/userService";
-import handleError from "../../services/errorHandler";
 import { useAppSelector } from "../../store/store";
+import { useNotification } from "../../hooks/useNotification";
 
 interface ChatConversationProps {
   currentChat: ChatModel | null;
@@ -24,6 +24,7 @@ const ChatConversation: FC<ChatConversationProps> = ({ currentChat }) => {
   const { userId: loggedInUserId } = useAppSelector((state) => state.user);
   const [user, setUser] = useState<UserModel | null>(null);
   const [messages, setMessages] = useState<MessageModel[]>([]);
+  const { showErrorNotification } = useNotification();
   useSubscription(`/user/${loggedInUserId}/queue/messages`, (message) =>
     setMessages((prev) => [...prev, JSON.parse(message.body)]),
   );
@@ -38,10 +39,8 @@ const ChatConversation: FC<ChatConversationProps> = ({ currentChat }) => {
         throw new Error(data.message);
       }
       setMessages(data.data);
-      console.log(data);
     } catch (error) {
-      const newError = handleError(error);
-      console.log(newError);
+      showErrorNotification(error);
     } finally {
       setIsLoading(false);
     }
@@ -59,8 +58,7 @@ const ChatConversation: FC<ChatConversationProps> = ({ currentChat }) => {
       }
       setUser(data.user);
     } catch (error) {
-      const newError = handleError(error);
-      console.log(newError);
+      showErrorNotification(error);
     }
   };
 
@@ -69,7 +67,6 @@ const ChatConversation: FC<ChatConversationProps> = ({ currentChat }) => {
       (user) => user !== Number(loggedInUserId),
     );
     if (stompClient) {
-      console.log("wysyłam");
       stompClient.publish({
         destination: "/app/chat",
         body: JSON.stringify({

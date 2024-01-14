@@ -53,7 +53,6 @@ const ArticleItem: FC<ForumItemProps> = ({ article }) => {
   }, 500);
 
   const toggleLikeHandler = () => {
-    console.log("xd");
     setIsLiked((prev) => !prev);
     setNumberOfLikes((prev) => (isLiked ? prev - 1 : prev + 1));
     debouncedToggleLike();
@@ -77,7 +76,7 @@ const ArticleItem: FC<ForumItemProps> = ({ article }) => {
   };
   return (
     <div
-      className="flex cursor-pointer justify-between gap-12 rounded-md  bg-white p-4 shadow-md dark:bg-primaryDark2"
+      className="flex cursor-pointer flex-col justify-between gap-4 rounded-md bg-white p-4  shadow-md dark:bg-primaryDark2 sm:flex-row sm:gap-12"
       onClick={(event) => navigateToArticlePage(event)}
     >
       <div>

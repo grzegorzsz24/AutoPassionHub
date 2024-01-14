@@ -30,7 +30,7 @@ const ArticleFilters: FC<ForumFiltersProps> = ({ title, dispatch }) => {
   };
 
   return (
-    <div className="flex gap-4 items-center">
+    <div className="flex flex-col items-center gap-2  sm:flex-row sm:gap-4">
       <form onSubmit={onSubmitTitleForm}>
         <input
           value={typedTitle}
@@ -39,7 +39,7 @@ const ArticleFilters: FC<ForumFiltersProps> = ({ title, dispatch }) => {
           }}
           type="text"
           placeholder="Szukaj po nazwie"
-          className="p-2 rounded-md focus:ring-2 ring-blue-600 bg-white dark:bg-grayDark outline-none w-72"
+          className="w-72 rounded-md bg-white p-2 outline-none ring-blue-600 focus:ring-2 dark:bg-grayDark"
         />
       </form>
       <PrimaryButton size="md" onClick={clearFilters}>

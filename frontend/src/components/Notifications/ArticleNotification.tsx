@@ -10,6 +10,7 @@ import { getUserById } from "../../services/userService";
 import { markNotificationAsRead } from "../../services/notificationService";
 import { useAppDispatch } from "../../store/store";
 import { useNavigate } from "react-router-dom";
+import { useNotification } from "../../hooks/useNotification";
 
 interface ArticleNotificationProps {
   notification: NotificationModel;
@@ -22,6 +23,7 @@ const ArticleNotification: FC<ArticleNotificationProps> = ({
   const navigate = useNavigate();
   const [user, setUser] = useState<UserModel | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { showErrorNotification } = useNotification();
 
   const fetchUser = async () => {
     if (!notification) return;
@@ -33,7 +35,7 @@ const ArticleNotification: FC<ArticleNotificationProps> = ({
       }
       setUser(response.user);
     } catch (error) {
-      console.log(error);
+      showErrorNotification(error);
     } finally {
       setIsLoading(false);
     }
@@ -50,7 +52,7 @@ const ArticleNotification: FC<ArticleNotificationProps> = ({
         navigate(`/articles/${notification.entityId}`);
       }
     } catch (error) {
-      console.log(error);
+      showErrorNotification(error);
     }
   };
 

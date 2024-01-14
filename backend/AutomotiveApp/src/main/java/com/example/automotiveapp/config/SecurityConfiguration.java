@@ -33,10 +33,10 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.ignoringRequestMatchers(toH2Console()).disable())
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(requests -> {
                     requests
-                            .requestMatchers(toH2Console(), antMatcher("/auth/**"),
+                            .requestMatchers(antMatcher("/auth/**"),
                                     antMatcher("/swagger-ui/**"),
                                     antMatcher("/swagger-ui.html"),
                                     antMatcher("/v3/**"),

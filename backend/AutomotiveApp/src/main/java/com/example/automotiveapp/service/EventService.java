@@ -18,6 +18,7 @@ import com.example.automotiveapp.storage.FileStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -36,7 +37,7 @@ public class EventService {
     private final ReportDtoMapper reportDtoMapper;
 
     public EventResponse getAllEvents(int page, int size) {
-        Pageable pageable = PageRequest.of(page - 1, size);
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("eventDate").ascending());
         List<EventDto> eventDtos = eventRepository.findAll(pageable)
                 .stream()
                 .map(EventDtoMapper::map)
